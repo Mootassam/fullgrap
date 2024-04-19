@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   backend:
-    build: ./admin
+    build: ./server
     ports:
       - 8080:8080
     restart: unless-stopped
