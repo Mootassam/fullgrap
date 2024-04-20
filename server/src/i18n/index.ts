@@ -1,7 +1,7 @@
 import en from './en';
 import ptBR from './pt-BR';
 import _get from 'lodash/get';
-import es from './es';
+import fr from './es';
 
 /**
  * Object with the languages available.
@@ -9,7 +9,7 @@ import es from './es';
 const languages = {
   en: en,
   'pt-BR': ptBR,
-  es: es,
+  fr: fr,
 };
 
 /**

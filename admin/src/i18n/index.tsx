@@ -36,7 +36,7 @@ const languages: {
 
 export async function init() {
   currentLanguageCode =
-    localStorage.getItem('language') || 'fr';
+    localStorage.getItem('language') || 'en';
   setLanguageCode(currentLanguageCode);
 
   if (currentLanguageCode === 'en') {
