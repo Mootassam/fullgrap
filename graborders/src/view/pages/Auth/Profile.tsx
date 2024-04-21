@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 
 import "../styles/styles.css";
@@ -39,6 +39,8 @@ function Profile() {
     { icon: "fa-solid fa-user", name: "Profile", url: "/team" },
     { icon: "fa-solid fa-lock", name: "Security", url: "/security" },
   ];
+
+
 
 
   return (
