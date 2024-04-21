@@ -122,6 +122,10 @@ export default class TransactionService {
     return TransactionRepository.findAndCountAll(args, this.options);
   }
 
+  async findAndCountByUser(args) {
+    return TransactionRepository.findAndCountByUser(args, this.options);
+  }
+
   async import(data, importHash) {
     if (!importHash) {
       throw new Error400(

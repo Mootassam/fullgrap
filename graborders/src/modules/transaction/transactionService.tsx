@@ -34,6 +34,26 @@ export default class TransactionService {
 
     return response.data;
   }
+  static async listbyUser(filter, orderBy, limit, offset) {
+    const params = {
+      filter,
+      orderBy,
+      limit,
+      offset,
+    };
+
+    const tenantId = AuthCurrentTenant.get();
+    const response = await authAxios.get(
+      `/tenant/${tenantId}/transaction/byUser`,
+      {
+        params,
+      },
+    );
+
+    return response.data;
+  }
+
+
 
   static async create(data) {
     const body = {

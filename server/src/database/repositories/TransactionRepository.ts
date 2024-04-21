@@ -232,6 +232,102 @@ class TransactionRepository {
     return { rows, count };
   }
 
+  static async findAndCountByUser(
+    { filter, limit = 0, offset = 0, orderBy = "" },
+    options: IRepositoryOptions
+  ) {
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
+
+    let criteriaAnd: any = [];
+
+    const search = JSON.parse(filter);
+
+    criteriaAnd.push({
+      tenant: currentTenant.id,
+      user: currentUser.id,
+    });
+
+    if (search) {
+      if (search.id) {
+        criteriaAnd.push({
+          ["_id"]: MongooseQueryUtils.uuid(filter.id),
+        });
+      }
+      if (search.user) {
+        criteriaAnd.push({
+          user: filter.user,
+        });
+      }
+
+      if (search.amount) {
+        criteriaAnd.push({
+          amount: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.amount),
+            $options: "i",
+          },
+        });
+      }
+
+      if (search.status) {
+        criteriaAnd.push({
+          status: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.status),
+            $options: "i",
+          },
+        });
+      }
+
+      if (search.type) {
+        criteriaAnd.push({
+          type: {
+            $regex: MongooseQueryUtils.escapeRegExp(search.type),
+            $options: "i",
+          },
+        });
+      }
+
+      if (search.datetransaction) {
+        const [start, end] = search.datetransaction;
+
+        if (start !== undefined && start !== null && start !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $gte: start,
+            },
+          });
+        }
+
+        if (end !== undefined && end !== null && end !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $lte: end,
+            },
+          });
+        }
+      }
+    }
+
+    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+
+    const skip = Number(offset || 0) || undefined;
+    const limitEscaped = Number(limit || 0) || undefined;
+    const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
+
+    let rows = await Transaction(options.database)
+      .find(criteria)
+      // .skip(skip)
+      // .limit(limitEscaped)
+      .sort(sort)
+      .populate("user");
+
+    const count = await Transaction(options.database).countDocuments(criteria);
+
+    rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
+
+    return { rows, count };
+  }
+
   static async findAllAutocomplete(search, limit, options: IRepositoryOptions) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
 

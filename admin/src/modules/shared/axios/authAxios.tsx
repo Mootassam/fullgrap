@@ -7,7 +7,8 @@ import moment from 'moment';
 
 const authAxios = Axios.create({
   // baseURL: 'https://6584-83-110-151-155.ngrok-free.app/api',
-  baseURL: 'http://172.104.203.123:8080/api',
+  // baseURL: 'http://172.104.203.123:8080/api', 
+  baseURL: 'http://localhost:8080/api',
   
   // baseURL: 'https://serverhongkong.onrender.com/api',
   paramsSerializer: function (params) {

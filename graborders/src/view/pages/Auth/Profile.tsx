@@ -82,8 +82,8 @@ function Profile() {
       </div>
 
       <div className="profile__content">
-        {data.map((item) => (
-          <Link to={item.url} className="remove__ligne">
+        {data.map((item, index) => (
+          <Link to={item.url} className="remove__ligne" key={index}>
             <div className="tasks__">
             <div className="profile__link">
               <div className="profile__links">

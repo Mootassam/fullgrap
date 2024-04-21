@@ -117,6 +117,43 @@ const transactionListActions = {
         });
       }
     },
+
+
+
+    doFetchByUser:
+    (filter?, rawFilter?, keepPagination = false) =>
+    async (dispatch, getState) => {
+
+
+      try {
+        dispatch({
+          type: transactionListActions.FETCH_STARTED,
+          payload: { filter, rawFilter, keepPagination },
+        });
+
+        const response = await TransactionService.listbyUser(
+          filter,
+          selectors.selectOrderBy(getState()),
+          selectors.selectLimit(getState()),
+          selectors.selectOffset(getState()),
+        );
+
+        dispatch({
+          type: transactionListActions.FETCH_SUCCESS,
+          payload: {
+            rows: response.rows,
+            count: response.count,
+          },
+        });
+      } catch (error) {
+        Errors.handle(error);
+
+        dispatch({
+          type: transactionListActions.FETCH_ERROR,
+        });
+      }
+    },
+
 };
 
 export default transactionListActions;

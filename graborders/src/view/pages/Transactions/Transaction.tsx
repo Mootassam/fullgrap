@@ -17,7 +17,7 @@ function Transaction() {
     const  values ={ 
       type : active
     }
-    dispatch(action.doFetch(values,values))
+    dispatch(action.doFetchByUser(values,values))
   }
   useEffect(() => {
     fetchAll()
@@ -25,6 +25,24 @@ function Transaction() {
   
   const record = useSelector(selector.selectRows)
 
+  const deposit =() => { 
+    setActive("deposit")
+    const  values = { 
+      type : 'deposit'
+    }
+
+    dispatch(action.doFetchByUser(values))
+
+  }
+
+
+  const withdraw =() => { 
+    setActive("withdraw")
+    const  values ={ 
+      type : 'withdraw'
+    }
+    dispatch(action.doFetchByUser(values,values))
+  }
 
   const all = (item) => {
     return (
@@ -50,14 +68,14 @@ function Transaction() {
             <span className="">All</span>
           </div>
           <div
-            onClick={() => setActive("withdraw")}
+            onClick={() => withdraw()}
             className={active === "withdraw" ? `active__transacttion` : ""}
           >
             {" "}
             <span>Withdraw</span>
           </div>
           <div
-            onClick={() => setActive("deposit")}
+            onClick={() => deposit()}
             className={active === "deposit" ? `active__transacttion` : ""}
           >
             <span>Deposit</span>
