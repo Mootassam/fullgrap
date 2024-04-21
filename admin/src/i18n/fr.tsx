@@ -2,7 +2,7 @@
  * I18n dictionary for the en.
  */
 
-const fr = {
+const en = {
   app: {
     title: 'Application',
   },
@@ -190,4 +190,4 @@ const fr = {
   }
 };
 
-export default fr;
+export default en;

@@ -71,7 +71,6 @@ export default class UserRepository {
       options
     );
 
-
     await User(options.database).updateOne(
       { _id: id },
       {
@@ -203,7 +202,6 @@ export default class UserRepository {
     return user;
   }
 
-
   static async updateProfileGrap(id, data, options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
     // await this.checkSolde(data, options);
@@ -222,7 +220,7 @@ export default class UserRepository {
         balance: data.balance,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
-        product: data?.product ,
+        product: data?.product,
       },
       options
     );
@@ -295,12 +293,12 @@ export default class UserRepository {
     const currentBalance = currentUser.balance;
     const currentVip = currentUser.vip.id;
 
-    if (!data) return;
+    if (!data?.vip?.id) return;
 
-    if (currentVip === data.vip.id) {
+    if (currentVip === data?.vip?.id) {
       throw new Error405("You are ready subscribed to this vip");
     }
-    if (currentBalance < data.vip.levellimit) {
+    if (currentBalance < data?.vip?.levellimit) {
       throw new Error405("Your solde insufissant please recharge your account");
     }
   }
@@ -616,7 +614,8 @@ export default class UserRepository {
       User(options.database)
         .findById(id)
         .populate("tenants.tenant")
-        .populate("vip").populate("product"),
+        .populate("vip")
+        .populate("product"),
       options
     );
 
