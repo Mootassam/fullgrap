@@ -5,8 +5,8 @@ export default class Calcule {
           return "";
         }
         const total =
-          parseFloat(price) + (parseFloat(price) * parseFloat(comission)) / 100;
-        return total;
+         (parseFloat(price) * parseFloat(comission)) / 100;
+        return total.toFixed(3);
       };
     
     

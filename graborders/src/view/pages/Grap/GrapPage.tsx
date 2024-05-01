@@ -115,8 +115,8 @@ const Grappage = () => {
 
   const calcule__total = (price, comission) => {
     const total =
-      parseFloat(price) + (parseFloat(price) * parseFloat(comission)) / 100;
-    return total;
+      (parseFloat(price) * parseFloat(comission)) / 100;
+    return total.toFixed(3);
   };
 
   const currentUser = useSelector(authSelectors.selectCurrentUser);

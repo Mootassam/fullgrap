@@ -5,7 +5,7 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server:{host:"192.168.3.9",port:80},
+  // server:{host:"192.168.1.21",port:80},
   resolve: {
     alias: {
       "@component": path.resolve(__dirname, "src/component"),

@@ -2,7 +2,7 @@ import axios from "axios";
 import authToken from "src/modules/auth/authToken";
 
 const authAxios = axios.create({
-  baseURL: "http://172.104.203.123:8080/api",  
+  baseURL: "http://localhost:8080/api",  
   // baseURL: "http://localhost:8080/api", 
 });
 

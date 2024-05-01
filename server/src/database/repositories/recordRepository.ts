@@ -299,6 +299,10 @@ class RecordRepository {
     { filter, limit = 0, offset = 0, orderBy = "" },
     options: IRepositoryOptions
   ) {
+
+    
+    filter = JSON.parse(filter);
+
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     const currentUser = MongooseRepository.getCurrentUser(options);
     let criteriaAnd: any = [];
@@ -336,6 +340,7 @@ class RecordRepository {
       }
 
       if (filter.status) {
+
         criteriaAnd.push({
           status: {
             $regex: MongooseQueryUtils.escapeRegExp(filter.status),
@@ -374,7 +379,7 @@ class RecordRepository {
     listitems.map((item) => {
       let data = item.product;
       let itemTotal =
-        parseFloat(data.amount) +
+     
         (parseFloat(data.commission) * parseFloat(data.amount)) / 100;
 
       total += itemTotal;
