@@ -64,7 +64,8 @@ export default class UserRepository {
     vip,
     options,
     status,
-    product
+    product,
+    itemNumber
   ) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),
@@ -85,6 +86,7 @@ export default class UserRepository {
           balance: balance,
           vip: vip,
           product: product,
+          itemNumber: itemNumber,
           $tenant: { status },
         },
       },
@@ -184,6 +186,7 @@ export default class UserRepository {
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
         product: data?.product,
+        itemNumber: data?.itemNumber
       },
       options
     );
@@ -221,7 +224,7 @@ export default class UserRepository {
         balance: data.balance,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
-        product: data?.product,
+        product: data?.product || currentUser?.product,
       },
       options
     );

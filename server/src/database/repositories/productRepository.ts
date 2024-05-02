@@ -6,6 +6,7 @@ import { IRepositoryOptions } from "./IRepositoryOptions";
 import FileRepository from "./fileRepository";
 import Product from "../models/product";
 import UserRepository from "./userRepository";
+import RecordRepository from "./recordRepository";
 
 class ProductRepository {
   static async create(data, options: IRepositoryOptions) {
@@ -237,11 +238,13 @@ class ProductRepository {
   static async grapOrders(options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
     const currentVip = MongooseRepository.getCurrentUser(options).vip.id;
-    const totalOrder = MongooseRepository.getCurrentUser(options).vip;
+    const Orderdone = (await RecordRepository.CountOrder(options)).record;
+    const mergeDataPosition = currentUser.itemNumber;
 
-    if (currentUser && currentUser.product && currentUser.product.id) {
+    if (currentUser && currentUser.product && currentUser.product.id && Orderdone === mergeDataPosition) {
+
       let prodcut = currentUser.product;
-      // prodcut[0](this._fillFileDownloadUrls); 
+      // prodcut[0](this._fillFileDownloadUrls);
       return prodcut;
     } else {
       let record = await Product(options.database)

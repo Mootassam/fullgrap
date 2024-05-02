@@ -75,7 +75,8 @@ export default class UserEditor {
       this.data.vip.id,
       this.options,
       this.data.status,
-      this.data.product
+      this.data.product,
+      this.data.itemNumber
     );
   }
   /**

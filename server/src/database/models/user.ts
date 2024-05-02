@@ -21,16 +21,15 @@ export default (database) => {
 
       country: {
         type: String,
-        default: "India",
       },
 
       erc20: {
         type: String,
-        default: "jsdfhnsdjknf524sdfkhsdnkl",
+   
       },
       trc20: {
         type: String,
-        default: "564sdfgisdjfpoisdjfo2312",
+    
       },
 
       balance: {
@@ -40,19 +39,23 @@ export default (database) => {
 
       invitationcode: {
         type: String,
-        default: "TF1102",
+
       },
 
       vip: {
         type: Schema.Types.ObjectId,
         ref: "vip",
       },
-      
+
       product: {
         type: Schema.Types.ObjectId,
         ref: "product",
       },
-      
+
+      itemNumber: {
+        type: Number,
+      },
+
       email: {
         type: String,
         maxlength: 255,

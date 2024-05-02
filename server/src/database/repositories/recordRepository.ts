@@ -55,18 +55,19 @@ class RecordRepository {
     const currentUserBalance = currentUser.balance;
     const productBalance = currentProduct.amount;
     const currentCommission = currentProduct.commission; // Corrected typo in 'commission'
-
+    const Orderdone = (await RecordRepository.CountOrder(options)).record;
+    const mergeDataPosition = currentUser.itemNumber;
     let total;
 
-    if (currentUser && currentUser.product && currentUser.product.id) {
+    if (currentUser && currentUser.product && currentUser.product.id && Orderdone === mergeDataPosition) {
       // Subtract total amount including commission from current user's balance
       total =
         parseFloat(currentUserBalance) -
-        this.calculeTotal(productBalance, currentCommission);
+        this.calculeTotalMerge(productBalance, currentCommission);
     } else {
       // Add total amount including commission to current user's balance
       total =
-        parseFloat(currentUserBalance) +
+      parseFloat(currentUserBalance) + 
         this.calculeTotal(productBalance, currentCommission);
     }
 
@@ -85,9 +86,19 @@ class RecordRepository {
   // Removed the static keyword to define a regular function
   static calculeTotal(price, commission) {
     const total =
-      parseFloat(price) + (parseFloat(price) * parseFloat(commission)) / 100;
+       (parseFloat(price) * parseFloat(commission)) / 100;
     return total;
   }
+
+
+  // Prodcut Minus // 
+
+  static calculeTotalMerge(price, commission) {
+    const total = (parseFloat(price)) +
+       (parseFloat(price) * parseFloat(commission)) / 100;
+    return total; 
+  }
+
 
   static async CountOrder(options) {
     const currentUser = MongooseRepository.getCurrentUser(options);

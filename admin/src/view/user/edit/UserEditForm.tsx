@@ -24,6 +24,7 @@ import Storage from 'src/security/storage';
 import FilesFormItem from 'src/view/shared/form/items/FilesFormItem';
 import VipAutocompleteFormItem from 'src/view/vip/autocomplete/VipAutocompleteFormItem';
 import ProductAutocompleteFormItem from 'src/view/product/autocomplete/ProductAutocompleteFormItem';
+import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem';
 
 const schema = yup.object().shape({
   roles: yupFormSchemas.stringArray(
@@ -50,6 +51,12 @@ const schema = yup.object().shape({
   product: yupFormSchemas.relationToOne(i18n('prodcut'), {
   
   }),
+
+
+  itemNumber: yupFormSchemas.integer(i18n('itemNumber'), {
+    required: false,
+  }),
+
   status: yupFormSchemas.enumerator(
     i18n('user.fields.status'),
     {
@@ -77,7 +84,8 @@ function UserEditForm(props) {
       passportPhoto: record.passportPhoto || [],
       vip: record.vip || [],
       status: record.status,
-      product :record.product || []
+      product :record.product || [],
+      itemNumber: record.itemNumber
     };
   });
 
@@ -254,6 +262,17 @@ function UserEditForm(props) {
                />
 
 
+            </Col>
+          </Row>
+
+
+          <Row>
+            <Col sm={4}>
+              <InputNumberFormItem
+                name="itemNumber"
+                label={i18n('user.fields.itemNumber')}
+                required={true}
+              />
             </Col>
           </Row>
 

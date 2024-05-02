@@ -105,12 +105,9 @@ const Grappage = () => {
 
   const [number] = useState(Dates.Number());
 
-
-
   useEffect(() => {
    dispatch(recordListAction.doCount())
   }, [dispatch]);
-
 
 
   const calcule__total = (price, comission) => {
