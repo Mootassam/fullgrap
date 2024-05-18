@@ -409,6 +409,9 @@ td {
   width: 50%;
   border-radius: 10px;
 }
+.vip__level{
+  height: 100px !important;
+}
 
 .content__footer {
   display: flex;

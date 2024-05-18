@@ -192,7 +192,7 @@ function Market() {
                   >
                    {currentUser?.vip?.id === item.id ? <div className="success__vip"></div> : <div className="subscribe__"></div>} 
                     <div className="vip__image">
-                      <img src={item?.photo[0]?.downloadUrl} alt="Vip__image" />
+                      <img src={item?.photo[0]?.downloadUrl} alt="Vip__image" className="vip__level" />
                     </div>
                     <div className="vip__text">
                       <div className="vip__title">{item.title}</div>
