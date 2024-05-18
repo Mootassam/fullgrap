@@ -26,15 +26,15 @@ const Grappage = () => {
   const loading = useSelector(selector.selectLoading);
   // const numberRecord = useSelector(recordSelector.selectCount);
   const [showModal, setShowModal] = useState(false);
-  const [lodingRoll, setLoadingRoll] = useState(false); 
-  const selectCountRecord = useSelector(recordSelector.selectCountRecord)
+  const [lodingRoll, setLoadingRoll] = useState(false);
+  const selectCountRecord = useSelector(recordSelector.selectCountRecord);
 
   const error = useSelector(recordSelector.selectError);
 
   const refreshItems = useCallback(() => {
     dispatch(recordListAction.doFetch());
     dispatch(actions.doFetch());
-    dispatch(authActions.doRefreshCurrentUser())
+    dispatch(authActions.doRefreshCurrentUser());
   }, [dispatch]);
 
   const roll = useCallback(async (reel, offset = 0) => {
@@ -64,10 +64,9 @@ const Grappage = () => {
   }, []);
 
   const rollAll = async () => {
-
     try {
-      setLoadingRoll(true)
-     await dispatch(recordListAction.doCheck());
+      setLoadingRoll(true);
+      await dispatch(recordListAction.doCheck());
       if (error) {
         return;
       }
@@ -88,16 +87,13 @@ const Grappage = () => {
       setTimeout(() => {
         if (slots) slots.classList.remove("win1");
       }, 2000);
-      setLoadingRoll(false)
-
+      setLoadingRoll(false);
     } catch (error) {
       console.log(error);
       // Handle other errors
-      setLoadingRoll(false)
+      setLoadingRoll(false);
     }
-    }
-
-
+  };
 
   const hideModal = () => {
     setShowModal(false);
@@ -106,13 +102,11 @@ const Grappage = () => {
   const [number] = useState(Dates.Number());
 
   useEffect(() => {
-   dispatch(recordListAction.doCount())
+    dispatch(recordListAction.doCount());
   }, [dispatch]);
 
-
   const calcule__total = (price, comission) => {
-    const total =
-      (parseFloat(price) * parseFloat(comission)) / 100;
+    const total = (parseFloat(price) * parseFloat(comission)) / 100;
     return total.toFixed(3);
   };
 
@@ -129,9 +123,9 @@ const Grappage = () => {
     setShowModal(false);
   };
 
-  const goto =(param) => {
-    history.push(param)
-  }
+  const goto = (param) => {
+    history.push(param);
+  };
   return (
     <>
       <div className="app__grappage">
@@ -175,8 +169,14 @@ const Grappage = () => {
         </div>
 
         <div className="button__grap">
-          <button className="button__upgrade" onClick={() => goto("/online")}>Deposit Upgrade</button>
-          <button className={`grap ${lodingRoll ? '__disabled' : ''}`} onClick={() => rollAll()} disabled={lodingRoll}>
+          <button className="button__upgrade" onClick={() => goto("/online")}>
+            Deposit Upgrade
+          </button>
+          <button
+            className={`grap ${lodingRoll ? "__disabled" : ""}`}
+            onClick={() => rollAll()}
+            disabled={lodingRoll}
+          >
             Automatic grab
           </button>
         </div>
@@ -201,7 +201,9 @@ const Grappage = () => {
             </div>
             <div className="group__comission">
               <div className="comission__text"> Availbale Balance </div>
-              <div className="comission__value">{Amount.Dollar(record?.balance)}</div>
+              <div className="comission__value">
+                {Amount.Dollar(record?.balance)}
+              </div>
             </div>
             <div className="group__comission">
               <div className="comission__text">Orders Completed</div>
@@ -222,7 +224,8 @@ const Grappage = () => {
           <div className="rules__title">Rules Description</div>
           <ul className="rules__list">
             <li>
-              (1) Every members from this room be able to grap 55 orders per day
+              (1) Every members from this room be able to grap{" "}
+              {record?.vip?.dailyorder} orders per day
             </li>
             <li>
               (2) The commission of the purchase would be 0.28% of each order
@@ -256,7 +259,7 @@ const Grappage = () => {
                 </div>
                 <div className="product__image">
                   <div className="image__">
-                    <img src={items?.photo[0]?.downloadUrl} alt="" /> 
+                    <img src={items?.photo[0]?.downloadUrl} alt="" />
                   </div>
 
                   <div className="product__detail">

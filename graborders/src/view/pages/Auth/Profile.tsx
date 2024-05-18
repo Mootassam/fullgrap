@@ -36,7 +36,7 @@ function Profile() {
       name: "Withdraw",
       url: "/withdraw",
     },
-    { icon: "fa-solid fa-user", name: "Profile", url: "/team" },
+    { icon: "fa-solid fa-user", name: "Profile", url: "/myprofile" },
     { icon: "fa-solid fa-lock", name: "Security", url: "/security" },
   ];
 

@@ -312,7 +312,6 @@ class RecordRepository {
   ) {
 
     
-    filter = JSON.parse(filter);
 
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     const currentUser = MongooseRepository.getCurrentUser(options);
@@ -324,6 +323,8 @@ class RecordRepository {
     });
 
     if (filter) {
+      filter = JSON.parse(filter);
+
       if (filter.id) {
         criteriaAnd.push({
           ["_id"]: MongooseQueryUtils.uuid(filter.id),

@@ -4,9 +4,9 @@ import SubHeader from "src/view/shared/Header/SubHeader";
 function Team() {
   return (
     <div>
-      <SubHeader title="Team" path="/profile" />
+      <SubHeader title="Profile" path="/profile" />
 
-      <h1>Team</h1>
+      <h1>Profile</h1>
     </div>
   );
 }

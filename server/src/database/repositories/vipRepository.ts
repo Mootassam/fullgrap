@@ -147,7 +147,7 @@ class VipRepository {
 
     }
 
-    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_ASC");
 
     const skip = Number(offset || 0) || undefined;
     const limitEscaped = Number(limit || 0) || undefined;

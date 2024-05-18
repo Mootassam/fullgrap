@@ -20,9 +20,7 @@ const schema = yup.object().shape({
 function Withdraw() {
   const currentUser = useSelector(authSelectors.selectCurrentUser);
   const dispatch = useDispatch();
-  useEffect(() => {
-  
-  }, [currentUser])
+  useEffect(() => {}, [currentUser]);
   const onSubmit = ({ amount }) => {
     const values = {
       status: "pending",
@@ -30,11 +28,10 @@ function Withdraw() {
       user: currentUser ? currentUser.id : null,
       type: "withdraw",
       amount: amount,
-      vip : currentUser 
+      vip: currentUser,
     };
     dispatch(authActions.doRefreshCurrentUser());
     dispatch(actions.doCreate(values));
-  
   };
 
   const [initialValues] = useState({
@@ -46,8 +43,6 @@ function Withdraw() {
     defaultValues: initialValues,
   });
 
-
-  
   return (
     <div>
       <SubHeader title="WithDraw" path="/" />
@@ -59,7 +54,7 @@ function Withdraw() {
             </h3>
 
             <span style={{ color: "black", fontSize: "14px" }}>
-              Availabe balance : {currentUser.balance} Usdt
+              Availabe balance : {currentUser.balance.toFixed(2)} Usdt
             </span>
           </div>
           <FormProvider {...form}>

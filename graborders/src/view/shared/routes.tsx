@@ -68,7 +68,7 @@ const screenRoutes = [
     exact: true,
   },
   {
-    path: "/team",
+    path: "/myprofile",
     loader: () => import("src/view/pages/Team/Team"),
     exact: true,
   },
