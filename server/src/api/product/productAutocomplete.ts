@@ -6,7 +6,7 @@ import ProductServices from "../../services/productService";
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatAutocomplete
+      Permissions.values.categoryRead
     );
 
     const payload = await new ProductServices(req).findAllAutocomplete(

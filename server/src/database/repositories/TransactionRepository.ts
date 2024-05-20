@@ -56,9 +56,9 @@ class TransactionRepository {
       const id = currentUser.id;
       const newBalance = oldAmount - requestAmount;
 
-      console.log("====================================");
-      console.log(newBalance);
-      console.log("====================================");
+      // console.log("====================================");
+      // console.log(newBalance);
+      // console.log("====================================");
 
       const values = {
         balances: newBalance,

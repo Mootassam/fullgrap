@@ -6,7 +6,7 @@ import RecordServices from "../../services/recordServices";
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatAutocomplete
+      Permissions.values.categoryRead
     );
     const payload = await new RecordServices(req).findAllAutocomplete(
       req.query.query,

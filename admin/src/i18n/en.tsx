@@ -34,12 +34,12 @@ const en = {
     accounting: 'Accounting',
     configurations: 'Configurations',
   },
-company:{
-  menu:"Company",
-  title:"Company Description",
-  faqs:"Frequently asked questions ",
-  TC :"Terms & Conditions"
-},
+  company: {
+    menu: 'Company',
+    title: 'Company Description',
+    faqs: 'Frequently asked questions ',
+    TC: 'Terms & Conditions',
+  },
   app: {
     title: 'Admin Panel',
   },
@@ -49,36 +49,30 @@ company:{
   },
 
   entities: {
-
-
-
-
-
-    company:{
-      title:"Company Section", 
-      menu:"company",
-    
+    company: {
+      title: 'Company Section',
+      menu: 'company',
     },
 
-    record:{
-      menu:"Records",
-      new:{
-        title : "Add new Record"
+    record: {
+      menu: 'Records',
+      new: {
+        title: 'Add new Record',
       },
-      fields:{
-        user:"user",
-        product:"product",
-        number:"record Number",
-        status:"status"
+      fields: {
+        user: 'user',
+        product: 'product',
+        number: 'record Number',
+        status: 'status',
       },
-      list:{
-        title:"List of records"
+      list: {
+        title: 'List of records',
       },
-      view:{ 
-        title:"Record Detail"
+      view: {
+        title: 'Record Detail',
       },
-      edit:{
-        title: "Edit Record"
+      edit: {
+        title: 'Edit Record',
       },
       create: {
         success: 'Record successfully saved',
@@ -92,36 +86,35 @@ company:{
       destroyAll: {
         success: 'Record successfully deleted',
       },
-      enumerators :{ 
-        status :{ 
-          pending:"Pending", 
-          completed:"Completed",
-          canceled:"Canceled"
-        }
-      }
+      enumerators: {
+        status: {
+          pending: 'Pending',
+          completed: 'Completed',
+          canceled: 'Canceled',
+        },
+      },
     },
-  
 
-    vip:{
-      menu:"Vip",
-      list:{
-        title:"List of vip"
-      }, 
-      fields:{
-        title:"Vip Name", 
-        dailyorder:"Daily Order", 
-        commissionrate:" commission rate", 
-        levelLimit:"Level Limit",
-        levellimit:""
+    vip: {
+      menu: 'Vip',
+      list: {
+        title: 'List of vip',
+      },
+      fields: {
+        title: 'Vip Name',
+        dailyorder: 'Daily Order',
+        commissionrate: ' commission rate',
+        levelLimit: 'Level Limit',
+        levellimit: '',
       },
       new: {
-        title:"Add New Vip"
+        title: 'Add New Vip',
       },
-      edit:{
-        title:"Edit Vip"
+      edit: {
+        title: 'Edit Vip',
       },
-      view:{
-        title :"Detail Vip"
+      view: {
+        title: 'Detail Vip',
       },
       create: {
         success: 'Vip successfully saved',
@@ -135,7 +128,6 @@ company:{
       destroyAll: {
         success: 'Vip successfully deleted',
       },
-      
     },
 
     typeProjet: {
@@ -226,11 +218,16 @@ company:{
         updatedAt: 'Updated at',
         createdAtRange: 'Created at',
         passportphoto: 'Passport Copy',
+        type: 'type',
       },
       enumerators: {
         status: {
           enable: 'Enable',
           disable: 'Disable',
+        },
+        type: {
+          whatsApp: 'whatsApp',
+          telegram: 'Telegram',
         },
       },
       placeholders: {},
@@ -1699,10 +1696,10 @@ company:{
         title: 'Edit Product',
       },
       fields: {
-        vip: "vip",
-        title:"Product Name",
-        amount:"Product Price",
-        commission:"Product Commission",
+        vip: 'vip',
+        title: 'Product Name',
+        amount: 'Product Price',
+        commission: 'Product Commission',
         id: 'Id',
         name: 'Name',
         slug: 'Slug',
@@ -1762,7 +1759,7 @@ company:{
       },
       placeholders: {},
       hints: {},
-    
+
       new: {
         title: 'New Product',
       },
@@ -2001,8 +1998,8 @@ company:{
         id: 'Id',
         title: 'Title',
         codeName: 'Code Name',
-        commission:"Commission",
-        price:"Price of Product ",
+        commission: 'Commission',
+        price: 'Price of Product ',
         discountRange: 'Discount',
         discount: 'Amount',
         noOfTimesRange: 'Number Of Times ',
@@ -2063,11 +2060,11 @@ company:{
         title: 'Edit Transaction',
       },
       fields: {
-        user:"user",
-        type:"type",
-        status:"status",
+        user: 'user',
+        type: 'type',
+        status: 'status',
         id: 'Id',
-        itemNumber:"itemNumber",
+        itemNumber: 'itemNumber',
         amountRange: 'Amount',
         amount: 'Amount',
         email: 'Email',
@@ -2077,19 +2074,19 @@ company:{
         orderId: 'OrderId',
         createdAt: 'Created at',
         updatedAt: 'Updated at',
-        createdAtRange: 'Created at', 
-        datetransaction: "Date transaction"
+        createdAtRange: 'Created at',
+        datetransaction: 'Date transaction',
       },
       enumerators: {
-        status :{
-          pending :"Pending", 
-          success:"Success",
-          canceled :"Canceled"
+        status: {
+          pending: 'Pending',
+          success: 'Success',
+          canceled: 'Canceled',
         },
-        type:{
-          withdraw:"withdraw",
-          deposit:"deposit"
-        }
+        type: {
+          withdraw: 'withdraw',
+          deposit: 'deposit',
+        },
       },
       placeholders: {},
       hints: {},
@@ -2617,6 +2614,10 @@ company:{
       label: 'Member',
       description: 'Member role access',
     },
+    agent: {
+      label: 'Agent',
+      description: 'Agent role access',
+    },
   },
 
   user: {
@@ -2626,11 +2627,11 @@ company:{
       email: 'Email',
       emails: 'Email(s)',
       fullName: 'Name',
-      itemNumber:"itemNumber",
-      product:"Product",
+      itemNumber: 'itemNumber',
+      product: 'Product',
       firstName: 'First Name',
       lastName: 'Last Name',
-      balance: 'Balance', 
+      balance: 'Balance',
       passportNumber: 'Passport Number',
       status: 'Status',
       phoneNumber: 'Phone Number',

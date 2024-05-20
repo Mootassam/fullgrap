@@ -10,20 +10,17 @@ export default (database) => {
 
   const SocialSchema = new Schema(
     {
-      whatsApp: {
+      number: {
         type: String,
         required: true,
       },
-      Telegram: {
-        type: Number,
+
+      type: {
+        type: String,
         required: true,
+        enum: ["whatsApp", "telegram"],
       },
-      Email: {
-        type: String,
-      },
-      Sms: {
-        type: String,
-      },
+
       tenant: {
         type: Schema.Types.ObjectId,
         ref: "tenant",

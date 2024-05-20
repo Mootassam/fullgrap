@@ -10,7 +10,7 @@ const selectPermissionToRead = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.userRead,
+      Permissions.values.categoryRead,
     ),
 );
 
@@ -21,7 +21,7 @@ const selectPermissionToEdit = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.userEdit,
+      Permissions.values.categoryRead,
     ),
 );
 

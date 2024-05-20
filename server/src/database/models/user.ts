@@ -28,10 +28,9 @@ export default (database) => {
    
       },
       trc20: {
-        type: String,
-    
+        type: String,    
       },
-
+      
       balance: {
         type: Number,
         default: 85,

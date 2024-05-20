@@ -6,7 +6,7 @@ import TransactionService from '../../services/transactionService';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatImport,
+      Permissions.values.categoryRead,
     );
 
     await new TransactionService(req).import(

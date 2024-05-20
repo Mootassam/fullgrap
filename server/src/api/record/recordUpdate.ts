@@ -6,7 +6,7 @@ import RecordServices from '../../services/recordServices';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatEdit,
+      Permissions.values.categoryRead,
     );
 
     const payload = await new RecordServices(req).update(

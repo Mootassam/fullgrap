@@ -6,6 +6,12 @@ const permissions = Permissions.values;
 const privateRoutes = [
   {
     path: '/',
+    loader: () => import('src/view/company/company'),
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
+  {
+    path: '/user',
     loader: () => import('src/view/user/list/UserPage'),
     permissionRequired: permissions.userRead,
     exact: true,
@@ -13,34 +19,39 @@ const privateRoutes = [
   {
     path: '/profile',
     loader: () => import('src/view/auth/ProfileFormPage'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
+  {
+    path: '/logo',
+    loader: () => import('src/view/company/Logo'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/company',
     loader: () => import('src/view/company/company'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/faqs',
     loader: () => import('src/view/company/Faqs'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/companydetail',
     loader: () => import('src/view/company/companyDetails'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/tc',
     loader: () => import('src/view/company/Tc'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
-
   {
     path: '/category',
     loader: () =>
@@ -79,13 +90,12 @@ const privateRoutes = [
     exact: true,
   },
 
-  
-  // product routes 
+  // product routes
   {
     path: '/product',
     loader: () =>
       import('src/view/product/list/ProductListPage'),
-    permissionRequired: permissions.couponsRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
@@ -93,7 +103,7 @@ const privateRoutes = [
     path: '/product/new',
     loader: () =>
       import('src/view/product/form/ProductFormPage'),
-    permissionRequired: permissions.categoryCreate,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
@@ -102,14 +112,14 @@ const privateRoutes = [
       import(
         'src/view/product/importer/ProductImporterPage'
       ),
-    permissionRequired: permissions.categoryImport,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/product/:id/edit',
     loader: () =>
       import('src/view/product/form/ProductFormPage'),
-    permissionRequired: permissions.categoryEdit,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
@@ -120,36 +130,33 @@ const privateRoutes = [
     exact: true,
   },
 
-
-  // record routes 
+  // record routes
   {
     path: '/record',
     loader: () =>
       import('src/view/record/list/RecordListPage'),
-    permissionRequired: permissions.couponsRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/record/new',
     loader: () =>
       import('src/view/record/form/RecordFormPage'),
-    permissionRequired: permissions.categoryCreate,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/record/importer',
     loader: () =>
-      import(
-        'src/view/record/importer/RecordImporterPage'
-      ),
-    permissionRequired: permissions.categoryImport,
+      import('src/view/record/importer/RecordImporterPage'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/record/:id/edit',
     loader: () =>
       import('src/view/record/form/RecordFormPage'),
-    permissionRequired: permissions.categoryEdit,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
@@ -160,23 +167,25 @@ const privateRoutes = [
     exact: true,
   },
 
-
-
-// transaction routes 
+  // transaction routes
 
   {
     path: '/transaction',
     loader: () =>
-      import('src/view/transaction/list/TransactionListPage'),
-    permissionRequired: permissions.couponsRead,
+      import(
+        'src/view/transaction/list/TransactionListPage'
+      ),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
   {
     path: '/transaction/new',
     loader: () =>
-      import('src/view/transaction/form/TransactionFormPage'),
-    permissionRequired: permissions.categoryCreate,
+      import(
+        'src/view/transaction/form/TransactionFormPage'
+      ),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
@@ -185,88 +194,77 @@ const privateRoutes = [
       import(
         'src/view/transaction/importer/TransactionImporterPage'
       ),
-    permissionRequired: permissions.categoryImport,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/transaction/:id/edit',
     loader: () =>
-      import('src/view/transaction/form/TransactionFormPage'),
-    permissionRequired: permissions.categoryEdit,
+      import(
+        'src/view/transaction/form/TransactionFormPage'
+      ),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/transaction/:id',
     loader: () =>
-      import('src/view/transaction/view/TransactionViewPage'),
+      import(
+        'src/view/transaction/view/TransactionViewPage'
+      ),
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
-
-
-
-
-
-  // vip routes 
+  // vip routes
 
   {
     path: '/vip',
-    loader: () =>
-      import('src/view/vip/list/VipListPage'),
-    permissionRequired: permissions.couponsRead,
+    loader: () => import('src/view/vip/list/VipListPage'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
   {
     path: '/vip/new',
-    loader: () =>
-      import('src/view/vip/form/VipFormPage'),
-    permissionRequired: permissions.categoryCreate,
+    loader: () => import('src/view/vip/form/VipFormPage'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/vip/importer',
     loader: () =>
-      import(
-        'src/view/vip/importer/VipImporterPage'
-      ),
-    permissionRequired: permissions.categoryImport,
+      import('src/view/vip/importer/VipImporterPage'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/vip/:id/edit',
-    loader: () =>
-      import('src/view/vip/form/VipFormPage'),
-    permissionRequired: permissions.categoryEdit,
+    loader: () => import('src/view/vip/form/VipFormPage'),
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/vip/:id',
-    loader: () =>
-      import('src/view/vip/view/VipViewPage'),
+    loader: () => import('src/view/vip/view/VipViewPage'),
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
-
-
-
-//  coupons routes 
-
+  //  coupons routes
 
   {
     path: '/coupons',
     loader: () =>
       import('src/view/coupons/list/CouponsListPage'),
-    permissionRequired: permissions.couponsRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/coupons/new',
     loader: () =>
       import('src/view/coupons/form/CouponsFormPage'),
-    permissionRequired: permissions.couponsCreate,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
@@ -275,27 +273,27 @@ const privateRoutes = [
       import(
         'src/view/coupons/importer/CouponsImporterPage'
       ),
-    permissionRequired: permissions.couponsImport,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/coupons/:id/edit',
     loader: () =>
       import('src/view/coupons/form/CouponsFormPage'),
-    permissionRequired: permissions.couponsEdit,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/coupons/:id',
     loader: () =>
       import('src/view/coupons/view/CouponsViewPage'),
-    permissionRequired: permissions.couponsRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/check',
     loader: () => import('src/view/visa/Check'),
-    permissionRequired: permissions.userRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 
@@ -303,7 +301,7 @@ const privateRoutes = [
     path: '/password-change',
     loader: () =>
       import('src/view/auth/PasswordChangeFormPage'),
-    permissionRequired: null,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 

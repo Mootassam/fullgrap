@@ -6,7 +6,7 @@ import ProductServices from '../../services/productService';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatImport,
+      Permissions.values.categoryRead,
     );
 
     await new ProductServices(req).import(

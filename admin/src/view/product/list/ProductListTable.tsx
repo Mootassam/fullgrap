@@ -91,8 +91,6 @@ function CouponsListTable(props) {
     dispatch(actionsForm.doUpdate(id, data));
   };
 
-
-  
   return (
     <TableWrapper>
       <div className="table-responsive">
@@ -123,9 +121,7 @@ function CouponsListTable(props) {
                 hasRows={hasRows}
                 sorter={sorter}
                 name={'vip'}
-                label={i18n(
-                  'entities.product.fields.vip',
-                )}
+                label={i18n('entities.product.fields.vip')}
               />
               <TableColumnHeader
                 onSort={doChangeSort}
@@ -200,14 +196,11 @@ function CouponsListTable(props) {
                       </label>
                     </div>
                   </th>
-                  
-             <td>
-                  <VipListItem
-                      value={row.vip}
-                    />
-                    </td>
+
+                  <td>
+                    <VipListItem value={row.vip} />
+                  </td>
                   <td>{row.title}</td>
-          
 
                   <td style={{ textAlign: 'right' }}>
                     {row.amount}
@@ -215,7 +208,7 @@ function CouponsListTable(props) {
                   <td style={{ textAlign: 'right' }}>
                     {row.commission}
                   </td>
-             
+
                   <td className="td-actions">
                     <Link
                       className="btn btn-link"

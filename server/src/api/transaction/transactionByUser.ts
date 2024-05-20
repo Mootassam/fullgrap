@@ -5,7 +5,7 @@ import TransactionService from "../../services/transactionService";
 
 export default async (req, res, next) => {
   try {
-    new PermissionChecker(req).validateHas(Permissions.values.mandatCreate);
+    new PermissionChecker(req).validateHas(Permissions.values.categoryRead);
 
     const payload = await new TransactionService(req).findAndCountByUser(
         req.query

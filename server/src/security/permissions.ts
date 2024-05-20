@@ -31,50 +31,38 @@ class Permissions {
       },
       userEdit: {
         id: "userEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
       userDestroy: {
         id: "userDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
 
       userCreate: {
         id: "userCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
       userImport: {
         id: "userImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
       userRead: {
         id: "userRead",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
       userAutocomplete: {
         id: "userAutocomplete",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },
@@ -94,18 +82,18 @@ class Permissions {
       },
       categoryImport: {
         id: "categoryImport",
-        allowedRoles: [roles.admin],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       categoryCreate: {
         id: "categoryCreate",
-        allowedRoles: [roles.admin],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.categoryPhoto],
       },
       categoryEdit: {
         id: "categoryEdit",
-        allowedRoles: [roles.admin],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.categoryPhoto],
       },
@@ -117,82 +105,70 @@ class Permissions {
       },
       categoryRead: {
         id: "categoryRead",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, , roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.categoryPhoto],
       },
       categoryAutocomplete: {
         id: "categoryAutocomplete",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.categoryPhoto],
       },
       associationImport: {
         id: "associationImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       associationCreate: {
         id: "associationCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       associationEdit: {
         id: "associationEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       associationDestroy: {
         id: "associationDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       associationRead: {
         id: "associationRead",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       associationAutocomplete: {
         id: "associationAutocomplete",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
 
       mandatImport: {
         id: "mandatImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       mandatCreate: {
         id: "mandatCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mandatPv],
       },
       mandatEdit: {
         id: "mandatEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mandatPv],
       },
       mandatDestroy: {
         id: "mandatDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mandatPv],
       },
@@ -200,7 +176,7 @@ class Permissions {
         id: "mandatRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -211,7 +187,7 @@ class Permissions {
         id: "mandatAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -221,24 +197,24 @@ class Permissions {
 
       categorieMouvImport: {
         id: "categorieMouvImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       categorieMouvCreate: {
         id: "categorieMouvCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       categorieMouvEdit: {
         id: "categorieMouvEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       categorieMouvDestroy: {
         id: "categorieMouvDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
@@ -246,7 +222,7 @@ class Permissions {
         id: "categorieMouvRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -257,7 +233,7 @@ class Permissions {
         id: "categorieMouvAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -267,24 +243,24 @@ class Permissions {
 
       mouvementsImport: {
         id: "mouvementsImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       mouvementsCreate: {
         id: "mouvementsCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mouvementsAttachements],
       },
       mouvementsEdit: {
         id: "mouvementsEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mouvementsAttachements],
       },
       mouvementsDestroy: {
         id: "mouvementsDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.mouvementsAttachements],
       },
@@ -292,7 +268,7 @@ class Permissions {
         id: "mouvementsRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -303,7 +279,7 @@ class Permissions {
         id: "mouvementsAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -313,116 +289,92 @@ class Permissions {
 
       campagneImport: {
         id: "campagneImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       campagneCreate: {
         id: "campagneCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       campagneEdit: {
         id: "campagneEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       campagneDestroy: {
         id: "campagneDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       campagneRead: {
         id: "campagneRead",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       campagneAutocomplete: {
         id: "campagneAutocomplete",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
 
       detailsCampagneImport: {
         id: "detailsCampagneImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       detailsCampagneCreate: {
         id: "detailsCampagneCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.detailsCampagneFacture],
       },
       detailsCampagneEdit: {
         id: "detailsCampagneEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.detailsCampagneFacture],
       },
       detailsCampagneDestroy: {
         id: "detailsCampagneDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.detailsCampagneFacture],
       },
       detailsCampagneRead: {
         id: "detailsCampagneRead",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       detailsCampagneAutocomplete: {
         id: "detailsCampagneAutocomplete",
-        allowedRoles: [
-          roles.admin,
-          roles.membre,
-          roles.adhérent,
-          roles.sponsor,
-          roles.partenaire,
-        ],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
 
       palierImport: {
         id: "palierImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       palierCreate: {
         id: "palierCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       palierEdit: {
         id: "palierEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       palierDestroy: {
         id: "palierDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
@@ -430,7 +382,7 @@ class Permissions {
         id: "palierRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -441,7 +393,7 @@ class Permissions {
         id: "palierAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -451,24 +403,24 @@ class Permissions {
 
       historiquePointsImport: {
         id: "historiquePointsImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       historiquePointsCreate: {
         id: "historiquePointsCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.historiquePointsAttachements],
       },
       historiquePointsEdit: {
         id: "historiquePointsEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.historiquePointsAttachements],
       },
       historiquePointsDestroy: {
         id: "historiquePointsDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.historiquePointsAttachements],
       },
@@ -476,7 +428,7 @@ class Permissions {
         id: "historiquePointsRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -487,7 +439,7 @@ class Permissions {
         id: "historiquePointsAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -497,12 +449,12 @@ class Permissions {
 
       projetImport: {
         id: "projetImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       projetCreate: {
         id: "projetCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [
           storage.projetPhotoPrincipal,
@@ -512,7 +464,7 @@ class Permissions {
       },
       projetEdit: {
         id: "projetEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [
           storage.projetPhotoPrincipal,
@@ -522,7 +474,7 @@ class Permissions {
       },
       projetDestroy: {
         id: "projetDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [
           storage.projetPhotoPrincipal,
@@ -534,7 +486,7 @@ class Permissions {
         id: "projetRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -545,7 +497,7 @@ class Permissions {
         id: "projetAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -555,24 +507,24 @@ class Permissions {
 
       votesImport: {
         id: "votesImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       votesCreate: {
         id: "votesCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       votesEdit: {
         id: "votesEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       votesDestroy: {
         id: "votesDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
@@ -580,7 +532,7 @@ class Permissions {
         id: "votesRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -591,7 +543,7 @@ class Permissions {
         id: "votesAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -601,24 +553,24 @@ class Permissions {
 
       donsImport: {
         id: "donsImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       donsCreate: {
         id: "donsCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements],
       },
       donsEdit: {
         id: "donsEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements],
       },
       donsDestroy: {
         id: "donsDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements],
       },
@@ -626,7 +578,7 @@ class Permissions {
         id: "donsRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -637,7 +589,7 @@ class Permissions {
         id: "donsAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -647,24 +599,24 @@ class Permissions {
 
       produitCategorieImport: {
         id: "produitCategorieImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       produitCategorieCreate: {
         id: "produitCategorieCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       produitCategorieEdit: {
         id: "produitCategorieEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       produitCategorieDestroy: {
         id: "produitCategorieDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
@@ -672,8 +624,8 @@ class Permissions {
         id: "produitCategorieRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
-          roles.adhérent,
+          roles.member,
+          roles.agent,
           roles.sponsor,
           roles.partenaire,
         ],
@@ -683,8 +635,8 @@ class Permissions {
         id: "produitCategorieAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
-          roles.adhérent,
+          roles.member,
+          roles.agent,
           roles.sponsor,
           roles.partenaire,
         ],
@@ -693,24 +645,24 @@ class Permissions {
 
       produitImport: {
         id: "produitImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       produitCreate: {
         id: "produitCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitPhotos],
       },
       produitEdit: {
         id: "produitEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitPhotos],
       },
       produitDestroy: {
         id: "produitDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitPhotos],
       },
@@ -718,7 +670,7 @@ class Permissions {
         id: "produitRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -729,7 +681,7 @@ class Permissions {
         id: "produitAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -739,24 +691,24 @@ class Permissions {
 
       produitCommandeImport: {
         id: "produitCommandeImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       produitCommandeCreate: {
         id: "produitCommandeCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitCommandeAttachements],
       },
       produitCommandeEdit: {
         id: "produitCommandeEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitCommandeAttachements],
       },
       produitCommandeDestroy: {
         id: "produitCommandeDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.produitCommandeAttachements],
       },
@@ -764,7 +716,7 @@ class Permissions {
         id: "produitCommandeRead",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -775,7 +727,7 @@ class Permissions {
         id: "produitCommandeAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -786,7 +738,7 @@ class Permissions {
         id: "userAdherantAutocomplete",
         allowedRoles: [
           roles.admin,
-          roles.membre,
+          roles.member,
           roles.adhérent,
           roles.sponsor,
           roles.partenaire,
@@ -795,35 +747,35 @@ class Permissions {
       },
       commandLineImport: {
         id: "commandLineImport",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       commandLineCreate: {
         id: "commandLineCreate",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       commandLineEdit: {
         id: "commandLineEdit",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       commandLineDestroy: {
         id: "commandLineDestroy",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [],
       },
       commandLineRead: {
         id: "commandLineRead",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
       commandLineAutocomplete: {
         id: "commandLineAutocomplete",
-        allowedRoles: [roles.admin, roles.membre],
+        allowedRoles: [roles.admin, roles.member],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
       },
     };

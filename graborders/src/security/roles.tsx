@@ -4,7 +4,7 @@ class Roles {
   static get values() {
     return {
       admin: 'admin',
-      adherent: 'adherent',
+      agent: 'agent',
       member: 'member',
     };
   }

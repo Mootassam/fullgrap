@@ -6,7 +6,7 @@ import RecordServices from '../../services/recordServices';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.mandatImport,
+      Permissions.values.categoryRead,
     );
 
     await new RecordServices(req).import(

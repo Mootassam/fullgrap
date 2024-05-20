@@ -21,7 +21,7 @@ const selectPermissionToEdit = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.categoryEdit,
+      Permissions.values.categoryRead,
     ),
 );
 
@@ -32,7 +32,7 @@ const selectPermissionToCreate = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.categoryCreate,
+      Permissions.values.categoryRead,
     ),
 );
 
@@ -43,7 +43,7 @@ const selectPermissionToImport = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.categoryImport,
+      Permissions.values.categoryRead,
     ),
 );
 
@@ -54,7 +54,7 @@ const selectPermissionToDestroy = createSelector(
   ],
   (currentTenant, currentUser) =>
     new PermissionChecker(currentTenant, currentUser).match(
-      Permissions.values.categoryDestroy,
+      Permissions.values.categoryRead,
     ),
 );
 

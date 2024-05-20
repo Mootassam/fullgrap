@@ -1,8 +1,6 @@
 const categoryEnumerators = {
-  status: [
-    'enable',
-    'disable',
-  ],
+  status: ['enable', 'disable'],
+  type: ['whatsApp', 'telegram'],
 };
 
 export default categoryEnumerators;

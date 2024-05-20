@@ -6,7 +6,7 @@ import CompanyService from '../../services/companyService';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.categoryEdit,
+      Permissions.values.categoryRead,
     );
 
     const payload = await new CompanyService(req).update(

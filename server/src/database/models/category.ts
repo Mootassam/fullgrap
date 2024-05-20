@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import FileSchema from './schemas/fileSchema';
+import mongoose from "mongoose";
+import FileSchema from "./schemas/fileSchema";
 const Schema = mongoose.Schema;
 
 export default (database) => {
   try {
-    return database.model('category');
+    return database.model("category");
   } catch (error) {
     // continue, because model doesnt exist
   }
@@ -29,9 +29,15 @@ export default (database) => {
       },
       status: {
         type: String,
-        enum: ['enable', 'disable'],
-        default: 'enable',
+        enum: ["enable", "disable"],
+        default: "enable",
       },
+      type: {
+        type: String,
+        required: true,
+        enum: ["whatsApp", "telegram"],
+      },
+
       isFeature: {
         type: Boolean,
         default: false,
@@ -41,20 +47,20 @@ export default (database) => {
       },
       tenant: {
         type: Schema.Types.ObjectId,
-        ref: 'tenant',
+        ref: "tenant",
         required: true,
       },
       createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: "user",
       },
       updatedBy: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: "user",
       },
       importHash: { type: String },
     },
-    { timestamps: true },
+    { timestamps: true }
   );
 
   CategorySchema.index(
@@ -62,23 +68,23 @@ export default (database) => {
     {
       unique: true,
       partialFilterExpression: {
-        importHash: { $type: 'string' },
+        importHash: { $type: "string" },
       },
-    },
+    }
   );
 
-  CategorySchema.virtual('id').get(function () {
+  CategorySchema.virtual("id").get(function () {
     // @ts-ignore
     return this._id.toHexString();
   });
 
-  CategorySchema.set('toJSON', {
+  CategorySchema.set("toJSON", {
     getters: true,
   });
 
-  CategorySchema.set('toObject', {
+  CategorySchema.set("toObject", {
     getters: true,
   });
 
-  return database.model('category', CategorySchema);
+  return database.model("category", CategorySchema);
 };

@@ -54,7 +54,6 @@ function CouponsListTable(props) {
     setRecordIdToDestroy(null);
   };
 
-  
   const doChangeSort = (field) => {
     const order =
       sorter.field === field && sorter.order === 'ascend'
@@ -120,9 +119,7 @@ function CouponsListTable(props) {
                 hasRows={hasRows}
                 sorter={sorter}
                 name={'title'}
-                label={i18n(
-                  'entities.vip.fields.title',
-                )}
+                label={i18n('entities.vip.fields.title')}
               />
               <TableColumnHeader
                 onSort={doChangeSort}
@@ -154,7 +151,6 @@ function CouponsListTable(props) {
                 align="right"
               />
 
-         
               <TableColumnHeader className="th-actions" />
             </tr>
           </thead>
@@ -200,16 +196,19 @@ function CouponsListTable(props) {
                     </div>
                   </th>
                   <td>{row.title}</td>
-                  
+
                   <td style={{ textAlign: 'left' }}>
                     {row.dailyorder}
                   </td>
-                  <td style={{ textAlign: 'right' }}> {row.comisionrate}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {' '}
+                    {row.comisionrate}
+                  </td>
 
                   <td style={{ textAlign: 'right' }}>
                     {row.levellimit}
                   </td>
-                 
+
                   <td className="td-actions">
                     <Link
                       className="btn btn-link"

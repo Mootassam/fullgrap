@@ -11,7 +11,7 @@ export default (database) => {
 
   const CompanySchema = new Schema(
     {
-      title: {
+      name: {
         type: String,
       },
       companydetails: {

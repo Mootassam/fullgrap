@@ -10,8 +10,6 @@ import MenuWrapper from 'src/view/layout/styles/MenuWrapper';
 import menus from 'src/view/menus';
 import selectors from 'src/modules/auth/authSelectors';
 
-import Accordion from 'react-bootstrap/Accordion';
-
 function Menu(props) {
   const dispatch = useDispatch();
 
@@ -98,12 +96,10 @@ function Menu(props) {
                 key={index + 'item'}
                 className={menu.className}
               >
-                
-                  <Link to={menu.path} key={index}>
-                    <i className={`${menu.icon}`}></i>
-                    <span>{menu.label}</span>
-                  </Link>
-                
+                <Link to={menu.path} key={index}>
+                  <i className={`${menu.icon}`}></i>
+                  <span>{menu.label}</span>
+                </Link>
               </li>
             ))}
 

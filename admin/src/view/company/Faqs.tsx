@@ -44,7 +44,7 @@ dispatch(listactions.doFetch())
 }
 
 React.useEffect(()=>{ 
-  doFetch()
+
 
 
 },[editorState])
@@ -57,6 +57,7 @@ useEffect(() => {
 }, [record]);
 
 useEffect(() => {
+  doFetch()
   // Set the editorState with the content from the record
   const contentState = ContentState.createFromText(recordContent);
   const newEditorState = EditorState.createWithContent(contentState);

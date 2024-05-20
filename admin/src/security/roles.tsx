@@ -5,6 +5,7 @@ class Roles {
     return {
       admin: 'admin',
       member: 'member',
+      agent: 'agent',
     };
   }
 

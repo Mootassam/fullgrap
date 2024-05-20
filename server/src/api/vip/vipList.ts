@@ -5,7 +5,7 @@ import VipServices from "../../services/vipServices";
 
 export default async (req, res, next) => {
   try {
-    new PermissionChecker(req).validateHas(Permissions.values.mandatRead);
+    // new PermissionChecker(req).validateHas(Permissions.values.categoryRead);  
     const payload = await new VipServices(req).findAndCountAll(req.query);
     await ApiResponseHandler.success(req, res, payload);
   } catch (error) {
