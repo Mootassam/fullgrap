@@ -67,18 +67,15 @@ function Withdraw() {
                   className="input__withdraw"
                 />
                 <div className="number__click">
-                  <div className="withdraw__">
-                    <div> 30 </div>
-                    <div>50</div>
-                    <div>100</div>
-                    <div>300</div>
-                  </div>
-                  <div className="withdraw__">
-                    <div>500</div>
-                    <div>1000</div>
-                    <div>3000</div>
-                    <div>5000</div>
-                  </div>
+                  <h3 className="hall" style={{ paddingTop: 0 }}>
+                    Withdraw Password:
+                  </h3>
+                  <InputFormItem
+                    type="text"
+                    name="amount"
+                    placeholder={i18n("user.fields.withdrawPassword")}
+                    className="input__withdraw"
+                  />
                 </div>
                 <button className="confirm" type="submit">
                   Confirm

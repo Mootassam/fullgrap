@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import SubHeader from "src/view/shared/Header/SubHeader";
 import yupFormSchemas from "src/modules/shared/yup/yupFormSchemas";
 import * as yup from "yup";
-import { i18n } from "../../../i18n";import { FormProvider, useForm } from "react-hook-form";
+import { i18n } from "../../../i18n";
+import { FormProvider, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import actions from "src/modules/auth/authActions";
 import InputFormItem from "src/shared/form/InputFormItem";
-import selector from 'src/modules/auth/authSelectors'
+import selector from "src/modules/auth/authSelectors";
 const schema = yup.object().shape({
   trc20: yupFormSchemas.string(i18n("user.fields.trc20"), {
     required: true,
@@ -18,14 +19,13 @@ const schema = yup.object().shape({
 });
 function Wallet() {
   const dispatch = useDispatch();
-  const currentUser = useSelector(selector.selectCurrentUser)
+  const currentUser = useSelector(selector.selectCurrentUser);
 
   const [initialValues] = useState(() => {
-
     return {
-    trc20: "" ||currentUser.trc20,
-    erc20: "" ||currentUser.erc20,
-  }
+      trc20: "" || currentUser.trc20,
+      erc20: "" || currentUser.erc20,
+    };
   });
   const form = useForm({
     resolver: yupResolver(schema),
@@ -33,7 +33,6 @@ function Wallet() {
     defaultValues: initialValues,
   });
   const onSubmit = ({ erc20, trc20 }) => {
-  
     const values = {
       erc20: erc20,
       trc20: trc20,
@@ -50,6 +49,35 @@ function Wallet() {
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="wallet__form">
                 <div className="form__">
+                  <div className="form__group">
+                    <div className="label__form">
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ fontSize: "13px" }}>Username</span>
+                    </div>
+                    <div className="input__div">
+                      <InputFormItem
+                        type="text"
+                        name="erc20"
+                        placeholder={i18n("user.fields.username")}
+                        className="input__"
+                      />
+                    </div>
+                  </div>
+                  <div className="form__group">
+                    <div className="label__form">
+                      <span style={{ color: "red" }}>*</span>
+                      <span style={{ fontSize: "13px" }}>Wallet Name</span>
+                    </div>
+                    <div className="input__div">
+                      <InputFormItem
+                        type="text"
+                        name="erc20"
+                        placeholder={i18n("user.fields.walletName")}
+                        className="input__"
+                      />
+                    </div>
+                  </div>
+
                   <div className="form__group">
                     <div className="label__form">
                       <span style={{ color: "red" }}>*</span>
@@ -80,7 +108,11 @@ function Wallet() {
                   </div>
                 </div>
 
-                <button className="button__submit" type="submit" disabled={Boolean(currentUser.erc20 && currentUser.trc20)}>
+                <button
+                  className="confirm"
+                  type="submit"
+                  disabled={Boolean(currentUser.erc20 && currentUser.trc20)}
+                >
                   Submit
                 </button>
                 <span style={{ fontSize: 13 }}>

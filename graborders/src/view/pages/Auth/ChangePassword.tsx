@@ -103,7 +103,7 @@ function ChangePassword() {
                   </div>
                 </div>
 
-                <button className="button__submit" 
+                <button className="confirm" 
                      disabled={saveLoading}
               type="button"
               onClick={form.handleSubmit(onSubmit)}> <ButtonIcon
