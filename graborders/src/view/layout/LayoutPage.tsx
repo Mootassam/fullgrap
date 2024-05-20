@@ -4,7 +4,7 @@ import TabBottomNavigator from "./TabBottomNavigator";
 import "./styles/style.css";
 function LayoutPage(props) {
   return (
-    <div>
+    <div className="">
       {/* <Header /> */}
       <div className="children__content">{props.children}</div>
       <TabBottomNavigator />

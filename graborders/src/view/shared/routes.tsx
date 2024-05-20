@@ -1,4 +1,4 @@
-import Permissions from 'src/security/permissions';
+import Permissions from "src/security/permissions";
 const permissions = Permissions.values;
 
 const privateRoutes = [
@@ -63,6 +63,12 @@ const screenRoutes = [
   },
 
   {
+    path: "/Certificate",
+    loader: () => import("src/view/pages/Certificate/Certificate"),
+    exact: true,
+  },
+
+  {
     path: "/tasks",
     loader: () => import("src/view/pages/Tasks/Tasks"),
     exact: true,
@@ -72,7 +78,6 @@ const screenRoutes = [
     loader: () => import("src/view/pages/Team/Team"),
     exact: true,
   },
-
   {
     path: "/withdraw",
     loader: () => import("src/view/pages/withdraw/Withdraw"),
@@ -106,7 +111,7 @@ const publicRoutes = [
 ];
 const simpleRoutes = [
   {
-    path: "/403", 
+    path: "/403",
     loader: () => import("src/view/shared/errors/Error403Page"),
   },
   {
@@ -121,9 +126,8 @@ const simpleRoutes = [
 
 const emptyPermissionsRoutes = [
   {
-    path: '/auth/empty-permissions',
-    loader: () =>
-      import('src/view/pages/Auth/EmptyPermissionsPage'),
+    path: "/auth/empty-permissions",
+    loader: () => import("src/view/pages/Auth/EmptyPermissionsPage"),
   },
 ].filter(Boolean);
 export default {
@@ -132,5 +136,4 @@ export default {
   simpleRoutes,
   screenRoutes,
   emptyPermissionsRoutes,
-  
 };

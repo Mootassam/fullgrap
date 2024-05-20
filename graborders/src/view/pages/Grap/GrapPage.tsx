@@ -70,23 +70,11 @@ const Grappage = () => {
       if (error) {
         return;
       }
-      const audio = new Audio(sound);
-      audio.play();
-
-      const reelsList = document.querySelectorAll(".slots > .reel");
-      await Promise.all(Array.from(reelsList).map((reel, i) => roll(reel, i)));
-
-      const slots = document.querySelector(".borders");
-      if (slots) {
-        slots.classList.add("win1");
-        await dispatch(actions.doFetch());
-        setTimeout(() => {
-          setShowModal(true);
-        }, 2000);
-      }
+      await dispatch(actions.doFetch());
       setTimeout(() => {
-        if (slots) slots.classList.remove("win1");
+        setShowModal(true);
       }, 2000);
+
       setLoadingRoll(false);
     } catch (error) {
       console.log(error);
@@ -153,11 +141,30 @@ const Grappage = () => {
             </div>
           </div>
 
-          <div className="borders">
-            <div className="slots">
-              <div className="reel"></div>
-              <div className="reel"></div>
-              <div className="reel"></div>
+          <div className="grap__products">
+            <div className="list__ofproduct">
+              <div className=""></div>
+              <div className=""></div>
+              <div className=""></div>
+            </div>
+            <div className="list__ofproduct">
+              <div className=""></div>
+              <div className="">
+                {" "}
+                <button
+                  className={`grap ${lodingRoll ? "__disabled" : ""}`}
+                  onClick={() => rollAll()}
+                  disabled={lodingRoll}
+                >
+                  Automatic grab
+                </button>
+              </div>
+              <div className=""></div>
+            </div>
+            <div className="list__ofproduct">
+              <div className=""></div>
+              <div className=""></div>
+              <div className=""></div>
             </div>
           </div>
 
@@ -168,18 +175,7 @@ const Grappage = () => {
           </div>
         </div>
 
-        <div className="button__grap">
-          <button className="button__upgrade" onClick={() => goto("/online")}>
-            Deposit Upgrade
-          </button>
-          <button
-            className={`grap ${lodingRoll ? "__disabled" : ""}`}
-            onClick={() => rollAll()}
-            disabled={lodingRoll}
-          >
-            Automatic grab
-          </button>
-        </div>
+        <div className="button__grap"></div>
 
         <div className="order__comission">
           <div className="today__achievements">

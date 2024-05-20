@@ -18,7 +18,6 @@ function Market() {
 
   const currentUser = useSelector(authSelectors.selectCurrentUser);
 
-
   const searchAllCoins = async () => {};
   interface DataItem {
     image: string;
@@ -30,41 +29,45 @@ function Market() {
   }
   const [selectedItem, setItems] = useState<DataItem | null>(null);
 
-  const currentDate = () =>{ 
-    const dubaiTimezone = 'Asia/Dubai';
+  const currentDate = () => {
+    const dubaiTimezone = "Asia/Dubai";
     const options = { timeZone: dubaiTimezone };
-    const currentDateTime = new Date().toLocaleString('en-US', options);
+    const currentDateTime = new Date().toLocaleString("en-US", options);
     return currentDateTime;
-  }
+  };
 
   useEffect(() => {
     searchAllCoins();
     dispatch(Vipactions.doFetch());
     currentDate();
-    
+
     // eslint-disable-next-line
   }, [dispatch]);
 
   const hideModal = () => {
-    setShowModal(false)
+    setShowModal(false);
   };
 
   const showModal = (item) => {
     setItems(item);
-    setShowModal(true)
+    setShowModal(true);
   };
-
 
   const button__action = [
     {
       icon: "fa-regular fa-building",
-      text: "Company",
+      text: "About",
       link: "/company",
     },
     {
       icon: "fa-solid fa-file-contract",
       text: "T&C",
       link: "/tc",
+    },
+    {
+      icon: "fa fa-certificate",
+      text: "Certificate",
+      link: "/Certificate",
     },
     {
       icon: "fa-solid fa-question",
@@ -79,13 +82,12 @@ function Market() {
   ];
 
   const submit = (item) => {
-
-  const balances =  parseFloat(currentUser?.balance)  - parseFloat(item.levellimit); 
+    const balances =
+      parseFloat(currentUser?.balance) - parseFloat(item.levellimit);
 
     const data = {
-      vip :item, 
-      balance : balances
-    
+      vip: item,
+      balance: balances,
     };
 
     dispatch(actions.doUpdateProfile(data));
@@ -102,20 +104,9 @@ function Market() {
   };
 
   const [currentImage, setCurrentImage] = useState(0);
-  const images = [
-    '/images/home/1.png',
-    '/images/home/2.png',
-    '/images/home/3.png',
-    '/images/home/4.jpeg'
-  ];
+  const images = ["/images/home/2.png"];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage(current => (current + 1) % images.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
+  useEffect(() => {});
 
   return (
     <div
@@ -126,33 +117,34 @@ function Market() {
     >
       <div className="market__header"></div>
 
-      <div className="advertise__header" >
-      {images.map((image, index) => (
-        <div key={index} style={{ display: index === currentImage ? 'block' : 'none' }}>
-          <img src={image} alt={`Image ${index + 1}`} className="image" />
-        </div>
-      ))}
-      
-    
+      <div className="advertise__header">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            style={{ display: index === currentImage ? "block" : "none" }}
+          >
+            <img src={image} alt={`Image ${index + 1}`} className="image" />
+          </div>
+        ))}
       </div>
       <div className="home__section">
         <div className="advertise__speaker">
           <div>
             <i className="fa-solid fa-volume-off speaker"></i>
           </div>
-          <NewsTicker text="****na agent reached 3000 direct active 3211321 ****na agent reached 3000 direct active 321132" />
+          <NewsTicker
+            text="Dear users, welcome to join us. The daily working hours are from 10:00 am to 23:00 pm Eastern. If you keep working for 2 days, you will be paid 200$. If you keep working for 4 days, you can get 500$. If you keep working for 10 days, you will be paid 1,000 USD. If you stay on the job for 20 days, you will be paid $2,500. If you stay on the job for 30 days, you will be paid $3,500.
+"
+          />
         </div>
 
         <div className="advertise__buttons">
-
-        <Link
+          <Link
             to="/online"
             className="button__deposit"
             style={{ textDecoration: "none" }}
           >
-
-            
-          <div >Deposit</div>
+            <div>Deposit</div>
           </Link>
           <Link
             to="/withdraw"
@@ -190,9 +182,17 @@ function Market() {
                     onClick={() => showModal(item)}
                     key={index}
                   >
-                   {currentUser?.vip?.id === item.id ? <div className="success__vip"></div> : <div className="subscribe__"></div>} 
+                    {currentUser?.vip?.id === item.id ? (
+                      <div className="success__vip"></div>
+                    ) : (
+                      <div className="subscribe__"></div>
+                    )}
                     <div className="vip__image">
-                      <img src={item?.photo[0]?.downloadUrl} alt="Vip__image" className="vip__level" />
+                      <img
+                        src={item?.photo[0]?.downloadUrl}
+                        alt="Vip__image"
+                        className="vip__level"
+                      />
                     </div>
                     <div className="vip__text">
                       <div className="vip__title">{item.title}</div>
@@ -227,10 +227,7 @@ function Market() {
             )}
           </div>
 
-          <div className="content__footer">
-
-        
-          </div>
+          <div className="content__footer"></div>
         </div>
       </div>
       {selectedItem && Modal && (

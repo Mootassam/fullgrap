@@ -1,12 +1,12 @@
-import React,{useEffect} from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import "../styles/styles.css";
 import { Link } from "react-router-dom";
-import authActions from 'src/modules/auth/authActions';
-import authSelectors from 'src/modules/auth/authSelectors';
+import authActions from "src/modules/auth/authActions";
+import authSelectors from "src/modules/auth/authSelectors";
 import Amount from "src/shared/Amount";
-import { useHistory } from 'react-router-dom'; // Assuming you're using React Router
+import { useHistory } from "react-router-dom"; // Assuming you're using React Router
 
 function Profile() {
   const dispatch = useDispatch();
@@ -15,10 +15,10 @@ function Profile() {
   };
   const history = useHistory();
 
-  const goto =(param) => {
-    history.push(param)
-  }
-  const currentUser= useSelector(authSelectors.selectCurrentUser);
+  const goto = (param) => {
+    history.push(param);
+  };
+  const currentUser = useSelector(authSelectors.selectCurrentUser);
   const data = [
     {
       icon: "fa-solid fa-clock-rotate-left",
@@ -40,12 +40,9 @@ function Profile() {
     { icon: "fa-solid fa-lock", name: "Security", url: "/security" },
   ];
 
-
-
-
   return (
     <div className="app__profile">
-      <div className="profile__arc">
+      {/* <div className="profile__arc">
 
 
         <div className="arc__header">
@@ -101,6 +98,152 @@ function Profile() {
             </div>
           </Link>
         ))}
+      </div> */}
+
+      <div className="profiles__header">
+        <div className="header__background"></div>
+        <div className="carde__profile">
+          <div className="cadre__top">
+            <div className="cadre__left">
+              <div>
+                <img src="/images/user.png" alt="" style={{ height: 70 }} />
+              </div>
+              <div className="left__details">
+                <div className="user__title">{currentUser?.fullName}</div>
+                <div className="small__invitation">
+                  {" "}
+                  InvitationCode : LDEKZS
+                </div>
+              </div>
+            </div>
+            <div className="cadre__right"></div>
+          </div>
+          <div className="cadre__ligne"></div>
+          <div className="cadre__bottom">
+            <div className="firt__cadre">
+              <span className="title__cadre">Wallet Amount</span>
+              <span className="amount__cadre">
+                {currentUser?.balance.toFixed(2)} USDT{" "}
+              </span>
+            </div>
+            <div className="second__cadre"></div>
+            <div className="">
+              <span className="title__cadre">Today Profit </span>
+              <span className="amount__cadre">2885.95 USDT </span>
+            </div>
+            <div className="second__cadre"></div>
+            <div>
+              <span className="title__cadre">Total Profit </span>
+              <span className="amount__cadre">2885.95 USDT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="profile__content">
+        <div>
+          <label htmlFor="" className="titre">
+            My Financial
+          </label>
+          <div className="detail__section">
+            <div
+              className="line__section border__"
+              onClick={() => goto("/online")}
+            >
+              <div className="titre__section">
+                <i className="fa-solid fa-paper-plane" />
+                <span>Deposit</span>
+              </div>
+              <div>
+                <i className="fa fa-arrow-right " />
+              </div>
+            </div>
+            <div className="line__section" onClick={() => goto("/withdraw")}>
+              <div className="titre__section">
+                <i className="fa-solid fa-money-check" />
+                <span>Withdraw</span>
+              </div>
+              <div>
+                <i className="fa fa-arrow-right " />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="" className="titre">
+            My Details
+          </label>
+          <div className="detail__section">
+            <Link to="/myprofile" className="remove__ligne">
+              <div className="line__section border__">
+                <div className="titre__section">
+                  <i className="fa-solid fa-user profile__icon"></i>
+                  <span>Profile</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+            <Link to="/wallet" className="remove__ligne">
+              <div className="line__section">
+                <div className="titre__section">
+                  <i className="fa-solid fa-wallet profile__icon"></i>
+                  <span>Wallet</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="" className="titre">
+            Other
+          </label>
+          <div className="detail__section">
+            <Link to="/transacation" className="remove__ligne">
+              <div className="line__section border__">
+                <div className="titre__section">
+                  <i className="fa-solid fa-arrow-right-arrow-left profile__icon"></i>
+                  <span>Transaction</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+            <Link to="/order" className="remove__ligne">
+              <div className="line__section border__">
+                <div className="titre__section">
+                  <i className="fa-solid fa-clock-rotate-left profile__icon"></i>
+                  <span>Tasks History</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+            <Link to="/security" className="remove__ligne">
+              <div className="line__section">
+                <div className="titre__section">
+                  <i className="fa-solid fa-lock profile__icon"></i>
+                  <span>Security</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+      <div className="logout__button" onClick={() => doSignout()}>
+        {" "}
+        Logout
       </div>
     </div>
   );
