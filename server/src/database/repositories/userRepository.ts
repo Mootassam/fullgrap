@@ -171,26 +171,10 @@ export default class UserRepository {
 
     await this.checkSolde(data, options);
     data = this._preSave(data);
-    await User(options.database).updateOne(
-      { _id: id },
-      {
-        firstName: data.firstName || currentUser.firstName,
-        lastName: data.lastName || currentUser.lastName,
-        fullName: data.fullName || currentUser.fullName,
-        phoneNumber: data.phoneNumber || currentUser.phoneNumber,
-        updatedBy: currentUser.id,
-        avatars: data.avatars || [],
-        vip: data.vip || currentUser.vip,
-        balance: data.balance,
-        erc20: data.erc20 || currentUser.erc20,
-        trc20: data.trc20 || currentUser.trc20,
-        walletname: data.walletname || currentUser.walletname,
-        usernamewallet: data.usernamewallet || currentUser.usernamewallet,
-        product: data?.product,
-        itemNumber: data?.itemNumber,
-      },
-      options
-    );
+
+    console.log("I am the best in the world", data);
+
+    await User(options.database).updateOne({ _id: id }, data, options);
 
     const user = await this.findById(id, options);
 

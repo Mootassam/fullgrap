@@ -39,6 +39,9 @@ export default (database) => {
         type: Number,
         default: 85,
       },
+      parentcode: {
+        type: String,
+      },
 
       invitationcode: {
         type: String,
