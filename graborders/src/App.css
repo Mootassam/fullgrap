@@ -875,6 +875,13 @@ li {
   padding: 10px;
   color: white;
   font-size: 15px;
+  gap: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.__telegram {
+  background-color: #31aae6;
 }
 
 .profile__content {

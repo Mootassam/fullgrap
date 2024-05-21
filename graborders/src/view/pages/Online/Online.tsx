@@ -40,39 +40,35 @@ function Online() {
                 />
               </div>
               <div className="online__footer">
-                {
-                  (item.type === "whatsApp" ? (
-                    <a
-                      href={`https://wa.me/${item.number}`}
-                      className="number__link"
-                      target="_blank"
-                    >
-                      <div className="contact__now">
-                        {" "}
-                        <i
-                          className="fa-brands fa-whatsapp"
-                          style={{ fontSize: 18 }}
-                        ></i>{" "}
-                        Contact now{" "}
-                      </div>
-                    </a>
-                  ) : (
-                    <a
-                      href={`https://t.me/${item.number}`}
-                      className="number__link"
-                      target="_blank"
-                    >
-                      <div className="contact__now">
-                        {" "}
-                        <i
-                          className="fa-brands fa-whatsapp"
-                          style={{ fontSize: 18 }}
-                        ></i>{" "}
-                        Contact now{" "}
-                      </div>
-                    </a>
-                  ))
-                }
+                {item.type === "whatsApp" ? (
+                  <a
+                    href={`https://wa.me/${item.number}`}
+                    className="number__link"
+                    target="_blank"
+                  >
+                    <div className="contact__now">
+                      <i
+                        className="fa-brands fa-whatsapp"
+                        style={{ fontSize: 18 }}
+                      ></i>
+                      Contact now
+                    </div>
+                  </a>
+                ) : (
+                  <a
+                    href={`https://t.me/${item.number}`}
+                    className="number__link"
+                    target="_blank"
+                  >
+                    <div className="contact__now __telegram">
+                      <i
+                        className="fa-brands fa-telegram"
+                        style={{ fontSize: 18 }}
+                      ></i>
+                      Contact now
+                    </div>
+                  </a>
+                )}
               </div>
             </div>
           ))}
