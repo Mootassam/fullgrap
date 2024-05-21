@@ -123,7 +123,7 @@ function Profile() {
             <div className="firt__cadre">
               <span className="title__cadre">Wallet Amount</span>
               <span className="amount__cadre">
-                {currentUser?.balance.toFixed(2)} USDT{" "}
+                {currentUser?.balance?.toFixed(2) || 0.0} USDT
               </span>
             </div>
             <div className="second__cadre"></div>

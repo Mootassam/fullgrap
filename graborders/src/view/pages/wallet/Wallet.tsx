@@ -25,6 +25,8 @@ function Wallet() {
     return {
       trc20: "" || currentUser.trc20,
       erc20: "" || currentUser.erc20,
+      walletname: "" || currentUser.walletname,
+      usernamewallet: "" || currentUser.usernamewallet,
     };
   });
   const form = useForm({
@@ -32,10 +34,12 @@ function Wallet() {
     mode: "onSubmit",
     defaultValues: initialValues,
   });
-  const onSubmit = ({ erc20, trc20 }) => {
+  const onSubmit = ({ erc20, trc20, walletname, usernamewallet }) => {
     const values = {
       erc20: erc20,
       trc20: trc20,
+      walletname: walletname,
+      usernamewallet: usernamewallet,
     };
     dispatch(actions.doUpdateProfile(values));
   };
@@ -57,7 +61,7 @@ function Wallet() {
                     <div className="input__div">
                       <InputFormItem
                         type="text"
-                        name="erc20"
+                        name="usernamewallet"
                         placeholder={i18n("user.fields.username")}
                         className="input__"
                       />
@@ -71,7 +75,7 @@ function Wallet() {
                     <div className="input__div">
                       <InputFormItem
                         type="text"
-                        name="erc20"
+                        name="walletname"
                         placeholder={i18n("user.fields.walletName")}
                         className="input__"
                       />

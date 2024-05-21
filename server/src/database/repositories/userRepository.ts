@@ -169,7 +169,6 @@ export default class UserRepository {
   static async updateProfile(id, data, options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
 
-
     await this.checkSolde(data, options);
     data = this._preSave(data);
     await User(options.database).updateOne(
@@ -185,8 +184,10 @@ export default class UserRepository {
         balance: data.balance,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
+        walletname: data.walletname || currentUser.walletname,
+        usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product,
-        itemNumber: data?.itemNumber
+        itemNumber: data?.itemNumber,
       },
       options
     );
@@ -224,6 +225,8 @@ export default class UserRepository {
         balance: data.balance,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
+        walletname: data.walletname || currentUser.walletname,
+        usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product || currentUser?.product,
       },
       options
@@ -262,6 +265,8 @@ export default class UserRepository {
         balance: data.balances,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
+        walletname: data.walletname || currentUser.walletname,
+        usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product,
       },
       options

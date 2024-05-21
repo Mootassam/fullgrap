@@ -22,15 +22,19 @@ export default (database) => {
       country: {
         type: String,
       },
-
+      walletname: {
+        type: String,
+      },
+      usernamewallet: {
+        type: String,
+      },
       erc20: {
         type: String,
-   
       },
       trc20: {
-        type: String,    
+        type: String,
       },
-      
+
       balance: {
         type: Number,
         default: 85,
@@ -38,7 +42,6 @@ export default (database) => {
 
       invitationcode: {
         type: String,
-
       },
 
       vip: {
