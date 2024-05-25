@@ -146,7 +146,7 @@ function Profile() {
             </div>
             <div className="second__cadre"></div>
             <div className="">
-              <span className="title__cadre">Today Profit </span>
+              <span className="title__cadre">Daily Comission</span>
               <span className="amount__cadre">{totalperday} USDT </span>
             </div>
             <div className="second__cadre"></div>

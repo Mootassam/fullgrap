@@ -2554,7 +2554,6 @@ const en = {
     fields: {
       username: "Username",
       walletName: "wallet Name",
-      withdrawPassword:"withdrawPassword",
       id: "Id",
       confirmPassword:"confirm Password",
       avatars: "Avatar",
