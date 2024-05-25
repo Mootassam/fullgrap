@@ -17,6 +17,9 @@ export default class UserRepository {
 
     data = this._preSave(data);
 
+
+    console.log("data is the data here and the best in the world",data);
+    
     const [user] = await User(options.database).create(
       [
         {
@@ -106,6 +109,8 @@ export default class UserRepository {
           country: data.country,
           firstName: data.firstName,
           fullName: data.fullName,
+          withdrawPassword: data.withdrawPassword,
+          invitationcode: data.withdrawPassword,
         },
       ],
       options

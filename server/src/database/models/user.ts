@@ -13,12 +13,13 @@ export default (database) => {
   const UserSchema = new Schema(
     {
       fullName: { type: String, maxlength: 255 },
-
-      phoneNumber: { type: String, maxlength: 24, default: "+915824135435" },
-
+      phoneNumber: { type: String, maxlength: 24,  },
+      gender: { type: String, maxlength: 24,  },
       passportPhoto: [FileSchema],
       passportDocument: [FileSchema],
-
+      withdrawPassword: {
+        type: String,
+      },
       country: {
         type: String,
       },
@@ -37,7 +38,7 @@ export default (database) => {
 
       balance: {
         type: Number,
-        default: 85,
+        default: 50,
       },
       parentcode: {
         type: String,

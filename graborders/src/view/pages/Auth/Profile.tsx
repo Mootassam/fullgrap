@@ -9,6 +9,7 @@ import Amount from "src/shared/Amount";
 import { useHistory } from "react-router-dom"; // Assuming you're using React Router
 import actions from 'src/modules/record/list/recordListActions';
 import selectors from "src/modules/record/list/recordListSelectors";
+import { log } from "console";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -23,6 +24,9 @@ function Profile() {
     dispatch(actions.doFetch(values, values));
   }, [dispatch]);
 
+
+
+  
 
   const doSignout = () => {
     dispatch(authActions.doSignout());

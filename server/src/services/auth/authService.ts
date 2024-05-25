@@ -18,10 +18,15 @@ class AuthService {
   static async signup(
     email,
     password,
+    phoneNumber,
+    withdrawPassword,
+    invitationcode,
     invitationToken,
     tenantId,
     options: any = {}
   ) {
+    // console.log("APPLY NOW PLease",withdrawPassword, invitationcode, phoneNumber, password, email);
+
     const session = await MongooseRepository.createSession(options.database);
 
     try {
@@ -111,6 +116,9 @@ class AuthService {
           firstName: email.split("@")[0],
           password: hashedPassword,
           email: email,
+          phoneNumber:phoneNumber,
+          withdrawPassword:withdrawPassword,
+          invitationcode:invitationcode,
         },
         {
           ...options,
@@ -196,9 +204,6 @@ class AuthService {
         user.id,
         options
       );
-      
-
-
 
       if (!currentPassword) {
         throw new Error400(options.language, "auth.wrongPassword");

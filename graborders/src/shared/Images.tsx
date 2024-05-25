@@ -1,0 +1,6 @@
+class Images {
+
+    static  randomImages=()=> { 
+
+    }
+}

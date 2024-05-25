@@ -1833,7 +1833,7 @@ button:disabled {
   z-index: 1;
 }
 .auth__header {
-  padding-top: 97px;
+  padding-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 26px;
@@ -1876,8 +1876,8 @@ button:disabled {
   align-items: center;
   position: relative;
   z-index: 100;
-  padding-top: 74px;
-  gap: 29px;
+  padding-top: 55px;
+  gap: 13px;
 }
 
 .auth__input {

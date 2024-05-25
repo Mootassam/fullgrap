@@ -61,7 +61,7 @@ export default class RecordService {
     const response = await authAxios.get(
       `/tenant/${tenantId}/count/recordperdays`, 
     );
-    return response.data;
+    return response.data.total;
   }
 
 

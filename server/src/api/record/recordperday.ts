@@ -5,7 +5,7 @@ import RecordServices from "../../services/recordServices";
 
 export default async (req, res, next) => {
   try {
-    new PermissionChecker(req).validateHas(Permissions.values.categoryRead);   
+    // new PermissionChecker(req).validateHas(Permissions.values.categoryRead);    
     const payload = await new RecordServices(req).findAndCountPerDay(req.query);
     await ApiResponseHandler.success(req, res, payload);
   } catch (error) {

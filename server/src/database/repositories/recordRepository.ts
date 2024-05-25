@@ -406,8 +406,6 @@ class RecordRepository {
     options: IRepositoryOptions
   ) {
 
-    
-
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     const currentUser = MongooseRepository.getCurrentUser(options);
     let criteriaAnd: any = [];
@@ -417,59 +415,17 @@ class RecordRepository {
       user: currentUser.id,
     });
 
-    if (filter) {
-      filter = JSON.parse(filter);
 
-      if (filter.id) {
-        criteriaAnd.push({
-          ["_id"]: MongooseQueryUtils.uuid(filter.id),
-        });
-      }
-
-      if (filter.user) {
-        criteriaAnd.push({
-          user: filter.user,
-        });
-      }
-      if (filter.product) {
-        criteriaAnd.push({
-          product: filter.product,
-        });
-      }
-
-      if (filter.number) {
-        criteriaAnd.push({
-          number: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.number),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.status) {
-
-        criteriaAnd.push({
-          status: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.status),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.createdAt) {
-        const start = new Date();
-        start.setHours(0, 0, 0, 0); // Set to the start of the current day
-        const end = new Date();
-        end.setHours(23, 59, 59, 999); // Set to the end of the current day
-        criteriaAnd.push({
-          createdAt: {
-            $gte: start,
-            $lte: end,
-          },
-        });
-      }
-    }
-
+    const start = new Date();
+    start.setHours(0, 0, 0, 0); // Set to the start of the current day
+    const end = new Date();
+    end.setHours(23, 59, 59, 999); // Set to the end of the current day
+    criteriaAnd.push({
+      createdAt: {
+        $gte: start,
+        $lte: end,
+      },
+    });
     const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
 
     const skip = Number(offset || 0) || undefined;

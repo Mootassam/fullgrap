@@ -17,12 +17,28 @@ const schema = yup.object().shape({
   password: yupFormSchemas.string(i18n("user.fields.password"), {
     required: true,
   }),
+
+  newPasswordConfirmation: yupFormSchemas
+    .string(i18n("user.fields.newPasswordConfirmation"), {
+      required: true,
+    })
+    .oneOf([yup.ref("password"), null], i18n("auth.passwordChange.mustMatch")),
+  phoneNumber: yupFormSchemas.string(i18n("user.fields.phoneNumber"), {
+    required: true,
+  }),
+  withdrawPassword: yupFormSchemas.string(
+    i18n("user.fields.withdrawPassword"),
+    {
+      required: true,
+    }
+  ),
   invitationcode: yupFormSchemas.string(i18n("user.fields.invitationcode"), {
     required: true,
   }),
-  
+
   rememberMe: yupFormSchemas.boolean(i18n("user.fields.rememberMe")),
 });
+
 function Signup() {
   const dispatch = useDispatch();
 
@@ -31,7 +47,9 @@ function Signup() {
   const [initialValues] = useState({
     email: "",
     password: "",
-    invitationcode:"",
+    phoneNumber: "",
+    withdrawPassword: "",
+    invitationcode: "",
     rememberMe: true,
   });
 
@@ -47,8 +65,20 @@ function Signup() {
 
   const externalErrorMessage = useSelector(selectors.selectErrorMessage);
 
-  const onSubmit = ({ email, password,  invitationcode}) => {
-    dispatch(actions.doRegisterEmailAndPassword(email, password,invitationcode));
+  const onSubmit = ({     email,
+    password,
+    phoneNumber,
+    withdrawPassword,
+    invitationcode, }) => {
+    dispatch(
+      actions.doRegisterEmailAndPassword(
+        email,
+    password,
+    phoneNumber,
+    withdrawPassword,
+    invitationcode,
+      )
+    );
   };
   return (
     <div className="auth__page">
@@ -59,44 +89,61 @@ function Signup() {
       <div className="auth__header header__signup ">
         <h1 className="auth__title"> Create Account</h1>
         <span className="auth__description __v2">
-        Create an account so you can explore all the existing jobs
+          Create an account so you can explore all the existing jobs
         </span>
       </div>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="auth__form">
-   
-              <InputFormItem
-                type="text"
-                name="email"
-                placeholder={i18n("user.fields.email")}
-                className="auth__input"
-                externalErrorMessage={externalErrorMessage}
-              />
-         
+            <InputFormItem
+              type="text"
+              name="email"
+              placeholder={i18n("user.fields.email")}
+              className="auth__input"
+              externalErrorMessage={externalErrorMessage}
+            />
 
-              <InputFormItem
-                type="text"
-                name="password"
-                placeholder={i18n("user.fields.password")}
-                className="auth__input"
-              />
+            <InputFormItem
+              type="text"
+              name="phoneNumber"
+              placeholder={i18n("user.fields.phoneNumber")}
+              className="auth__input"
+            />
 
-              
-<InputFormItem
-                type="text"
-                name="invitationcode"
-                placeholder={i18n("user.fields.invitationcode")}
-                className="auth__input"
-              />
-         
+            <InputFormItem
+              type="password"
+              name="withdrawPassword"
+              placeholder={i18n("user.fields.withdrawPassword")}
+              className="auth__input"
+            />
+
+            <InputFormItem
+              type="password"
+              name="password"
+              placeholder={i18n("user.fields.password")}
+              className="auth__input"
+            />
+
+            <InputFormItem
+              type="password"
+              name="newPasswordConfirmation"
+              autoComplete="new-password"
+              placeholder={i18n("user.fields.confirmPassword")}
+              className="auth__input"
+            />
+
+            <InputFormItem
+              type="text"
+              name="invitationcode"
+              placeholder={i18n("user.fields.invitationcode")}
+              className="auth__input"
+            />
           </div>
 
           <div className="auth__bottom">
             <button className="auth__button" disabled={loading} type="submit">
-              <ButtonIcon loading={loading} /> 
-              <span>
-              Sign up</span>
+              <ButtonIcon loading={loading} />
+              <span>Sign up</span>
             </button>
             <Link to="/auth/signin" className="remove__ligne">
               <span className="auth__link">Already have an account</span>
