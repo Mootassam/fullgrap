@@ -8,6 +8,8 @@ const initialData = {
   counts: 0,
   total: 0,
   loading: false,
+  loadingday: false,
+  countsday: 0,
   filter: {},
   rawFilter: {},
   pagination: {
@@ -171,6 +173,36 @@ export default (state = initialData, { type, payload }) => {
       ...state,
       loading: false,
       counts : 0
+      
+    
+    };
+  }
+
+
+
+  if (type === actions.COUNTDAY_STARTED) {
+    return {
+      ...state,
+      loadingday: true,
+      countsday : 0
+    };
+  }
+
+  if (type === actions.COUNTDAY_SUCCESS) {
+
+    return {
+      ...state,
+      loadingday: false,
+      countsday : payload.count
+
+    };
+  }
+
+  if (type === actions.COUNTDAY_ERROR) {
+    return {
+      ...state,
+      loadingday: false,
+      countsday : 0
       
     
     };

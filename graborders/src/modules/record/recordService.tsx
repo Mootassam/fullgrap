@@ -55,6 +55,18 @@ export default class RecordService {
     return response.data.record;
   }
 
+
+  static async countDay () { 
+    const tenantId = AuthCurrentTenant.get();
+    const response = await authAxios.get(
+      `/tenant/${tenantId}/count/recordperdays`, 
+    );
+    return response.data;
+  }
+
+
+
+
   static async import(values, importHash) {
     const body = {
       data: values,

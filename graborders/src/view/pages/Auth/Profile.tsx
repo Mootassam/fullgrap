@@ -7,9 +7,23 @@ import authActions from "src/modules/auth/authActions";
 import authSelectors from "src/modules/auth/authSelectors";
 import Amount from "src/shared/Amount";
 import { useHistory } from "react-router-dom"; // Assuming you're using React Router
+import actions from 'src/modules/record/list/recordListActions';
+import selectors from "src/modules/record/list/recordListSelectors";
 
 function Profile() {
   const dispatch = useDispatch();
+  const total = useSelector(selectors.selectTotal);
+  const totalperday = useSelector(selectors.selectTotalPerday)
+
+  useEffect(() => {
+    const values = {
+      "status": "completed"
+    };
+    dispatch(actions.doCountDay());
+    dispatch(actions.doFetch(values, values));
+  }, [dispatch]);
+
+
   const doSignout = () => {
     dispatch(authActions.doSignout());
   };
@@ -129,12 +143,12 @@ function Profile() {
             <div className="second__cadre"></div>
             <div className="">
               <span className="title__cadre">Today Profit </span>
-              <span className="amount__cadre">2885.95 USDT </span>
+              <span className="amount__cadre">{totalperday} USDT </span>
             </div>
             <div className="second__cadre"></div>
             <div>
               <span className="title__cadre">Total Profit </span>
-              <span className="amount__cadre">2885.95 USDT</span>
+              <span className="amount__cadre">{total} USDT</span>
             </div>
           </div>
         </div>

@@ -21,6 +21,10 @@ img {
   object-fit: cover;
   border-radius: 8px;
 }
+.start__{ 
+  font-size: 54px !important;
+}
+
 
 body {
   background-color: #EDF1F7;

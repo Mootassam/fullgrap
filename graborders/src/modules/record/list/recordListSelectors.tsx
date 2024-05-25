@@ -119,6 +119,8 @@ const selectSelectedRows = createSelector(
   },
 );
 
+const selectTotalPerday = createSelector([selectRaw, selectRows], (count) => count.countsday)
+
 const selectIsAllSelected = createSelector(
   [selectRows, selectSelectedKeys],
   (rows, selectedKeys) => {
@@ -144,7 +146,8 @@ const couponsListSelectors = {
   selectIsAllSelected,
   selectSorter,
   selectError, 
-  selectCountRecord
+  selectCountRecord,
+  selectTotalPerday
 };
 
 export default couponsListSelectors;

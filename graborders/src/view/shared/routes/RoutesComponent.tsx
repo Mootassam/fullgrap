@@ -58,7 +58,7 @@ function RoutesComponent() {
             loader: route.loader,
           })}
         />
-      ))}
+      ))} 
       {routes.privateRoutes.map((route) => (
         <PrivateRoute
           exact

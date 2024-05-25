@@ -147,6 +147,11 @@ export default class RecordServices {
     return RecordRepository.findAndCountAll(args, this.options);
   }
 
+  async findAndCountPerDay(args) {
+    console.log("i ");
+    
+    // return RecordRepository.findAndCountPerDay(args, this.options); 
+  }
   async findAndCountAllMobile(args) {
     return RecordRepository.findAndCountAllMobile(args, this.options);
   }

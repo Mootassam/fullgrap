@@ -401,6 +401,114 @@ class RecordRepository {
     return { rows, count, total };
   }
 
+  static async findAndCountPerDay(
+    { filter, limit = 0, offset = 0, orderBy = "" },
+    options: IRepositoryOptions
+  ) {
+
+    
+
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
+    let criteriaAnd: any = [];
+
+    criteriaAnd.push({
+      tenant: currentTenant.id,
+      user: currentUser.id,
+    });
+
+    if (filter) {
+      filter = JSON.parse(filter);
+
+      if (filter.id) {
+        criteriaAnd.push({
+          ["_id"]: MongooseQueryUtils.uuid(filter.id),
+        });
+      }
+
+      if (filter.user) {
+        criteriaAnd.push({
+          user: filter.user,
+        });
+      }
+      if (filter.product) {
+        criteriaAnd.push({
+          product: filter.product,
+        });
+      }
+
+      if (filter.number) {
+        criteriaAnd.push({
+          number: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.number),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.status) {
+
+        criteriaAnd.push({
+          status: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.status),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.createdAt) {
+        const start = new Date();
+        start.setHours(0, 0, 0, 0); // Set to the start of the current day
+        const end = new Date();
+        end.setHours(23, 59, 59, 999); // Set to the end of the current day
+        criteriaAnd.push({
+          createdAt: {
+            $gte: start,
+            $lte: end,
+          },
+        });
+      }
+    }
+
+    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+
+    const skip = Number(offset || 0) || undefined;
+    const limitEscaped = Number(limit || 0) || undefined;
+    const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
+
+    let listitems = await Records(options.database)
+      .find(criteria)
+      .skip(skip)
+      .sort(sort)
+      .populate("user")
+      .populate("product");
+
+    // let rows = await Records(options.database)
+    //   .find(criteria)
+    //   .limit(limitEscaped)
+    //   .sort(sort)
+    //   .populate("user")
+    //   .populate("product");
+
+    // const count = await Records(options.database).countDocuments(criteria);
+
+    // rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
+
+    let total = 0;
+
+    listitems.map((item) => {
+      let data = item.product;
+      let itemTotal =
+     
+        (parseFloat(data.commission) * parseFloat(data.amount)) / 100;
+
+      total += itemTotal;
+    });
+    total = parseFloat(total.toFixed(3));
+
+    return {  total };
+  }
+
   static async findAllAutocomplete(search, limit, options: IRepositoryOptions) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
 

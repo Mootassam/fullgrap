@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from 'src/modules/record/list/recordListActions';
-import selectors from 'src/modules/record/list/recordListSelectors';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "src/modules/record/list/recordListActions";
+import selectors from "src/modules/record/list/recordListSelectors";
 import LoadingModal from "src/shared/LoadingModal";
 import Calcule from "src/view/shared/utils/Calcule";
 import Dates from "src/view/shared/utils/Dates";
@@ -13,17 +13,16 @@ function Portfolio() {
   const record = useSelector(selectors.selectRows);
   const loading = useSelector(selectors.selectLoading);
   const total = useSelector(selectors.selectTotal);
-  const selectHasRows = useSelector(selectors.selectHasRows)
+  const selectHasRows = useSelector(selectors.selectHasRows);
   // const [limit, setLimit] = useState<number>(10);
   // const count = useSelector(selectors.selectCount);
 
   useEffect(() => {
     const values = {
-      "status": active
+      status: active,
     };
 
     console.log(active);
-    
 
     dispatch(actions.doFetch(values, values));
   }, [dispatch, active]);
@@ -33,7 +32,7 @@ function Portfolio() {
   //   return () => {
   //     window.removeEventListener('scroll', handleScroll);
   //   };
-  // }, []); 
+  // }, []);
 
   // const handleScroll = () => {
   //   if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
@@ -83,7 +82,13 @@ function Portfolio() {
             </div>
             <div className="cadre__detail">
               <div>Estimated return</div>
-              <div>{Calcule.calcule__total(item?.product?.amount, item?.product?.commission)} USDT</div>
+              <div>
+                {Calcule.calcule__total(
+                  item?.product?.amount,
+                  item?.product?.commission
+                )}{" "}
+                USDT
+              </div>
             </div>
           </div>
         </div>
@@ -93,42 +98,58 @@ function Portfolio() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "center", flexDirection: 'column' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexDirection: "column",
+        }}
+      >
         <div className="header_order">
           <div className="order__header">
-            <div className="order__record">
-              Order Record
-            </div>
+            <div className="order__record">Order Record</div>
           </div>
           <div className="order__background">
             <div className="order__remaining">
-              <label htmlFor="" className="remaining__assets"> Remaining Availalbe assets</label>
-              <span className="remaining__amount">{total}<span style={{fontSize:19}}>USDT</span> </span>
+              <label htmlFor="" className="remaining__assets">
+                {" "}
+                Remaining Availalbe assets
+              </label>
+              <span className="remaining__amount">
+                {total}
+                <span style={{ fontSize: 19 }}>USDT</span>{" "}
+              </span>
             </div>
           </div>
         </div>
         <div className="order__list">
           <div className="list__actions">
-            <div onClick={() => setActive("completed")} className={active === 'completed' ? `active__order` : ''}>
+            <div
+              onClick={() => setActive("completed")}
+              className={active === "completed" ? `active__order` : ""}
+            >
               <span>Completed</span>
             </div>
-            <div onClick={() => setActive("pending")} className={active === 'pending' ? `active__order` : ''}>
+            <div
+              onClick={() => setActive("pending")}
+              className={active === "pending" ? `active__order` : ""}
+            >
               <span>Pending</span>
             </div>
-            <div onClick={() => setActive("canceled")} className={active === 'canceled' ? `active__order` : ''}>
+            <div
+              onClick={() => setActive("canceled")}
+              className={active === "canceled" ? `active__order` : ""}
+            >
               <span>Canceled</span>
             </div>
           </div>
         </div>
         <div className="list__product">
           {loading && <LoadingModal />}
-          {!loading && record && <All /> }
-          
+          {!loading && record && <All />}
         </div>
 
-{!selectHasRows && <Nodata />}
-
-        
+        {!selectHasRows && <Nodata />}
       </div>
     </div>
   );
