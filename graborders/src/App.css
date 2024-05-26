@@ -10,7 +10,12 @@
   height: 100%;
   margin-bottom: 65px;
 }
-
+.invitation__logo { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap:7px
+}
 .app__switchtab {
   background-color: #203040;
   width: 100%;
@@ -240,8 +245,15 @@ td {
   background-color: #232323;
   width: 100%;
   height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+
+.logo__header {
+  width: 70px !important;
+}
 .advertise__header {
   width: 100%;
   display: flex;
@@ -2100,7 +2112,7 @@ button:disabled {
   display: flex;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 19px;
 }
 
 .product__start{ 
@@ -2125,7 +2137,7 @@ button:disabled {
 .grap__products {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 19px;
 }
 
 .header__background {

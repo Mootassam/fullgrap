@@ -12,7 +12,6 @@ import Spinner from 'src/view/shared/Spinner';
 import { getHistory } from 'src/modules/store';
 
 function Logo() {
-  const [dispatched, setDispatched] = useState(false);
   const dispatch = useDispatch();
 
   const record = useSelector(selectors.selectRows);
