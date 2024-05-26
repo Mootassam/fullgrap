@@ -126,6 +126,8 @@ class TransactionRepository {
     );
   }
 
+
+
   static async findById(id, options: IRepositoryOptions) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
 

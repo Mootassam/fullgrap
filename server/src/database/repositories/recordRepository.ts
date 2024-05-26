@@ -141,7 +141,7 @@ class RecordRepository {
       }
 
       if (currentUser.balance < 0) {
-        throw new Error405("Your balance is not enough. Please recharge.");
+        throw new Error405("insufficient balance please upgrade.");
       }
     } else {
       throw new Error405("Please subscribe to at least one VIP package.");

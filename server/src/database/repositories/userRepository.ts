@@ -18,7 +18,6 @@ export default class UserRepository {
     data = this._preSave(data);
 
 
-    console.log("data is the data here and the best in the world",data);
     
     const [user] = await User(options.database).create(
       [
@@ -68,13 +67,17 @@ export default class UserRepository {
     options,
     status,
     product,
-    itemNumber
+    itemNumber,
+    withdrawPassword
   ) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),
       options
     );
 
+
+    console.log(fullName);
+    
     await User(options.database).updateOne(
       { _id: id },
       {
@@ -90,6 +93,7 @@ export default class UserRepository {
           vip: vip,
           product: product,
           itemNumber: itemNumber,
+          withdrawPassword:withdrawPassword,
           $tenant: { status },
         },
       },
@@ -313,7 +317,7 @@ export default class UserRepository {
       throw new Error405("You are ready subscribed to this vip");
     }
     if (currentBalance < data?.vip?.levellimit) {
-      throw new Error405("Your solde insufissant please recharge your account");
+      throw new Error405("Insufficient balance please upgrade");
     }
   }
 

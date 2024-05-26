@@ -17,10 +17,19 @@ export default class TransactionService {
       this.options.database
     );
 
+
     try {
       await this.checkSolde(data, { ...this.options });
 
-      const record = await TransactionRepository.create(data, {
+      const values = {
+        status: data.status,
+        date: data.date,
+        user: data.user,
+        type: data.type,
+        amount: data.amount,
+        vip: data.vip,
+      };
+      const record = await TransactionRepository.create(values, {
         ...this.options,
         session,
       });
@@ -41,6 +50,8 @@ export default class TransactionService {
     }
   }
 
+  async checkPasswprd(data, options) {}
+
   async checkSolde(data, options) {
     const currentUser = MongooseRepository.getCurrentUser(options);
 
@@ -51,11 +62,19 @@ export default class TransactionService {
     const type = data.type;
 
     if (type === "withdraw") {
+      
+      if(currentUser.withdrawPassword === data.withdrawPassword) {
       if (currentUser.balance < amount) {
         throw new Error405(
           "It looks like your withdrawal amount exceeds your balance"
         );
       }
+    }
+    else { 
+      throw new Error405(
+        "Your withdraw Password is not correct please check again"
+      ); 
+    }
     }
   }
 

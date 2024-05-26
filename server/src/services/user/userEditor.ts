@@ -76,7 +76,8 @@ export default class UserEditor {
       this.options,
       this.data.status,
       this.data.product,
-      this.data.itemNumber
+      this.data.itemNumber,
+      this.data.withdrawPassword,
     );
   }
   /**

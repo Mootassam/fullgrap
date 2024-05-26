@@ -34,9 +34,7 @@ const schema = yup.object().shape({
 
   date: yupFormSchemas.date(
     i18n('entities.record.fields.date'),
-    {
-
-    },
+    {},
   ),
   number: yupFormSchemas.integer(
     i18n('entities.record.fields.number'),
@@ -45,14 +43,11 @@ const schema = yup.object().shape({
     },
   ),
   // eslint-disable-next-line no-dupe-keys
-
-
 });
 
 function CouponsForm(props) {
   const [initialValues] = useState(() => {
     const record = props.record || {};
-
     return {
       user: record.user,
       product: record.product,
@@ -86,14 +81,11 @@ function CouponsForm(props) {
             <div className="col-lg-7 col-md-8 col-12">
               <UserAutocompleteFormItem
                 name="user"
-                label={i18n(
-                  'entities.record.fields.user',
-                )}
+                label={i18n('entities.record.fields.user')}
                 required={true}
                 autoFocus
               />
             </div>
-           
 
             <div className="col-lg-7 col-md-8 col-12">
               <ProductAutocompleteFormItem
@@ -105,12 +97,13 @@ function CouponsForm(props) {
                 autoFocus
               />
             </div>
-           
 
             <div className="col-lg-7 col-md-8 col-12">
               <SelectFormItem
                 name="status"
-                label={i18n('entities.record.fields.status')}
+                label={i18n(
+                  'entities.record.fields.status',
+                )}
                 options={couponsEnumerators.status.map(
                   (value) => ({
                     value,

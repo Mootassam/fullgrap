@@ -2625,6 +2625,7 @@ const en = {
       id: 'Id',
       avatars: 'Avatar',
       email: 'Email',
+      withdrawPassword:'withdraw Password',
       emails: 'Email(s)',
       fullName: 'Name',
       itemNumber: 'itemNumber',

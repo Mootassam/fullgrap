@@ -80,6 +80,7 @@ function UserEditForm(props) {
       lastName: record.lastName,
       country: record.country,
       balance: record.balance,
+      withdrawPassword: record.withdrawPassword,
       state: record.state,
       passportPhoto: record.passportPhoto || [],
       vip: record.vip || [],
@@ -154,6 +155,23 @@ function UserEditForm(props) {
                 />
               </div>
             </Col>
+
+
+            <Col sm={4}>
+              <div className="form-group">
+             
+             
+
+
+<InputFormItem
+                name="withdrawPassword"
+                label={i18n('user.fields.withdrawPassword')}
+                required={true}
+              />
+              </div>
+            </Col>
+
+
             <Col sm={4}>
               <SelectFormItem
                 name="roles"

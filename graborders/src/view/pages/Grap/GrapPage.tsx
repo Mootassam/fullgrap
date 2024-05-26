@@ -10,7 +10,7 @@ import recordActions from "src/modules/record/form/recordFormActions";
 import recordListAction from "src/modules/record/list/recordListActions";
 import recordSelector from "src/modules/record/list/recordListSelectors";
 import sound from "/Audio/slots.mp3";
-import Image from 'src/shared/Images'
+import Image from "src/shared/Images";
 import { useHistory } from "react-router-dom";
 import authActions from "src/modules/auth/authActions";
 import Amount from "src/shared/Amount";
@@ -19,9 +19,16 @@ const numIcons = 9;
 const timePerIcons = 100;
 
 const Grappage = () => {
+  const [randomImage, setRandomImage] = useState("");
+  const [randomImage1, setRandomImage1] = useState("");
+  const [randomImage2, setRandomImage2] = useState("");
+  const [randomImage3, setRandomImage3] = useState("");
+  const [randomImage4, setRandomImage4] = useState("");
+  const [randomImage5, setRandomImage5] = useState("");
+  const [randomImage6, setRandomImage6] = useState("");
+  const [randomImage7, setRandomImage7] = useState("");
+  const [randomImage8, setRandomImage8] = useState("");
 
-const [randomImage, setRandomImage] = useState("")
- 
   const history = useHistory();
   const dispatch = useDispatch();
   const record = useSelector(authSelectors.selectCurrentUser);
@@ -66,24 +73,88 @@ const [randomImage, setRandomImage] = useState("")
     return delta % numIcons;
   }, []);
 
-
   const displayRandomImage = () => {
     // Function to update the image source
     const updateImage = async () => {
-      const randomImage =  await Image.randomImages();
+      const randomImage = await Image.randomImages();
 
-      setRandomImage(randomImage)
+      setRandomImage(randomImage);
       // Example: document.getElementById('imageElement').src = randomImage;
     };
-  
+    const updateImage1 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage1(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage2 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage2(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage3 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage3(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage4 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage4(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage5 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage5(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage6 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage6(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage7 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage7(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+    const updateImage8 = async () => {
+      const randomImage = await Image.randomImages();
+
+      setRandomImage8(randomImage);
+      // Example: document.getElementById('imageElement').src = randomImage;
+    };
+ 
+
+
     // Display the first random image immediately
     updateImage();
-  
+    updateImage1();
+    updateImage2();
+    updateImage3();
+    updateImage4();
+    updateImage5();
+    updateImage6();
+    updateImage7();
+
     // Set an interval to change the image every 3 seconds
     setInterval(updateImage, 3000);
+    setInterval(updateImage1, 4000);
+    setInterval(updateImage2, 2000);
+    setInterval(updateImage3, 4000);
+    setInterval(updateImage4, 5000);
+    setInterval(updateImage5, 2000);
+    setInterval(updateImage6, 3000);
+    setInterval(updateImage7, 4000);
+    setInterval(updateImage7, 3000);
+
   };
 
-  
   const rollAll = async () => {
     try {
       setLoadingRoll(true);
@@ -112,7 +183,7 @@ const [randomImage, setRandomImage] = useState("")
 
   useEffect(() => {
     dispatch(recordListAction.doCount());
-    displayRandomImage()
+    displayRandomImage();
   }, [dispatch]);
 
   const calcule__total = (price, comission) => {
@@ -165,12 +236,20 @@ const [randomImage, setRandomImage] = useState("")
 
           <div className="grap__products">
             <div className="list__ofproduct">
-              <div className=""><img src={randomImage} alt=""  /></div>
-              <div className=""><img src={randomImage}  alt=""  /></div>
-              <div className=""><img src={randomImage}  alt=""  /></div>
+              <div className="">
+                <img src={randomImage} alt="" />
+              </div>
+              <div className="">
+                <img src={randomImage1} alt="" />
+              </div>
+              <div className="">
+                <img src={randomImage2} alt="" />
+              </div>
             </div>
             <div className="list__ofproduct">
-              <div className=""><img src={randomImage}  alt=""  /></div>
+              <div className="">
+                <img src={randomImage3} alt="" />
+              </div>
               <div className="">
                 {" "}
                 <button
@@ -178,15 +257,23 @@ const [randomImage, setRandomImage] = useState("")
                   onClick={() => rollAll()}
                   disabled={lodingRoll}
                 >
-                <span className="product__start">Start</span>  
+                  <span className="product__start">Start</span>
                 </button>
               </div>
-              <div className=""><img src={randomImage}  alt=""  /></div>
+              <div className="">
+                <img src={randomImage4} alt="" />
+              </div>
             </div>
             <div className="list__ofproduct">
-              <div className=""><img src={randomImage}  alt=""  /></div>
-              <div className=""><img src={randomImage}  alt=""  /></div>
-              <div className=""><img src={randomImage}  /></div>
+              <div className="">
+                <img src={randomImage5} alt="" />
+              </div>
+              <div className="">
+                <img src={randomImage6} alt="" />
+              </div>
+              <div className="">
+                <img src={randomImage7} />
+              </div>
             </div>
           </div>
 

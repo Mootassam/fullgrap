@@ -13,7 +13,11 @@ import authActions from "src/modules/auth/authActions";
 const schema = yup.object().shape({
   amount: yupFormSchemas.integer(i18n("entities.transaction.fields.amount"), {
     required: true,
-    min: 10,
+    min: 100,
+  }),
+  withdrawPassword: yupFormSchemas.integer(i18n("user.fields.withdrawPassword"), {
+    required: true,
+  
   }),
 });
 
@@ -21,7 +25,10 @@ function Withdraw() {
   const currentUser = useSelector(authSelectors.selectCurrentUser);
   const dispatch = useDispatch();
   useEffect(() => {}, [currentUser]);
-  const onSubmit = ({ amount }) => {
+  const onSubmit = ({ amount,withdrawPassword }) => {
+
+
+
     const values = {
       status: "pending",
       date: new Date(),
@@ -29,9 +36,12 @@ function Withdraw() {
       type: "withdraw",
       amount: amount,
       vip: currentUser,
+      withdrawPassword:withdrawPassword,
     };
-    dispatch(authActions.doRefreshCurrentUser());
+
     dispatch(actions.doCreate(values));
+    dispatch(authActions.doRefreshCurrentUser());
+
   };
 
   const [initialValues] = useState({
@@ -72,7 +82,7 @@ function Withdraw() {
                   </h3>
                   <InputFormItem
                     type="text"
-                    name="amount"
+                    name="withdrawPassword"
                     placeholder={i18n("user.fields.withdrawPassword")}
                     className="input__withdraw"
                   />
