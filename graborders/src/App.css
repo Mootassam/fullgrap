@@ -248,11 +248,12 @@ td {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 6px 0;
 }
 
 
 .logo__header {
-  width: 70px !important;
+  width: 100% !important;
 }
 .advertise__header {
   width: 100%;

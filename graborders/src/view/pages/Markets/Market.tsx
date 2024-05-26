@@ -126,7 +126,7 @@ function Market() {
     >
      
       <div className="market__header">
-      {!loadingImage && logorecord.photo && <img src={logorecord?.photo[0]?.downloadUrl} alt="" className="logo__header" />}  
+      {!loadingImage && logorecord.map((item) =>   <img src={item?.photo[0]?.downloadUrl} alt="" className="logo__header" />)}  
       
       </div>
 
