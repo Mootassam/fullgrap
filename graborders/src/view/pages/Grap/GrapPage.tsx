@@ -329,21 +329,18 @@ const Grappage = () => {
           <div className="rules__title">Rules Description</div>
           <ul className="rules__list">
             <li>
-              (1) Every members from this room be able to grap{" "}
-              {record?.vip?.dailyorder} orders per day
+
+            (1) Every user in the platform should be able to submit all daily orders before withdrawal 
+            
             </li>
             <li>
-              (2) The commission of the purchase would be 0.28% of each order
-              amount
+            (2) commissions depends on the vip level
             </li>
             <li>
-              (3) The system automatic dispatch the products throught the cloud.
+            (3) The system automatically dispatch’s the products through the cloud after submission 
             </li>
             <li>
-              (4) if the order is not confirmed and submitted bu the member
-              after the product successfully dispatch, he/she might not be able
-              to continue to grab the orders. The member need to process with
-              the previous order to continue with the task.
+            (4) If the order is not submitted, the user will not be able to continue with the next product. The user need to submit the previous product to continue with the task
             </li>
           </ul>
         </div>

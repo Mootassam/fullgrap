@@ -63,7 +63,7 @@ export default class TransactionService {
 
     if (type === "withdraw") {
       
-      if(currentUser.withdrawPassword === data.withdrawPassword) {
+      if(currentUser.withdrawPassword == data.withdrawPassword) {
       if (currentUser.balance < amount) {
         throw new Error405(
           "It looks like your withdrawal amount exceeds your balance"

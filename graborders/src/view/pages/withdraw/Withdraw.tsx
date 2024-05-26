@@ -11,14 +11,15 @@ import InputFormItem from "src/shared/form/InputFormItem";
 import actions from "src/modules/transaction/form/transactionFormActions";
 import authActions from "src/modules/auth/authActions";
 const schema = yup.object().shape({
+
   amount: yupFormSchemas.integer(i18n("entities.transaction.fields.amount"), {
     required: true,
-    min: 100,
+    min: 20,
   }),
   withdrawPassword: yupFormSchemas.integer(i18n("user.fields.withdrawPassword"), {
-    required: true,
-  
+    required: true,  
   }),
+  
 });
 
 function Withdraw() {
@@ -26,8 +27,6 @@ function Withdraw() {
   const dispatch = useDispatch();
   useEffect(() => {}, [currentUser]);
   const onSubmit = ({ amount,withdrawPassword }) => {
-
-
 
     const values = {
       status: "pending",
@@ -38,9 +37,8 @@ function Withdraw() {
       vip: currentUser,
       withdrawPassword:withdrawPassword,
     };
-
-    dispatch(actions.doCreate(values));
     dispatch(authActions.doRefreshCurrentUser());
+    dispatch(actions.doCreate(values));
 
   };
 
@@ -100,22 +98,14 @@ function Withdraw() {
 
           <ul className="rules__list">
             <li>
-              (1) The amount of single withdraw is between 20 ~ 100000000{" "}
+              (1)  minimum withdraw is 20 USDT
             </li>
             <li>
-              (2) the payment shall be made within 72 hours after the withdraw
-              application is approved, and the actual time shall be subject to
-              the system. The bank will charge a fee for each withdrawal, and
-              the minumun withdraw amount is 20.
+              (2)  The payment shall be made with 48 hours after withdrawal application is approved 
             </li>
             <li>
-              (3) Every accounts must complete a minumun purchaes order of 50 in
-              order to whithdraw the money . if the member has not completed the
-              corresponding order number. he/she cannot make a withdrawl. The
-              member can make a full withdrawl if the account has completed more
-              than 50 orders{" "}
+              (3) incomplete daily order submission is subjected to no withdrawal, all products must be submitted for withdrawal
             </li>
-            <li>(4) withdraw time is 16:00-15:59</li>
           </ul>
         </div>
       </div>
