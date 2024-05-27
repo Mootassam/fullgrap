@@ -37,22 +37,21 @@ class AuthService {
 
       // Generates a hashed password to hide the original one.
       const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+      const filter = {};
 
+      const countUser = await UserRepository.CountUser(options);
 
-      const checkrefCode = await UserRepository.checkRefcode(
-         invitationcode,
-        options
-      );
+      if (countUser) {
+        const checkrefCode = await UserRepository.checkRefcode(
+          invitationcode,
+          options
+        );
 
-   
-
-
-      if (!checkrefCode) {
-        throw new Error400(options.language, "auth.invitationCode");
+        if (!checkrefCode) {
+          throw new Error400(options.language, "auth.invitationCode");
+        }
       }
 
-  
-      
       // The user may already exist on the database in case it was invided.
       if (existingUser) {
         // If the user already have an password,
@@ -61,7 +60,6 @@ class AuthService {
           existingUser.id,
           options
         );
-
 
         if (existingPassword) {
           throw new Error400(options.language, "auth.emailAlreadyInUse");
@@ -128,8 +126,6 @@ class AuthService {
         return token;
       }
 
-
-      
       const newUser = await UserRepository.createFromAuth(
         {
           firstName: email.split("@")[0],

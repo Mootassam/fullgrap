@@ -982,4 +982,13 @@ export default class UserRepository {
     ]);
     return rows;
   }
+
+  static async CountUsers(options: IRepositoryOptions) {
+    const count = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database).countDocuments(),
+      options
+    );
+
+    return count
+  }
 }
