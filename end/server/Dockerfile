@@ -6,7 +6,7 @@ RUN npm install
 #RUN npm ci --only=production
 #RUN  npm install --production --silent && mv node_modules ../
 # ENV BACKEND_URL="http://localhost:8080/api"
-ENV BACKEND_URL="http://139.162.155.71:8080/api"
+ENV BACKEND_URL="http://139.162.155.71:8088/api"
 # ENV BACKEND_URL="http://localhost:8080/api"
-EXPOSE 8080
+EXPOSE 8088
 CMD ["npm", "start"]
