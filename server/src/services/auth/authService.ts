@@ -37,20 +37,20 @@ class AuthService {
 
       // Generates a hashed password to hide the original one.
       const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-    
+      const filter = {};
 
       // const countUser = await UserRepository.CountUser(options);
 
-      // if (countUser) {
-      //   const checkrefCode = await UserRepository.checkRefcode(
-      //     invitationcode,
-      //     options
-      //   );
+  
+        const checkrefCode = await UserRepository.checkRefcode(
+          invitationcode,
+          options
+        );
 
-      //   if (!checkrefCode) {
-      //     throw new Error400(options.language, "auth.invitationCode");
-      //   }
-      // }
+        if (!checkrefCode) {
+          throw new Error400(options.language, "auth.invitationCode");
+        }
+ 
 
       // The user may already exist on the database in case it was invided.
       if (existingUser) {
