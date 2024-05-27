@@ -11,6 +11,7 @@ export default class AuthService {
   static async registerWithEmailAndPassword(
     email,
     password,
+    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,
@@ -20,6 +21,7 @@ export default class AuthService {
     const response = await authAxios.post("/auth/sign-up", {
       email,
     password,
+    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,

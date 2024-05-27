@@ -14,6 +14,12 @@ const schema = yup.object().shape({
   email: yupFormSchemas.string(i18n("user.fields.email"), {
     required: true,
   }),
+
+
+  username: yupFormSchemas.string(i18n("user.fields.username"), {
+    required: true,
+  }),
+  
   password: yupFormSchemas.string(i18n("user.fields.password"), {
     required: true,
   }),
@@ -67,6 +73,7 @@ function Signup() {
 
   const onSubmit = ({     email,
     password,
+    username,
     phoneNumber,
     withdrawPassword,
     invitationcode, }) => {
@@ -74,6 +81,7 @@ function Signup() {
       actions.doRegisterEmailAndPassword(
         email,
     password,
+    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,
@@ -99,6 +107,13 @@ function Signup() {
               type="text"
               name="email"
               placeholder={i18n("user.fields.email")}
+              className="auth__input"
+              externalErrorMessage={externalErrorMessage}
+            />
+             <InputFormItem
+              type="text"
+              name="username"
+              placeholder={i18n("user.fields.username")}
               className="auth__input"
               externalErrorMessage={externalErrorMessage}
             />
