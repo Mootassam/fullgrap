@@ -168,13 +168,7 @@ function Signup() {
         </form>
       </FormProvider>
 
-      <div className="bottom__image">
-        <img
-          src="/images/Login/bottom.png"
-          alt="bottom__page"
-          className="bottom__image"
-        />
-      </div>
+   
     </div>
   );
 }
