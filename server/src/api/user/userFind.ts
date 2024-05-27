@@ -14,6 +14,10 @@ export default async (req, res) => {
       req,
     );
 
+    console.log('====================================');
+    console.log("Payload", payload);
+    console.log('====================================');
+
     await ApiResponseHandler.success(req, res, payload);
   } catch (error) {
     await ApiResponseHandler.error(req, res, error);

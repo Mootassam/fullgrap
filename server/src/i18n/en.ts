@@ -12,6 +12,7 @@ const en = {
     wrongPassword: `Sorry, we don't recognize your credentials`,
     weakPassword: 'This password is too weak',
     emailAlreadyInUse: 'Email is already in use',
+    invitationCode: 'please write a correct invitationCode',
     invalidEmail: 'Please provide a valid email',
     passwordReset: {
       invalidToken:

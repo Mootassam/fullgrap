@@ -13,9 +13,10 @@ export default (database) => {
   const UserSchema = new Schema(
     {
       fullName: { type: String, maxlength: 255 },
-      username:{type:String },
-      phoneNumber: { type: String, maxlength: 24,  },
-      gender: { type: String, maxlength: 24,  },
+      username: { type: String },
+      refcode: { type: String },
+      phoneNumber: { type: String, maxlength: 24 },
+      gender: { type: String, maxlength: 24 },
       passportPhoto: [FileSchema],
       passportDocument: [FileSchema],
       withdrawPassword: {

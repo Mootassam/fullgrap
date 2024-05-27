@@ -111,7 +111,7 @@ function UserToolbar(props) {
 
   return (
     <Toolbar>
-      {hasPermissionToCreate && (
+      {/* {hasPermissionToCreate && (
         <Link to="/user/new">
           <button className="btn btn-primary" type="button">
             <ButtonIcon iconClass="fas fa-user-plus" />
@@ -134,7 +134,7 @@ function UserToolbar(props) {
             <ReactTooltip id="charge-list-toolbar-import-tooltip" />
           </span>
         </Link>
-      )}
+      )} */}
 
       {renderDestroyButton()}
 

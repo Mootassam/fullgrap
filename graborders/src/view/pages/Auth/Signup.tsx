@@ -115,7 +115,7 @@ function Signup() {
               name="username"
               placeholder={i18n("user.fields.username")}
               className="auth__input"
-              externalErrorMessage={externalErrorMessage}
+           
             />
 
             <InputFormItem
@@ -152,6 +152,7 @@ function Signup() {
               name="invitationcode"
               placeholder={i18n("user.fields.invitationcode")}
               className="auth__input"
+              externalErrorMessage={externalErrorMessage}
             />
           </div>
 

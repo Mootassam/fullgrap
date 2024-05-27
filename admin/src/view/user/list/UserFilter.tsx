@@ -63,6 +63,12 @@ const previewRenders = {
     render: (value) =>
       value ? i18n(`roles.${value}.label`) : null,
   },
+
+  invitationcode: {
+    label: i18n('user.fields.invitationcode'),
+    render: filterRenders.generic(),
+  },
+
   status: {
     label: i18n('user.fields.status'),
     render: filterRenders.enumerator('user.status'),
@@ -136,16 +142,22 @@ function UserFilter(props) {
           <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="row">
-                <div className="col-lg-6 col-12">
+                <div className="col-lg-4 col-12">
                   <InputFormItem
                     name={'email'}
                     label={i18n('user.fields.email')}
                   />
                 </div>
-                <div className="col-lg-6 col-12">
+                <div className="col-lg-4 col-12">
                   <InputFormItem
                     name={'fullName'}
                     label={i18n('user.fields.fullName')}
+                  />
+                </div>
+                <div className="col-lg-4 col-12">
+                  <InputFormItem
+                    name={'invitationcode'}
+                    label={i18n('user.fields.invitationcode')}
                   />
                 </div>
                 <div className="col-lg-6 col-12">

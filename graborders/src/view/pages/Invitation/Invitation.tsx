@@ -86,7 +86,7 @@ function Invitation() {
             ref={referenceCodeRef}
             style={{ cursor: "pointer" }}
           >
-            {currentUser?.invitationcode}
+            {currentUser?.refcode}
           </span>
           <div className="invitation__button" onClick={copyToClipboard}>
             Copy referral Code

@@ -73,7 +73,6 @@ export default class UserRepository {
       options
     );
 
-    console.log(fullName);
 
     await User(options.database).updateOne(
       { _id: id },
@@ -98,6 +97,13 @@ export default class UserRepository {
     );
   }
 
+  static async generateRandomCode() {
+    const randomNumber = Math.floor(Math.random() * 10000000);
+    const randomNumberPadded = randomNumber.toString().padStart(7, "0");
+    const randomCode = await `ECL${randomNumberPadded}`;
+    return randomCode;
+  }
+
   static async createFromAuth(data, options: IRepositoryOptions) {
     data = this._preSave(data);
 
@@ -112,7 +118,8 @@ export default class UserRepository {
           firstName: data.firstName,
           fullName: data.fullName,
           withdrawPassword: data.withdrawPassword,
-          invitationcode: data.withdrawPassword,
+          invitationcode: data.invitationcode,
+          refcode: await this.generateRandomCode(),
         },
       ],
       options
@@ -454,6 +461,15 @@ export default class UserRepository {
         });
       }
 
+      if (filter.invitationcode) {
+        criteriaAnd.push({
+          ["invitationcode"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.invitationcode),
+            $options: "i",
+          },
+        });
+      }
+
       if (filter.status) {
         criteriaAnd.push({
           tenants: {
@@ -639,6 +655,9 @@ export default class UserRepository {
       throw new Error404();
     }
 
+
+   
+    
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     if (!options || !options.bypassPermissionValidation) {
       if (!isUserInTenant(record, currentTenant.id)) {
@@ -649,7 +668,22 @@ export default class UserRepository {
 
     record = await this._fillRelationsAndFileDownloadUrls(record, options);
 
+
     return record;
+  }
+
+  static async checkRefcode( refcode, options: IRepositoryOptions) {
+    const checkref = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database).findOne({
+        invitationcode: refcode
+        
+      }),
+      options
+    );
+    if (!checkref) {
+      return null;
+    }
+    return true
   }
 
   static async findPassword(id, options: IRepositoryOptions) {
@@ -802,10 +836,11 @@ export default class UserRepository {
       fullName: user.fullName,
       passportNumber: user.passportNumber,
       country: user.country,
-      state: user.state,
-      payee: user.payee,
-      bearthday: user.bearthday,
+      withdrawPassword: user.withdrawPassword,
+      balance: user.balance,
+      invitationcode: user.invitationcode,
       nationality: user.nationality,
+      refcode: user.refcode,
       roles,
       status,
     };

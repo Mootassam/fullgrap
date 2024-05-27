@@ -130,7 +130,7 @@ function Profile() {
                 <div className="user__title">{currentUser?.fullName}</div>
                 <div className="small__invitation">
                   {" "}
-                  InvitationCode : LDEKZS
+                  InvitationCode : {currentUser?.refcode}
                 </div>
               </div>
             </div>
