@@ -1,30 +1,26 @@
-import authAxios from 'src/modules/shared/axios/authAxios';
-import  AuthToken  from 'src/modules/auth/authToken';
-import AuthCurrentTenant from 'src/modules/auth/authCurrentTenant';
-import AuthInvitationToken from 'src/modules/auth/authInvitationToken';
+import authAxios from "src/modules/shared/axios/authAxios";
+import AuthToken from "src/modules/auth/authToken";
+import AuthCurrentTenant from "src/modules/auth/authCurrentTenant";
+import AuthInvitationToken from "src/modules/auth/authInvitationToken";
 
 export default class AuthService {
-
-
-
-
   static async registerWithEmailAndPassword(
     email,
     password,
     username,
     phoneNumber,
     withdrawPassword,
-    invitationcode,
+    invitationcode
   ) {
     const invitationToken = AuthInvitationToken.get();
 
     const response = await authAxios.post("/auth/sign-up", {
       email,
-    password,
-    username,
-    phoneNumber,
-    withdrawPassword,
-    invitationcode,
+      password,
+      username,
+      phoneNumber,
+      withdrawPassword,
+      invitationcode,
       invitationToken,
       tenantId: AuthCurrentTenant.get(),
     });
@@ -50,9 +46,9 @@ export default class AuthService {
   }
 
   static async fetchMe() {
-    const response = await authAxios.get('/auth/me');
+    const response = await authAxios.get("/auth/me");
     return response.data;
-  }  
+  }
 
   static signout() {
     AuthToken.set(null, true);
@@ -63,10 +59,7 @@ export default class AuthService {
       data,
     };
 
-    const response = await authAxios.put(
-      '/auth/profile',
-      body,
-    );
+    const response = await authAxios.put("/auth/profile", body);
 
     return response.data;
   }
@@ -77,35 +70,26 @@ export default class AuthService {
       newPassword,
     };
 
-    const response = await authAxios.put(
-      '/auth/change-password',
-      body,
-    );
+    const response = await authAxios.put("/auth/change-password", body);
 
     return response.data;
   }
 
   static async passwordReset(token, password) {
-    const response = await authAxios.put(
-      '/auth/password-reset',
-      {
-        token,
-        password,
-        tenantId: AuthCurrentTenant.get(),
-      },
-    );
+    const response = await authAxios.put("/auth/password-reset", {
+      token,
+      password,
+      tenantId: AuthCurrentTenant.get(),
+    });
 
     return response.data;
   }
 
   static async verifyEmail(token) {
-    const response = await authAxios.put(
-      '/auth/verify-email',
-      {
-        token,
-        tenantId: AuthCurrentTenant.get(),
-      },
-    );
+    const response = await authAxios.put("/auth/verify-email", {
+      token,
+      tenantId: AuthCurrentTenant.get(),
+    });
 
     return response.data;
   }
@@ -113,13 +97,10 @@ export default class AuthService {
   static async socialOnboard() {
     const invitationToken = AuthInvitationToken.get();
 
-    const response = await authAxios.post(
-      '/auth/social/onboard',
-      {
-        invitationToken,
-        tenantId: AuthCurrentTenant.get(),
-      },
-    );
+    const response = await authAxios.post("/auth/social/onboard", {
+      invitationToken,
+      tenantId: AuthCurrentTenant.get(),
+    });
 
     AuthInvitationToken.clear();
 
@@ -127,10 +108,8 @@ export default class AuthService {
   }
 
   static isSocialOnboardRequested() {
-    const urlParams = new URLSearchParams(
-      window.location.search,
-    );
+    const urlParams = new URLSearchParams(window.location.search);
 
-    return Boolean(urlParams.get('social'));
+    return Boolean(urlParams.get("social"));
   }
 }
