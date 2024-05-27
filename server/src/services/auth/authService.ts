@@ -18,6 +18,7 @@ class AuthService {
   static async signup(
     email,
     password,
+    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,
@@ -116,6 +117,7 @@ class AuthService {
           firstName: email.split("@")[0],
           password: hashedPassword,
           email: email,
+          username:username,
           phoneNumber:phoneNumber,
           withdrawPassword:withdrawPassword,
           invitationcode:invitationcode,

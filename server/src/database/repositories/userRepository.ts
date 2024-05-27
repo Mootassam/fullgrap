@@ -17,8 +17,6 @@ export default class UserRepository {
 
     data = this._preSave(data);
 
-
-    
     const [user] = await User(options.database).create(
       [
         {
@@ -75,9 +73,8 @@ export default class UserRepository {
       options
     );
 
-
     console.log(fullName);
-    
+
     await User(options.database).updateOne(
       { _id: id },
       {
@@ -93,7 +90,7 @@ export default class UserRepository {
           vip: vip,
           product: product,
           itemNumber: itemNumber,
-          withdrawPassword:withdrawPassword,
+          withdrawPassword: withdrawPassword,
           $tenant: { status },
         },
       },
@@ -109,6 +106,7 @@ export default class UserRepository {
         {
           email: data.email,
           password: data.password,
+          username: data.username,
           phoneNumber: data.phoneNumber,
           country: data.country,
           firstName: data.firstName,
