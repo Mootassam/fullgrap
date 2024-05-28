@@ -1838,12 +1838,11 @@ button:disabled {
   font-weight: 100;
   font-style: normal;
 }
-.login__page {
-  position: absolute;
-  right: 0;
 
-  z-index: 1;
+.login__page {
+
 }
+
 .auth__header {
   padding-top: 30px;
   display: flex;
@@ -1879,6 +1878,8 @@ button:disabled {
 .auth__page {
   width: 100%;
   background-color: #fff;
+  height: 100dvh;
+  padding-bottom: 25px;
   overflow-y: scroll;
 }
 

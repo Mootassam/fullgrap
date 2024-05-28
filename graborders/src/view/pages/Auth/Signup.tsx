@@ -90,9 +90,7 @@ function Signup() {
   };
   return (
     <div className="auth__page">
-      <div className="login__page">
-        <img src="/images/Login/login.png" alt="" />
-      </div>
+    
 
       <div className="auth__header header__signup ">
         <h1 className="auth__title"> Create Account</h1>
