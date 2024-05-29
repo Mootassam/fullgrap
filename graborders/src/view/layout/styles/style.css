@@ -29,7 +29,8 @@
 .children__content {
   align-items: center;
   justify-content: center;
-  max-width: 100%;
+  max-width: 500px;
+  margin: auto;
 
   margin-bottom: 60px;
 }

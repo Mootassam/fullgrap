@@ -5,9 +5,9 @@ import VipServices from '../../services/vipServices';
 
 export default async (req, res, next) => {
   try {
-    new PermissionChecker(req).validateHas(
-      Permissions.values.categoryRead,
-    );
+    // new PermissionChecker(req).validateHas(
+    //   Permissions.values.categoryRead,
+    // );
 
     const payload = await new VipServices(req).update(
       req.params.id,

@@ -9,8 +9,8 @@ import selector from "src/modules/vip/list/vipListSelectors";
 import LoadingModal from "src/shared/LoadingModal";
 import authSelectors from "src/modules/auth/authSelectors";
 import actions from "src/modules/auth/authActions";
-import listactions from 'src/modules/company/list/companyListActions';
-import selectors from 'src/modules/company/list/companyListSelectors';
+import listactions from "src/modules/company/list/companyListActions";
+import selectors from "src/modules/company/list/companyListSelectors";
 
 function Market() {
   const dispatch = useDispatch();
@@ -18,7 +18,6 @@ function Market() {
   const logorecord = useSelector(selectors.selectRows);
   const loadingImage = useSelector(selectors?.selectLoading);
 
-  
   const loading = useSelector(selector.selectLoading);
   const [Modal, setShowModal] = useState(false);
   const currentUser = useSelector(authSelectors.selectCurrentUser);
@@ -45,7 +44,7 @@ function Market() {
   };
 
   useEffect(() => {
-    dolistCompany()
+    dolistCompany();
     searchAllCoins();
     dispatch(Vipactions.doFetch());
     currentDate();
@@ -113,7 +112,7 @@ function Market() {
   };
 
   const [currentImage, setCurrentImage] = useState(0);
-  const images = ["/images/home/2.png"];
+  const images = ["/images/header.jpg"];
 
   useEffect(() => {});
 
@@ -124,10 +123,15 @@ function Market() {
         flexDirection: "column",
       }}
     >
-     
       <div className="market__header">
-      {!loadingImage && logorecord.map((item) =>   <img src={item?.photo[0]?.downloadUrl} alt="" className="logo__header" />)}  
-      
+        {!loadingImage &&
+          logorecord.map((item) => (
+            <img
+              src={item?.photo[0]?.downloadUrl}
+              alt=""
+              className="logo__header"
+            />
+          ))}
       </div>
 
       <div className="advertise__header">

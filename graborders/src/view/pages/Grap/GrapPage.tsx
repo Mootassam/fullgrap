@@ -129,7 +129,7 @@ const Grappage = () => {
       setRandomImage8(randomImage);
       // Example: document.getElementById('imageElement').src = randomImage;
     };
- 
+
 
 
     // Display the first random image immediately
@@ -211,7 +211,7 @@ const Grappage = () => {
     <>
       <div className="app__grappage">
         <div className="online__service">
-          <h4>Grap</h4>
+          {/* <h4>Grap</h4> */}
         </div>
 
         <div className="grap__order">
@@ -330,14 +330,14 @@ const Grappage = () => {
           <ul className="rules__list">
             <li>
 
-            (1) Every user in the platform should be able to submit all daily orders before withdrawal 
-            
+            (1) Every user in the platform should be able to submit all daily orders before withdrawal
+
             </li>
             <li>
             (2) commissions depends on the vip level
             </li>
             <li>
-            (3) The system automatically dispatch’s the products through the cloud after submission 
+            (3) The system automatically dispatch’s the products through the cloud after submission
             </li>
             <li>
             (4) If the order is not submitted, the user will not be able to continue with the next product. The user need to submit the previous product to continue with the task
