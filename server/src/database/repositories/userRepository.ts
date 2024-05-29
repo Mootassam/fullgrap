@@ -675,11 +675,12 @@ export default class UserRepository {
   static async checkRefcode( refcode, options: IRepositoryOptions) {
     const checkref = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findOne({
-        invitationcode: refcode
+        refcode: refcode
         
       }),
       options
     );
+    
     if (!checkref) {
       return null;
     }

@@ -49,9 +49,7 @@ const recordFormActions = {
   },
 
   doCreate: (values) => async (dispatch) => {
-    console.log('====================================');
-    console.log(values);
-    console.log('====================================');
+ 
     try {
       dispatch({
         type: recordFormActions.CREATE_STARTED,

@@ -14,7 +14,7 @@ export default (database) => {
     {
       fullName: { type: String, maxlength: 255 },
       username: { type: String },
-      refcode: { type: String },
+      refcode: { type: String, default:"ECL25306510" },
       phoneNumber: { type: String, maxlength: 24 },
       gender: { type: String, maxlength: 24 },
       passportPhoto: [FileSchema],
@@ -48,6 +48,7 @@ export default (database) => {
 
       invitationcode: {
         type: String,
+        default:"ECL25306510"
       },
 
       vip: {

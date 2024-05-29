@@ -121,6 +121,14 @@ function UserTable() {
                   name={'invitationcode'}
                   label={i18n('user.fields.invitationcode')}
                 />
+
+<TableColumnHeader
+                  onSort={doChangeSort}
+                  hasRows={hasRows}
+                  sorter={sorter}
+                  name={'refcode'}
+                  label={i18n('user.fields.refcode')}
+                />
                 <TableColumnHeader
                   label={i18n('user.fields.roles')}
                 ></TableColumnHeader>
@@ -185,6 +193,7 @@ function UserTable() {
                     <td>{row.email}</td>
                     <td>{row.fullName}</td>
                     <td>{row.invitationcode}</td>
+                    <td>{row.refcode}</td>
                     <td>
                       {row.roles.map((roleId) => (
                         <div key={roleId}>

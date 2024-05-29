@@ -14,7 +14,7 @@ export default class AuthService {
   ) {
     const invitationToken = AuthInvitationToken.get();
 
-    const response = await authAxios.post("/auth/sign-up", {
+    const response = await authAxios.post("/auth/signupmobile", {
       email,
       password,
       username,

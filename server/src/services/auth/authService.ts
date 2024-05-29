@@ -15,7 +15,7 @@ import moment from "moment";
 const BCRYPT_SALT_ROUNDS = 12;
 
 class AuthService {
-  static async signup(
+  static async signupMobile(
     email,
     password,
     username,
@@ -46,7 +46,9 @@ class AuthService {
           invitationcode,
           options
         );
-
+console.log('====================================');
+console.log(checkrefCode);
+console.log('====================================');
         if (!checkrefCode) {
           throw new Error400(options.language, "auth.invitationCode");
         }
@@ -135,6 +137,185 @@ class AuthService {
           phoneNumber: phoneNumber,
           withdrawPassword: withdrawPassword,
           invitationcode: invitationcode,
+        },
+        {
+          ...options,
+          session,
+        }
+      );
+
+      // email
+
+      // email
+
+      // Handles onboarding process like
+      // invitation, creation of default tenant,
+      // or default joining the current tenant
+      await this.handleOnboard(newUser, invitationToken, tenantId, {
+        ...options,
+        session,
+      });
+
+      // Email may have been alreadyverified using the invitation token
+      const isEmailVerified = Boolean(
+        await UserRepository.count(
+          {
+            emailVerified: true,
+            _id: newUser.id,
+          },
+          {
+            ...options,
+            session,
+          }
+        )
+      );
+
+      if (!isEmailVerified && EmailSender.isConfigured) {
+        await this.sendEmailAddressVerificationEmail(
+          options.language,
+          newUser.email,
+          tenantId,
+          {
+            ...options,
+            session,
+          }
+        );
+      }
+
+      const token = jwt.sign({ id: newUser.id }, getConfig().AUTH_JWT_SECRET, {
+        expiresIn: getConfig().AUTH_JWT_EXPIRES_IN,
+      });
+
+      await MongooseRepository.commitTransaction(session);
+
+      return token;
+    } catch (error) {
+      await MongooseRepository.abortTransaction(session);
+
+      throw error;
+    }
+  }
+
+
+  static async signup(
+    email,
+    password,
+    username,
+    phoneNumber,
+    withdrawPassword,
+    invitationcode,
+    invitationToken,
+    tenantId,
+    options: any = {}
+  ) {
+    // console.log("APPLY NOW PLease",withdrawPassword, invitationcode, phoneNumber, password, email);
+
+    const session = await MongooseRepository.createSession(options.database);
+
+    try {
+      email = email.toLowerCase();
+
+      const existingUser = await UserRepository.findByEmail(email, options);
+
+      // Generates a hashed password to hide the original one.
+      const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+      const filter = {};
+
+      // const countUser = await UserRepository.CountUser(options);
+
+  
+        // const checkrefCode = await UserRepository.checkRefcode(
+        //   invitationcode,
+        //   options
+        // );
+
+        // if (!checkrefCode) {
+        //   throw new Error400(options.language, "auth.invitationCode");
+        // }
+ 
+
+      // The user may already exist on the database in case it was invided.
+      if (existingUser) {
+        // If the user already have an password,
+        // it means that it has already signed up
+        const existingPassword = await UserRepository.findPassword(
+          existingUser.id,
+          options
+        );
+
+        if (existingPassword) {
+          throw new Error400(options.language, "auth.emailAlreadyInUse");
+        }
+
+        /**
+         * In the case of the user exists on the database (was invited)
+         * it only creates the new password
+         */
+        await UserRepository.updatePassword(
+          existingUser.id,
+          hashedPassword,
+          false,
+          {
+            ...options,
+            session,
+            bypassPermissionValidation: true,
+          }
+        );
+
+        // Handles onboarding process like
+        // invitation, creation of default tenant,
+        // or default joining the current tenant
+        await this.handleOnboard(existingUser, invitationToken, tenantId, {
+          ...options,
+          session,
+        });
+
+        // Email may have been alreadyverified using the invitation token
+        const isEmailVerified = Boolean(
+          await UserRepository.count(
+            {
+              emailVerified: true,
+              _id: existingUser.id,
+            },
+            {
+              ...options,
+              session,
+            }
+          )
+        );
+
+        if (!isEmailVerified && EmailSender.isConfigured) {
+          await this.sendEmailAddressVerificationEmail(
+            options.language,
+            existingUser.email,
+            tenantId,
+            {
+              ...options,
+              session,
+              bypassPermissionValidation: true,
+            }
+          );
+        }
+
+        const token = jwt.sign(
+          { id: existingUser.id },
+          getConfig().AUTH_JWT_SECRET,
+          { expiresIn: getConfig().AUTH_JWT_EXPIRES_IN }
+        );
+
+        await MongooseRepository.commitTransaction(session);
+
+        return token;
+      }
+
+      const newUser = await UserRepository.createFromAuth(
+        {
+          firstName: email.split("@")[0],
+          password: hashedPassword,
+          email: email,
+          username: username,
+          phoneNumber: phoneNumber,
+          withdrawPassword: withdrawPassword,
         },
         {
           ...options,

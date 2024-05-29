@@ -47,9 +47,7 @@ function Signin() {
   };
   return (
     <div className="auth__page">
-      <div className="login__page">
-        <img src="/images/Login/login.png" alt="" />
-      </div>
+     
 
       <div className="auth__header">
         <h1 className="auth__title"> Login here</h1>

@@ -2626,7 +2626,7 @@ const en = {
       avatars: 'Avatar',
       email: 'Email',
       refcode: "refcode",
-      invitationcode:"Invitation Code",
+      invitationcode:"My code",
       withdrawPassword:'withdraw Password',
       emails: 'Email(s)',
       fullName: 'Name',
