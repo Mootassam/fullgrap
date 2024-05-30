@@ -243,8 +243,8 @@ class ProductRepository {
 
     if (currentUser && currentUser.product && currentUser.product.id && Orderdone === mergeDataPosition) {
 
-      let prodcut = currentUser.product;
-      // prodcut[0](this._fillFileDownloadUrls);
+      let [prodcut] = currentUser.product;
+      prodcut(this._fillFileDownloadUrls);
       return prodcut;
     } else {
       let record = await Product(options.database)

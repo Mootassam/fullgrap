@@ -112,7 +112,7 @@ function Market() {
   };
 
   const [currentImage, setCurrentImage] = useState(0);
-  const images = ["/images/header.jpg"];
+  const images = ["/images/sub__heading.png"];
 
   useEffect(() => {});
 
