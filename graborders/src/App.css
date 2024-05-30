@@ -255,7 +255,7 @@ td {
   width: 100% !important;
 }
 .advertise__header {
-  width: 100%;
+  width: 100dvw;
   display: flex;
   overflow: hidden;
 }
