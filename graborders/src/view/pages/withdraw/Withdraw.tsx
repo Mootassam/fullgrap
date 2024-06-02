@@ -62,7 +62,7 @@ function Withdraw() {
             </h3>
 
             <span style={{ color: "black", fontSize: "14px" }}>
-              Availabe balance : {currentUser.balance.toFixed(2)} Usdt
+              Availabe balance : {currentUser?.balance?.toFixed(2) || 0} Usdt
             </span>
           </div>
           <FormProvider {...form}>
