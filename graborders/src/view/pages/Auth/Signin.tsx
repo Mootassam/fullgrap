@@ -11,7 +11,7 @@ import InputFormItem from "src/shared/form/InputFormItem";
 import selectors from "src/modules/auth/authSelectors";
 import ButtonIcon from "src/shared/ButtonIcon";
 const schema = yup.object().shape({
-  email: yupFormSchemas.string(i18n("user.fields.email"), {
+  email: yupFormSchemas.string(i18n("user.fields.username"), {
     required: true,
   }),
   password: yupFormSchemas.string(i18n("user.fields.password"), {
@@ -62,7 +62,7 @@ function Signin() {
               <InputFormItem
                 type="text"
                 name="email"
-                placeholder={i18n("user.fields.email")}
+                placeholder={i18n("user.fields.username")}
                 className="auth__input"
                 externalErrorMessage={externalErrorMessage}
               />
