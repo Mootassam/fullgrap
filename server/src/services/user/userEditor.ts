@@ -62,6 +62,8 @@ export default class UserEditor {
     );
   }
   async _updateUserAtDatabase() {
+
+    
     await UserRepository.updateUser(
       this.options.currentTenant.id,
       this.data.id,
@@ -78,6 +80,7 @@ export default class UserEditor {
       this.data.product,
       this.data.itemNumber,
       this.data.withdrawPassword,
+      this.data.score,
     );
   }
   /**

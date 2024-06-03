@@ -18,7 +18,6 @@ class AuthService {
   static async signupMobile(
     email,
     password,
-    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,
@@ -46,9 +45,7 @@ class AuthService {
           invitationcode,
           options
         );
-console.log('====================================');
-console.log(checkrefCode);
-console.log('====================================');
+
         if (!checkrefCode) {
           throw new Error400(options.language, "auth.invitationCode");
         }
@@ -133,7 +130,6 @@ console.log('====================================');
           firstName: email.split("@")[0],
           password: hashedPassword,
           email: email,
-          username: username,
           phoneNumber: phoneNumber,
           withdrawPassword: withdrawPassword,
           invitationcode: invitationcode,

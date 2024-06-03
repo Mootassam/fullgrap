@@ -148,7 +148,7 @@ export default class RecordServices {
   }
 
   async findAndCountPerDay(args) {
-    // console.log("i ");
+  
     
     return RecordRepository.findAndCountPerDay(args, this.options); 
   }

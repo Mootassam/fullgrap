@@ -11,7 +11,7 @@ const en = {
     userNotFound: `Sorry, we don't recognize your credentials`,
     wrongPassword: `Sorry, we don't recognize your credentials`,
     weakPassword: 'This password is too weak',
-    emailAlreadyInUse: 'Email is already in use',
+    emailAlreadyInUse: 'Username is already in use',
     invitationCode: 'please write a correct invitationCode',
     invalidEmail: 'Please provide a valid email',
     passwordReset: {

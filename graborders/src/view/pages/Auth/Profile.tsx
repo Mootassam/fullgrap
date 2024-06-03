@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import "../styles/styles.css";
@@ -10,6 +10,8 @@ import { useHistory } from "react-router-dom"; // Assuming you're using React Ro
 import actions from 'src/modules/record/list/recordListActions';
 import selectors from "src/modules/record/list/recordListSelectors";
 import { log } from "console";
+import styles from '../../shared/form/styles/styles';
+import Message from "src/view/shared/message";
 
 function Profile() {
   const dispatch = useDispatch();
@@ -57,6 +59,36 @@ function Profile() {
     { icon: "fa-solid fa-user", name: "Profile", url: "/myprofile" },
     { icon: "fa-solid fa-lock", name: "Security", url: "/security" },
   ];
+  const referenceCodeRef = useRef<any>(null);
+
+  const copyToClipboard = () => {
+    const referenceCode = referenceCodeRef.current.innerText;
+
+    // Check if the browser supports the modern clipboard API
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(referenceCode)
+        .then(() => {
+          Message.success("Copied");
+          // You can add any additional logic here, such as showing a success message
+        })
+        .catch((error) => {
+          console.error("Error copying to clipboard:", error);
+          // You can handle errors here, such as displaying an error message to the user
+        });
+    } else {
+      // Fallback for browsers that do not support the modern clipboard API
+      const textArea = document.createElement("textarea");
+      textArea.value = referenceCode;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      Message.success("Copied");
+
+      // You can add any additional logic here for the fallback mechanism
+    }
+  }; 
 
   return (
     <div className="app__profile">
@@ -129,14 +161,26 @@ function Profile() {
               <div className="left__details">
                 <div className="user__title">{currentUser?.fullName}</div>
                 <div className="small__invitation">
-                  {" "}
-                  InvitationCode : {currentUser?.refcode}
+                <div className="small__inviation__left">InvitationCode : <span ref={referenceCodeRef}> {currentUser?.refcode}</span></div>
+               
+                  
                 </div>
               </div>
             </div>
-            <div className="cadre__right"></div>
+            <div className="cadre__right">
+
+                  <i className="fa-regular fa-copy" style={{fontSize:30, color:'orange'}} onClick={copyToClipboard} />
+             
+            </div>
           </div>
-          <div className="cadre__ligne"></div>
+
+          <div className="score">
+            <div className="score__right">Credit Score:</div>
+            <div className="score__left">{currentUser?.score ? currentUser.score : 100}%</div>
+          </div>
+          <div className="bar">
+    <div className="progress-value" style={{width: `${currentUser?.score ? currentUser.score : 100}%`  }}></div>
+  </div>
           <div className="cadre__bottom">
             <div className="firt__cadre">
               <span className="title__cadre">Wallet Amount</span>

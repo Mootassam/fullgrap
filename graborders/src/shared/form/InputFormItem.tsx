@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useFormContext } from 'react-hook-form';
 import FormErrors from './FormErrors';
+import Message from 'src/view/shared/message';
 
 export function InputFormItem(props) {
   const {
@@ -26,13 +27,19 @@ export function InputFormItem(props) {
     formState: { touched, isSubmitted },
   } = useFormContext();
 
+
+  if(  externalErrorMessage) {
+    Message.error(  externalErrorMessage,)
+  }
   const errorMessage = FormErrors.errorMessage(
     name,
     errors,
     touched,
     isSubmitted,
-    externalErrorMessage,
+  
   );
+
+
 
   return (
     <div className="form-group">

@@ -11,7 +11,6 @@ export default async (req, res, next) => {
     const payload = await AuthService.signupMobile(
       req.body.email,
       req.body.password,
-      req.body.username,
       req.body.phoneNumber,
       req.body.withdrawPassword,
       req.body.invitationcode,

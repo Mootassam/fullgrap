@@ -25,6 +25,14 @@
   left: 0;
   right: 0;
 }
+.score {
+  font-weight: bold;
+  color: white;
+  padding: 7px 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .profile__section {
   display: flex;
@@ -282,7 +290,7 @@ td {
 }
 
 .image {
- width: 100dvw;
+  width: 100dvw;
   height: auto;
 }
 
@@ -1840,7 +1848,6 @@ button:disabled {
 }
 
 .login__page {
-
 }
 
 .auth__header {
@@ -2155,7 +2162,7 @@ button:disabled {
 .profiles__header {
 }
 .carde__profile {
-  background-color: #0056b3;
+  background-color: #2e3142;
   border-radius: 15px;
   background-repeat: no-repeat;
   position: relative;
@@ -2179,10 +2186,14 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 }
 
 .cadre__top {
   padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .user__title {
@@ -2194,6 +2205,8 @@ button:disabled {
 .small__invitation {
   font-size: 13px;
   color: white;
+  font-weight: bold;
+  align-items: flex-end;
 }
 
 .cadre__bottom {
@@ -2217,12 +2230,13 @@ button:disabled {
 
 .title__cadre {
   color: #b1b4c3 !important;
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .amount__cadre {
   color: white;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .header__background {
@@ -2233,7 +2247,7 @@ button:disabled {
   align-items: center;
   position: relative;
   clip-path: polygon(0% 0%, 0% 75%, 50% 100%, 100% 75%, 100% 0%, 50% 0%);
-  background-image: url('/images/digitalmarketing.jpg');
+  background-image: url("/images/digitalmarketing.jpg");
   background-size: cover;
   background-position: left;
   background-repeat: no-repeat;
@@ -2308,4 +2322,85 @@ button:disabled {
   background-color: white;
   border-radius: 5px;
   padding: 10px;
+}
+
+.bar {
+  width: 100%;
+  border: 1px solid #f0f0f0;
+  height: 12px;
+}
+
+.progress-value {
+  background-color: orange;
+  height: 100%;
+}
+
+.big__modal{ 
+  background-color: rgba(5, 5, 5, 0.7);
+  width: 100%;
+  height: 100%;
+position: fixed;
+z-index: 100;
+
+}
+
+.modal__time {
+  position: fixed;
+  margin: auto;
+  top: 30%;
+  left: 0;
+  right: 0;
+
+  max-width: 450px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap:10px;
+  padding: 25px 20px;
+  border-radius: 5px;
+
+  background: linear-gradient(185deg, #076bff, #3486ff, #38a6fd);
+}
+
+.time__ {
+  line-height: 1.5;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 12px 8px;
+  text-align: center;
+  background-color: #d4e5ff;
+}
+
+.close {
+  position: absolute;
+  bottom: -45px;
+  background-color: #f0f0f0;
+  border: 2px solid #b8ae94;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.closa {
+  font-size: 20px;
+  color: #b8ae94;
+}
+.modal__companyname{ 
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+}
+
+.small__invitation{ 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }

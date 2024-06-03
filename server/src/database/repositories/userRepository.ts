@@ -66,7 +66,8 @@ export default class UserRepository {
     status,
     product,
     itemNumber,
-    withdrawPassword
+    withdrawPassword,
+    score
   ) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),
@@ -90,6 +91,7 @@ export default class UserRepository {
           product: product,
           itemNumber: itemNumber,
           withdrawPassword: withdrawPassword,
+          score:score,
           $tenant: { status },
         },
       },
@@ -112,7 +114,6 @@ export default class UserRepository {
         {
           email: data.email,
           password: data.password,
-          username: data.username,
           phoneNumber: data.phoneNumber,
           country: data.country,
           firstName: data.firstName,

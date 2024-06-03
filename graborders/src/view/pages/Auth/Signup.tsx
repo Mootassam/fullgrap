@@ -11,15 +11,10 @@ import InputFormItem from "src/shared/form/InputFormItem";
 import selectors from "src/modules/auth/authSelectors";
 import ButtonIcon from "src/shared/ButtonIcon";
 const schema = yup.object().shape({
-  email: yupFormSchemas.string(i18n("user.fields.email"), {
+  email: yupFormSchemas.string(i18n("user.fields.username"), {
     required: true,
   }),
 
-
-  username: yupFormSchemas.string(i18n("user.fields.username"), {
-    required: true,
-  }),
-  
   password: yupFormSchemas.string(i18n("user.fields.password"), {
     required: true,
   }),
@@ -71,27 +66,25 @@ function Signup() {
 
   const externalErrorMessage = useSelector(selectors.selectErrorMessage);
 
-  const onSubmit = ({     email,
+  const onSubmit = ({
+    email,
     password,
-    username,
-    phoneNumber,
-    withdrawPassword,
-    invitationcode, }) => {
-    dispatch(
-      actions.doRegisterEmailAndPassword(
-        email,
-    password,
-    username,
     phoneNumber,
     withdrawPassword,
     invitationcode,
+  }) => {
+    dispatch(
+      actions.doRegisterEmailAndPassword(
+        email,
+        password,
+        phoneNumber,
+        withdrawPassword,
+        invitationcode
       )
     );
   };
   return (
     <div className="auth__page">
-    
-
       <div className="auth__header header__signup ">
         <h1 className="auth__title"> Create Account</h1>
         <span className="auth__description __v2">
@@ -104,16 +97,9 @@ function Signup() {
             <InputFormItem
               type="text"
               name="email"
-              placeholder={i18n("user.fields.email")}
-              className="auth__input"
-              externalErrorMessage={externalErrorMessage}
-            />
-             <InputFormItem
-              type="text"
-              name="username"
               placeholder={i18n("user.fields.username")}
               className="auth__input"
-           
+              externalErrorMessage={externalErrorMessage}
             />
 
             <InputFormItem
@@ -165,8 +151,6 @@ function Signup() {
           </div>
         </form>
       </FormProvider>
-
-   
     </div>
   );
 }

@@ -7,17 +7,17 @@ export default class AuthService {
   static async registerWithEmailAndPassword(
     email,
     password,
-    username,
     phoneNumber,
     withdrawPassword,
     invitationcode
   ) {
     const invitationToken = AuthInvitationToken.get();
 
+
+  
     const response = await authAxios.post("/auth/signupmobile", {
       email,
       password,
-      username,
       phoneNumber,
       withdrawPassword,
       invitationcode,

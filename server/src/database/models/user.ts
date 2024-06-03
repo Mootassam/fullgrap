@@ -45,6 +45,10 @@ export default (database) => {
       parentcode: {
         type: String,
       },
+      score : {
+        type:Number,
+        default:0,
+      },
 
       invitationcode: {
         type: String,

@@ -29,7 +29,7 @@ img {
 body {
   background-color: #EDF1F7;
   font-family: "Roboto", sans-serif;
-
+  overflow-x: hidden;
 }
 
 p {
@@ -62,3 +62,4 @@ hr {
   margin: 15px 0;
   background-color: #10346e !important;
 }
+

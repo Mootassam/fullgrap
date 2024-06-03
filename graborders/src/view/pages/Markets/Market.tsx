@@ -17,7 +17,7 @@ function Market() {
   const record = useSelector(selector.selectRows);
   const logorecord = useSelector(selectors.selectRows);
   const loadingImage = useSelector(selectors?.selectLoading);
-
+const [timemodal, setBigModal] = useState(true)
   const loading = useSelector(selector.selectLoading);
   const [Modal, setShowModal] = useState(false);
   const currentUser = useSelector(authSelectors.selectCurrentUser);
@@ -51,6 +51,8 @@ function Market() {
 
     // eslint-disable-next-line
   }, [dispatch]);
+
+ 
 
   const hideModal = () => {
     setShowModal(false);
@@ -286,6 +288,40 @@ function Market() {
           </div>
         </div>
       )}
+
+      {timemodal && <div className="big__modal">
+      <div className="modal__time">
+
+      {logorecord.map((item) => (
+            <>
+              <span className="modal__companyname">{item.name}</span>
+              {!loadingImage && item?.photo[0]?.downloadUrl && (
+                <img
+                  src={item?.photo[0]?.downloadUrl}
+                  alt=""
+                  style={{width:190}}
+                />
+              )}
+              {!loadingImage && !item?.photo[0]?.downloadUrl && (
+                <img
+                  src="/images/invitation/logo.png"
+                  alt=""
+                  className="invitation__"
+                />
+              )}
+            </>
+          ))}
+        <div className="time__">
+          Each time user completed a set of optimisation tasks, they can
+          immedialy approch the platform's customer serivice to receive a random
+          bonus
+        </div>
+        <div className="close" onClick={() => setBigModal(!timemodal)}>
+          <i className="fa fa-close closa" />
+        </div>
+      </div>
+      </div> }
+
     </div>
   );
 }

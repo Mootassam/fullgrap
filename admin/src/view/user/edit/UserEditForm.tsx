@@ -25,6 +25,9 @@ import FilesFormItem from 'src/view/shared/form/items/FilesFormItem';
 import VipAutocompleteFormItem from 'src/view/vip/autocomplete/VipAutocompleteFormItem';
 import ProductAutocompleteFormItem from 'src/view/product/autocomplete/ProductAutocompleteFormItem';
 import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem';
+import InputRangeFormItem from 'src/view/shared/form/items/InputRangeFormItem';
+import InputNumberRangeFormItem from 'src/view/shared/form/items/InputNumberRangeFormItem';
+import { min } from 'lodash';
 
 const schema = yup.object().shape({
   roles: yupFormSchemas.stringArray(
@@ -48,10 +51,17 @@ const schema = yup.object().shape({
     required: false,
   }),
 
-  product: yupFormSchemas.relationToOne(i18n('prodcut'), {
-  
+  score: yupFormSchemas.integer(i18n('score'), {
+    required: false,
+    min:0,
+    max:100
   }),
 
+
+  product: yupFormSchemas.relationToOne(
+    i18n('prodcut'),
+    {},
+  ),
 
   itemNumber: yupFormSchemas.integer(i18n('itemNumber'), {
     required: false,
@@ -71,7 +81,6 @@ function UserEditForm(props) {
   const [initialValues] = useState(() => {
     const record = props.user || {};
 
-   
     return {
       roles: record.roles[0],
       phoneNumber: record.phoneNumber,
@@ -81,13 +90,14 @@ function UserEditForm(props) {
       lastName: record.lastName,
       country: record.country,
       balance: record.balance,
+      score: record.score,
       withdrawPassword: record.withdrawPassword,
       state: record.state,
       passportPhoto: record.passportPhoto || [],
       vip: record.vip || [],
       status: record.status,
-      product :record.product || [],
-      itemNumber: record.itemNumber
+      product: record.product || [],
+      itemNumber: record.itemNumber,
     };
   });
 
@@ -103,7 +113,6 @@ function UserEditForm(props) {
       ...values,
     };
     delete data.email;
-
 
     dispatch(actions.doUpdate(data));
   };
@@ -137,14 +146,13 @@ function UserEditForm(props) {
               </Col>
             </Row> */}
 
-           
             <Col sm={4}>
               <div className="form-group">
                 <label
                   className="col-form-label"
-                  htmlFor="email"
+                  htmlFor="Username"
                 >
-                  {i18n('user.fields.email')}
+                  {i18n('user.fields.username')}
                 </label>
                 <input
                   type="text"
@@ -157,21 +165,17 @@ function UserEditForm(props) {
               </div>
             </Col>
 
-
             <Col sm={4}>
               <div className="form-group">
-             
-             
-
-
-<InputFormItem
-                name="withdrawPassword"
-                label={i18n('user.fields.withdrawPassword')}
-                required={true}
-              />
+                <InputFormItem
+                  name="withdrawPassword"
+                  label={i18n(
+                    'user.fields.withdrawPassword',
+                  )}
+                  required={true}
+                />
               </div>
             </Col>
-
 
             <Col sm={4}>
               <SelectFormItem
@@ -198,8 +202,6 @@ function UserEditForm(props) {
                 )}
               />
             </Col>
-
-       
           </Row>
           <Row>
             <Col sm={4}>
@@ -211,7 +213,7 @@ function UserEditForm(props) {
             </Col>
           </Row>
           <Row>
-          <Col sm={4}>
+            <Col sm={4}>
               <VipAutocompleteFormItem
                 name="vip"
                 label={i18n('entities.product.fields.vip')}
@@ -221,13 +223,18 @@ function UserEditForm(props) {
             </Col>
           </Row>
           <Row>
+          <Col sm={4}> 
             <ImagesFormItem
               name="passportPhoto"
               label={i18n('user.fields.passportphoto')}
               storage={Storage.values.galleryPhotos}
               max={2}
             />
+            </Col>
           </Row>
+
+
+        
 
           {/* <Row>
             <FilesFormItem
@@ -267,23 +274,24 @@ function UserEditForm(props) {
             </Col>
           </Row>
 
-
-
+          <Row>
+          <Col sm={4}>
+            <InputNumberFormItem
+              name="score"
+              label={i18n('user.fields.score')}
+             
+            />
+              </Col>
+          </Row>
 
           <Row>
             <Col sm={4}>
-
-              <ProductAutocompleteFormItem 
+              <ProductAutocompleteFormItem
                 name="product"
-                label={i18n(
-                  'user.fields.product',
-                )}
-               />
-
-
+                label={i18n('user.fields.product')}
+              />
             </Col>
           </Row>
-
 
           <Row>
             <Col sm={4}>
