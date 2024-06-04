@@ -1008,13 +1008,12 @@ img {
 }
 
 .news-ticker-container {
-  width: 100%;
   overflow: hidden;
 }
 
 .news-ticker {
   white-space: nowrap;
-  animation: ticker 16s linear infinite;
+  animation: ticker 11s linear infinite;
 }
 
 .news-ticker span {
@@ -1029,6 +1028,28 @@ img {
 
   to {
     transform: translateX(-100%);
+  }
+}
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.marquee span {
+  padding-left: 
+  500px;
+  display: inline-block;
+  animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
   }
 }
 
