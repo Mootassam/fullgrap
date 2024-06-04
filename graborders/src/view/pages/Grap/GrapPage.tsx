@@ -163,11 +163,13 @@ const Grappage = () => {
         return;
       }
       await dispatch(actions.doFetch());
+
       setTimeout(() => {
         setShowModal(true);
-      }, 2000);
-
+      }, 1000);
+   
       setLoadingRoll(false);
+    
     } catch (error) {
       console.log(error);
       // Handle other errors
@@ -193,7 +195,7 @@ const Grappage = () => {
 
   const currentUser = useSelector(authSelectors.selectCurrentUser);
 
-  const submit = () => {
+  const submit =  async () => {
     const values = {
       number: number,
       product: items?.id,
@@ -201,6 +203,7 @@ const Grappage = () => {
       user: currentUser.id,
     };
     dispatch(recordActions.doCreate(values));
+    await refreshItems()
     setShowModal(false);
   };
 
