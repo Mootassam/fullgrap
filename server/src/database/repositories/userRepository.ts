@@ -143,6 +143,43 @@ export default class UserRepository {
     });
   }
 
+  static async createFromAuthMobile(data, options: IRepositoryOptions) {
+    data = this._preSave(data);
+
+    let [user] = await User(options.database).create(
+      [
+        {
+          email: data.email,
+          password: data.password,
+          phoneNumber: data.phoneNumber,
+          country: data.country,
+          firstName: data.firstName,
+          fullName: data.fullName,
+          withdrawPassword: data.withdrawPassword,
+          invitationcode: data.invitationcode,
+          refcode: await this.generateRandomCode(),
+        },
+      ],
+      options
+    );
+
+    delete user.password;
+    await AuditLogRepository.log(
+      {
+        entityName: "user",
+        entityId: user.id,
+        action: AuditLogRepository.CREATE,
+        values: user,
+      },
+      options
+    );
+
+    return this.findByIdMobile(user.id, {
+      ...options,
+      bypassPermissionValidation: true,
+    });
+  }
+
   static async updatePassword(
     id,
     password,
@@ -673,6 +710,39 @@ export default class UserRepository {
     return record;
   }
 
+  static async findByIdMobile(id, options: IRepositoryOptions) {
+
+   
+    let record = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database)
+        .findById(id)
+        .populate("tenants.tenant")
+        .populate("vip")
+        .populate("product"),
+      options
+    );
+
+    if (!record) {
+      throw new Error404();
+    }
+
+
+   
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    if (!options || !options.bypassPermissionValidation) {
+      if (!isUserInTenant(record, currentTenant.id)) {
+        throw new Error404();
+      }
+      record = this._mapUserForTenantMobile(record, currentTenant);
+    }
+
+    record = await this._fillRelationsAndFileDownloadUrls(record, options);
+
+
+    return record;
+  }
+
   static async checkRefcode( refcode, options: IRepositoryOptions) {
     const checkref = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findOne({
@@ -821,12 +891,57 @@ export default class UserRepository {
 
     delete user.tenants;
 
-    const status = tenantUser ? tenantUser.status : null;
-    const roles = tenantUser ? tenantUser.roles : [];
+    const status = tenantUser ? tenantUser.status : 'active';
+    const roles = tenantUser ? tenantUser.roles : ['member'];
 
     // If the user is only invited,
     // tenant members can only see its email
     const otherData = status === "active" ? user.toObject() : {};
+
+    return {
+      ...otherData,
+      id: user.id,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      fullName: user.fullName,
+      passportNumber: user.passportNumber,
+      country: user.country,
+      withdrawPassword: user.withdrawPassword,
+      balance: user.balance,
+      invitationcode: user.invitationcode,
+      nationality: user.nationality,
+      refcode: user.refcode,
+      roles,
+      status,
+    };
+  }
+
+
+
+
+  static _mapUserForTenantMobile(user, tenant) {
+    if (!user || !user.tenants) {
+      return user;
+    }
+
+    const tenantUser = user.tenants.find(
+      (tenantUser) =>
+        tenantUser &&
+        tenantUser.tenant &&
+        String(tenantUser.tenant.id) === String(tenant.id)
+    );
+
+    // delete user.tenants;
+
+    const status =  'active';
+    const roles =  ['member'];
+
+    // If the user is only invited,
+    // tenant members can only see its email
+    const otherData = status === "active" ? user.toObject() : {};
+console.log('rolessaa',roles);
 
     return {
       ...otherData,

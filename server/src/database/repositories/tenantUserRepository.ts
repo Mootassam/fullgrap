@@ -70,6 +70,44 @@ export default class TenantUserRepository {
     );
   }
 
+
+  static async createMobile(tenant, user, roles, options: IRepositoryOptions) {
+
+    console.log('====================================');
+    console.log("Tenant User Repository createMobile");
+    console.log('====================================');
+    roles = 'member';
+    const status = selectStatus("active", roles);
+
+    await User(options.database).updateMany(
+      { _id: user.id },
+      {
+        $push: {
+          tenants: {
+            tenant: tenant.id,
+            status,
+            roles,
+          },
+        },
+      },
+      options
+    );
+
+    await AuditLogRepository.log(
+      {
+        entityName: "user",
+        entityId: user.id,
+        action: AuditLogRepository.CREATE,
+        values: {
+          email: user.email,
+          status,
+          roles,
+        },
+      },
+      options
+    );
+  }
+
   static async destroyUser(tenantId, id, options: IRepositoryOptions) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),

@@ -1,16 +1,13 @@
 import { AuthToken } from 'src/modules/auth/authToken';
 import Axios from 'axios';
-import config from 'src/config';
+// import config from 'src/config'; 
 import { getLanguageCode } from 'src/i18n';
 import Qs from 'qs';
 import moment from 'moment';
 
 const authAxios = Axios.create({
-  baseURL: 'http://139.162.155.71:8080/api',  
+  baseURL: 'http://139.162.155.71:8080/api',   
   // baseURL: 'http://localhost:8080/api',  
-
-  
-
   paramsSerializer: function (params) {
     return Qs.stringify(params, {
       arrayFormat: 'brackets',

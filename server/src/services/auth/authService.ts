@@ -82,7 +82,7 @@ class AuthService {
         // Handles onboarding process like
         // invitation, creation of default tenant,
         // or default joining the current tenant
-        await this.handleOnboard(existingUser, invitationToken, tenantId, {
+        await this.handleOnboardMobile(existingUser, invitationToken, tenantId, {
           ...options,
           session,
         });
@@ -125,9 +125,9 @@ class AuthService {
         return token;
       }
 
-      const newUser = await UserRepository.createFromAuth(
+      const newUser = await UserRepository.createFromAuthMobile(
         {
-          firstName: email.split("@")[0],
+          firstName: email,
           password: hashedPassword,
           email: email,
           phoneNumber: phoneNumber,
@@ -147,7 +147,7 @@ class AuthService {
       // Handles onboarding process like
       // invitation, creation of default tenant,
       // or default joining the current tenant
-      await this.handleOnboard(newUser, invitationToken, tenantId, {
+      await this.handleOnboardMobile(newUser, invitationToken, tenantId, {
         ...options,
         session,
       });
@@ -428,6 +428,67 @@ class AuthService {
       await MongooseRepository.abortTransaction(session);
 
       throw error;
+    }
+  }
+
+  static async handleOnboardMobile(currentUser, invitationToken, tenantId, options) {
+
+    console.log("Current User handleOnboardMobile");
+    
+    if (invitationToken) {
+      try {
+        await TenantUserRepository.acceptInvitation(invitationToken, {
+          ...options,
+          currentUser,
+          bypassPermissionValidation: true,
+        });
+      } catch (error) {
+        console.error(error);
+        // In case of invitation acceptance error, does not prevent
+        // the user from sign up/in
+      }
+    }
+
+    const isMultiTenantViaSubdomain =
+      ["multi", "multi-with-subdomain"].includes(getConfig().TENANT_MODE) &&
+      tenantId;
+
+    if (isMultiTenantViaSubdomain) {
+      await new TenantService({
+        ...options,
+        currentUser,
+      }).joinWithDefaultRolesOrAskApproval(
+        {
+          tenantId,
+          // leave empty to require admin's approval
+          roles: [],
+        },
+        options
+      );
+    }
+
+    const singleTenant = getConfig().TENANT_MODE === "single";
+
+    if (singleTenant) {
+      // In case is single tenant, and the user is signing in
+      // with an invited email and for some reason doesn't have the token
+      // it auto-assigns it
+      await new TenantService({
+        ...options,
+        currentUser,
+      }).joinDefaultUsingInvitedEmail(options.session);
+
+      // Creates or join default Tenant
+      await new TenantService({
+        ...options,
+        currentUser,
+      }).createOrJoinDefaultMobile(
+        {
+          // leave empty to require admin's approval
+          roles: [],
+        },
+        options.session
+      );
     }
   }
 
