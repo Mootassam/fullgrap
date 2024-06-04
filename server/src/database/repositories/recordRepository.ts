@@ -52,7 +52,7 @@ class RecordRepository {
     });
 
     const currentUser = MongooseRepository.getCurrentUser(options);
-    const currentUserBalance = currentUser.balance;
+    const currentUserBalance = currentUser?.balance ? currentUser?.balance : 0;
     const productBalance = currentProduct.amount;
     const currentCommission = currentProduct.commission; // Corrected typo in 'commission'
     const Orderdone = (await RecordRepository.CountOrder(options)).record;
