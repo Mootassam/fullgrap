@@ -77,7 +77,6 @@ export default class UserRepository {
       options
     );
 
-    console.log(vip);
     
 
 
@@ -969,7 +968,6 @@ export default class UserRepository {
     // If the user is only invited,
     // tenant members can only see its email
     const otherData = status === "active" ? user.toObject() : {};
-console.log('rolessaa',roles);
 
     return {
       ...otherData,

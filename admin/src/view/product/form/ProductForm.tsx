@@ -11,6 +11,7 @@ import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem'
 import ImagesFormItem from 'src/view/shared/form/items/ImagesFormItem';
 import Storage from 'src/security/storage';
 import VipAutocompleteFormItem from 'src/view/vip/autocomplete/VipAutocompleteFormItem';
+import SwitchFormItem from 'src/view/shared/form/items/SwitchFormItem';
 
 const schema = yup.object().shape({
   vip: yupFormSchemas.relationToOne(
@@ -39,9 +40,6 @@ const schema = yup.object().shape({
     i18n('entities.product.fields.photo'),
     {},
   ),
-
-
-
 });
 
 function ProductForm(props) {
@@ -53,6 +51,7 @@ function ProductForm(props) {
       commission: record.commission,
       vip: record.vip || [],
       photo: record.photo,
+      combo: record.combo,
     };
   });
 
@@ -127,7 +126,17 @@ function ProductForm(props) {
               />
             </div>
 
+             <div className="col-lg-7 col-md-8 col-12">
+              <SwitchFormItem
+                name="combo"
+                label={i18n(
+                  'entities.product.fields.combo',
+                )}
+              />
+            </div>
           </div>
+
+
 
           <div className="form-buttons">
             <button

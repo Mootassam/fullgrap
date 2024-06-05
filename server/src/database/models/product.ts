@@ -21,6 +21,12 @@ export default (database) => {
         type: String,
       },
       photo: [FileSchema],
+
+      combo: {
+        type: Boolean,
+        default: false,
+      },
+     
       vip: {
         type: Schema.Types.ObjectId,
         ref: "vip",

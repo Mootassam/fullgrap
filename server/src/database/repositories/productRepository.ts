@@ -244,11 +244,11 @@ class ProductRepository {
     if (currentUser && currentUser.product && currentUser.product.id && Orderdone === mergeDataPosition) {
 
       let prodcut = currentUser.product;
-      // prodcut(this._fillFileDownloadUrls);
+      prodcut.photo = await FileRepository.fillDownloadUrl(prodcut?.photo);
       return prodcut;
     } else {
       let record = await Product(options.database)
-        .find({ vip: currentVip })
+        .find({ vip: currentVip ,combo:false })
         .populate("vip");
       const random = Math.floor(Math.random() * record.length);
       record = await Promise.all(record.map(this._fillFileDownloadUrls));

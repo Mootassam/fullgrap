@@ -22,7 +22,6 @@ function Portfolio() {
       status: active,
     };
 
-    console.log(active);
 
     dispatch(actions.doFetch(values, values));
   }, [dispatch, active]);

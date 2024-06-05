@@ -1696,6 +1696,7 @@ const en = {
         title: 'Edit Product',
       },
       fields: {
+        combo:"Combo",
         vip: 'vip',
         title: 'Product Name',
         amount: 'Product Price',
