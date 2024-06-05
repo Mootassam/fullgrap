@@ -310,7 +310,7 @@ const Grappage = () => {
             <div className="group__comission">
               <div className="comission__text"> Availbale Balance </div>
               <div className="comission__value">
-                {Amount.Dollar(record?.balance)}
+                {Amount.USDT(record?.balance)}
               </div>
             </div>
             <div className="group__comission">

@@ -2252,6 +2252,7 @@ button:disabled {
 .title__cadre {
   color: #b1b4c3 !important;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .amount__cadre {

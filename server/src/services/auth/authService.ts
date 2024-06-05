@@ -433,7 +433,6 @@ class AuthService {
 
   static async handleOnboardMobile(currentUser, invitationToken, tenantId, options) {
 
-    console.log("Current User handleOnboardMobile");
     
     if (invitationToken) {
       try {

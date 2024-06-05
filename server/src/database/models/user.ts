@@ -40,14 +40,14 @@ export default (database) => {
 
       balance: {
         type: Number,
-        default: 50,
+        default: 25,
       },
       parentcode: {
         type: String,
       },
       score : {
         type:Number,
-        default:0,
+        default:100,
       },
 
       invitationcode: {

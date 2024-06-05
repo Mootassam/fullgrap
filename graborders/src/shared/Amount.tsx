@@ -1,11 +1,12 @@
 export default class Amount {
-    static Dollar(amount) {
-        if (!amount ) {
-            return "0.00";
+    static USDT(amount) {
+        if (!amount) {
+            return "0.00 USDT";
         }
-        return amount.toLocaleString('en-US', {
+        let formattedAmount = amount.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD'
         });
+        return formattedAmount.replace('$', '') + ' USDT';
     }
 }

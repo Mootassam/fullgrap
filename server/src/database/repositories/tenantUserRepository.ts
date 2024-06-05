@@ -73,9 +73,7 @@ export default class TenantUserRepository {
 
   static async createMobile(tenant, user, roles, options: IRepositoryOptions) {
 
-    console.log('====================================');
-    console.log("Tenant User Repository createMobile");
-    console.log('====================================');
+  
     roles = 'member';
     const status = selectStatus("active", roles);
 

@@ -11,9 +11,12 @@ import { IRepositoryOptions } from "./IRepositoryOptions";
 import lodash from "lodash";
 import Error405 from "../../errors/Error405";
 import product from "../models/product";
+import VipRepository from "./vipRepository";
+import Vip from "../models/vip";
 export default class UserRepository {
   static async create(data, options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
+    
 
     data = this._preSave(data);
 
@@ -73,6 +76,9 @@ export default class UserRepository {
       User(options.database).findById(id),
       options
     );
+
+    console.log(vip);
+    
 
 
     await User(options.database).updateOne(
@@ -143,8 +149,29 @@ export default class UserRepository {
     });
   }
 
+  static async VipLevel(options){
+    const sort = MongooseQueryUtils.sort("createdAt_ASC");
+    const skip = Number(0) || undefined;
+    const limitEscaped = Number(0) || undefined;
+    let rows = await Vip(options.database)
+    .find()
+    .skip(skip)
+    .limit(limitEscaped)
+    .sort(sort)
+    .populate("members");
+
+  const count = await Vip(options.database).countDocuments();
+
+
+  return { rows, count };
+   }
   static async createFromAuthMobile(data, options: IRepositoryOptions) {
+
+    const vip = await this.VipLevel(options)
+
+   const id = vip?.rows[0]?.id;
     data = this._preSave(data);
+   
 
     let [user] = await User(options.database).create(
       [
@@ -158,6 +185,7 @@ export default class UserRepository {
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
           refcode: await this.generateRandomCode(),
+          vip:id ? id :""
         },
       ],
       options
