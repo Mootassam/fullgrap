@@ -43,7 +43,7 @@ const fr = {
   },
 
   app: {
-    title: 'CheckWithoneClikc',
+    title: 'E-CLICKS DIGITAL',
   },
 
   api: {
