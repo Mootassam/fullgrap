@@ -34,7 +34,6 @@ services:
     ports:
       - 80:80
       - 443:443
-
     restart: unless-stopped
     volumes:
       - "./graborders:/app"
@@ -42,8 +41,6 @@ services:
     stdin_open: true
     environment:
       - CHOKIDAR_USEPOLLING=true
-
- 
 
 volumes:
   phone:
