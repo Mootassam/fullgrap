@@ -43,7 +43,7 @@ const en = {
   },
 
   app: {
-    title: "CheckWithoneClikc",
+    title: "E-clicks DIGITAL",
   },
 
   api: {
