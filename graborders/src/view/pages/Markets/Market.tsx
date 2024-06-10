@@ -33,12 +33,12 @@ const [timemodal, setBigModal] = useState(true)
   const [selectedItem, setItems] = useState<DataItem | null>(null);
 
   const currentDate = () => {
-    const dubaiTimezone = "Asia/Dubai";
-    const options = { timeZone: dubaiTimezone };
+    const californiaTimezone = "America/Los_Angeles"; // Timezone for California
+    const options = { timeZone: californiaTimezone };
     const currentDateTime = new Date().toLocaleString("en-US", options);
     return currentDateTime;
   };
-
+  
   const dolistCompany = () => {
     dispatch(listactions.doFetch());
   };
