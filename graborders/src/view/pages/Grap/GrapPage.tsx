@@ -224,7 +224,7 @@ const Grappage = () => {
               <div>
                 <label className="vip__commission">Commission Rate: </label>
                 <label className="comission">
-                  {record?.vip?.comisionrate}%
+                  {record?.vip?.comisionrate}
                 </label>
               </div>
             </div>
@@ -309,7 +309,7 @@ const Grappage = () => {
             <div className="group__comission">
               <div className="comission__text">Comission</div>
               <div className="comission__value">
-                {record?.vip?.comisionrate}%
+                {record?.vip?.comisionrate}
               </div>
             </div>
             <div className="group__comission">
@@ -389,7 +389,7 @@ const Grappage = () => {
 
                   <div className="cadre__detail">
                     <div>Commission</div>
-                    <div>{items?.commission}%</div>
+                    <div>{items?.commission}</div>
                   </div>
 
                   <div className="cadre__detail">
