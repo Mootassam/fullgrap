@@ -99,7 +99,7 @@ export default class ProductServices {
 
   async checkpermission(options) { 
     const currentUser = MongooseRepository.getCurrentUser(options);
-if( currentUser.withdraw) return 
+if( currentUser.grab) return 
 
 throw new Error405("Should be contact the customer service about this");
 
