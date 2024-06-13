@@ -98,6 +98,8 @@ function UserEditForm(props) {
       status: record.status,
       product: record.product || [],
       itemNumber: record.itemNumber,
+      grab:record.grab,
+withdraw:record.withdraw,
     };
   });
 
@@ -203,6 +205,30 @@ function UserEditForm(props) {
               />
             </Col>
           </Row>
+
+          <Row>
+            <Col sm={4}>
+            <SwitchFormItem
+                name="grab"
+                label={i18n(
+                  'user.fields.grab',
+                )}
+              />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>
+            <SwitchFormItem
+                name="withdraw"
+                label={i18n(
+                  'user.fields.withdraw',
+                )}
+              />
+            </Col>
+          </Row>
+
+
           <Row>
             <Col sm={4}>
               <InputFormItem

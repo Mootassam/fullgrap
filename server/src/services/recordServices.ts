@@ -61,6 +61,30 @@ export default class RecordServices {
     }
   }
 
+  async countTasksDone(userId) {
+    const session = await MongooseRepository.createSession(
+      this.options.database
+    );
+
+    try {
+      const record = await RecordRepository.tasksDone(userId, {
+        ...this.options,
+        session,
+      });
+      return record;
+    } catch (error) {
+      await MongooseRepository.abortTransaction(session);
+
+      MongooseRepository.handleUniqueFieldError(
+        error,
+        this.options.language,
+        "mandat"
+      );
+
+      throw error;
+    }
+  }
+
   async check() {
     const session = await MongooseRepository.createSession(
       this.options.database
@@ -148,9 +172,7 @@ export default class RecordServices {
   }
 
   async findAndCountPerDay(args) {
-  
-    
-    return RecordRepository.findAndCountPerDay(args, this.options); 
+    return RecordRepository.findAndCountPerDay(args, this.options);
   }
   async findAndCountAllMobile(args) {
     return RecordRepository.findAndCountAllMobile(args, this.options);

@@ -2623,12 +2623,15 @@ const en = {
 
   user: {
     fields: {
+      currentrecord:"Tasks Done",
       id: 'Id',
       avatars: 'Avatar',
       email: 'Email',
       username : 'Username',
       refcode: "refcode",
       score: "Score",
+      grab:"Grab",
+      withdraw:"Withdraw",
       invitationcode:"My code",
       withdrawPassword:'withdraw Password',
       emails: 'Email(s)',

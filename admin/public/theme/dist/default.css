@@ -9122,3 +9122,37 @@ td {
   text-align: center !important;
   vertical-align: middle !important
 }
+
+.modal__socore{ 
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  height: 200px;
+  background-color: #00512d;
+  border-radius: 5px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score__close{ 
+  position: absolute;
+  right:0;
+  top:0;
+  background-color: white;
+  padding: 10px;
+
+}
+
+.text__score{ 
+  color:white; 
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.font{ 
+  font-size: 34px !important;
+}

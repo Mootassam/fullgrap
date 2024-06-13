@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import userSelectors from 'src/modules/user/userSelectors';
 import selectors from 'src/modules/user/list/userListSelectors';
@@ -13,12 +13,20 @@ import Roles from 'src/security/roles';
 import UserStatusView from 'src/view/user/view/UserStatusView';
 import Avatar from 'src/view/shared/Avatar';
 import TableWrapper from 'src/view/shared/styles/TableWrapper';
+import recordListActions from 'src/modules/record/list/recordListActions';
+import selectorTaskdone from 'src/modules/record/list/recordListSelectors';
 
 function UserTable() {
   const dispatch = useDispatch();
   const [recordIdToDestroy, setRecordIdToDestroy] =
     useState(null);
-
+  const [totalTask, setTotalTasks] = useState('');
+  const tasksdone = useSelector(
+    selectorTaskdone.selectCountRecord,
+  );
+  const LoadingTasksDone = useSelector(
+    selectorTaskdone.selectLoading,
+  );
   const loading = useSelector(selectors.selectLoading);
   const rows = useSelector(selectors.selectRows);
   const pagination = useSelector(
@@ -27,6 +35,7 @@ function UserTable() {
   const selectedKeys = useSelector(
     selectors.selectSelectedKeys,
   );
+  const [showTask, setShowTask] = useState(false)
   const hasRows = useSelector(selectors.selectHasRows);
   const sorter = useSelector(selectors.selectSorter);
   const isAllSelected = useSelector(
@@ -69,6 +78,14 @@ function UserTable() {
   const doToggleOneSelected = (id) => {
     dispatch(actions.doToggleOneSelected(id));
   };
+
+  const showThecurrentRecord = async (id, totaltask?) => {
+    setShowTask(true)
+    await dispatch(recordListActions.doTasksDone(id));
+    setTotalTasks(totaltask);
+  };
+
+  useEffect(() => {}, [dispatch, tasksdone]);
 
   return (
     <>
@@ -122,7 +139,7 @@ function UserTable() {
                   label={i18n('user.fields.invitationcode')}
                 />
 
-<TableColumnHeader
+                <TableColumnHeader
                   onSort={doChangeSort}
                   hasRows={hasRows}
                   sorter={sorter}
@@ -135,6 +152,10 @@ function UserTable() {
                 <TableColumnHeader
                   className="text-center"
                   label={i18n('user.fields.status')}
+                />
+                <TableColumnHeader
+                  className="text-center"
+                  label={i18n('user.fields.currentrecord')}
                 />
                 <TableColumnHeader className="th-actions" />
               </tr>
@@ -206,6 +227,20 @@ function UserTable() {
                     <td className="text-center">
                       <UserStatusView value={row.status} />
                     </td>
+
+                    <td>
+                      <button
+                        onClick={() =>
+                          showThecurrentRecord(
+                            row.id,
+                            row?.vip?.dailyorder,
+                          )
+                        }
+                      >
+                        Show{' '}
+                      </button>
+                    </td>
+
                     <td className="td-actions">
                       <Link
                         className="btn btn-link"
@@ -253,6 +288,16 @@ function UserTable() {
           okText={i18n('common.yes')}
           cancelText={i18n('common.no')}
         />
+      )}
+      {!LoadingTasksDone && showTask && (
+        <div className="modal__socore">
+          <div className='score__close' onClick={() => setShowTask(false)}> <i className='fa fa-close font' /></div>
+          <div className="modal__contentscore">
+            <p className="text__score">
+              {tasksdone} / {totalTask}
+            </p>
+          </div>
+        </div>
       )}
     </>
   );

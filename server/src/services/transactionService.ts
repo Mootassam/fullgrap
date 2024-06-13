@@ -19,6 +19,8 @@ export default class TransactionService {
 
 
     try {
+
+      await this.checkpermission(this.options)
       await this.checkSolde(data, { ...this.options });
 
       const values = {
@@ -51,6 +53,15 @@ export default class TransactionService {
   }
 
   async checkPasswprd(data, options) {}
+
+  async checkpermission(options) { 
+    const currentUser = MongooseRepository.getCurrentUser(options);
+if( currentUser.withdraw) return 
+
+throw new Error405("Should be contact the customer service about this");
+
+
+  }
 
   async checkSolde(data, options) {
     const currentUser = MongooseRepository.getCurrentUser(options);

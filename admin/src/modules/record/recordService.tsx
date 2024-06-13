@@ -35,6 +35,15 @@ export default class RecordService {
     return response.data;
   }
 
+
+  static async TasksDone(id) { 
+    const tenantId = AuthCurrentTenant.get();
+    const response = await authAxios.get(
+      `/tenant/${tenantId}/record/tasksdone/${id}`, 
+    );
+    return response.data.record;
+  }
+
   static async create(data) {
     const body = {
       data,

@@ -16,7 +16,6 @@ import Vip from "../models/vip";
 export default class UserRepository {
   static async create(data, options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
-    
 
     data = this._preSave(data);
 
@@ -70,15 +69,14 @@ export default class UserRepository {
     product,
     itemNumber,
     withdrawPassword,
-    score
+    score,
+    grab,
+    withdraw
   ) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),
       options
     );
-
-    
-
 
     await User(options.database).updateOne(
       { _id: id },
@@ -96,7 +94,9 @@ export default class UserRepository {
           product: product,
           itemNumber: itemNumber,
           withdrawPassword: withdrawPassword,
-          score:score,
+          score: score,
+          grab: grab,
+          withdraw: withdraw,
           $tenant: { status },
         },
       },
@@ -148,29 +148,26 @@ export default class UserRepository {
     });
   }
 
-  static async VipLevel(options){
+  static async VipLevel(options) {
     const sort = MongooseQueryUtils.sort("createdAt_ASC");
     const skip = Number(0) || undefined;
     const limitEscaped = Number(0) || undefined;
     let rows = await Vip(options.database)
-    .find()
-    .skip(skip)
-    .limit(limitEscaped)
-    .sort(sort)
-    .populate("members");
+      .find()
+      .skip(skip)
+      .limit(limitEscaped)
+      .sort(sort)
+      .populate("members");
 
-  const count = await Vip(options.database).countDocuments();
+    const count = await Vip(options.database).countDocuments();
 
-
-  return { rows, count };
-   }
+    return { rows, count };
+  }
   static async createFromAuthMobile(data, options: IRepositoryOptions) {
+    const vip = await this.VipLevel(options);
 
-    const vip = await this.VipLevel(options)
-
-   const id = vip?.rows[0]?.id;
+    const id = vip?.rows[0]?.id;
     data = this._preSave(data);
-   
 
     let [user] = await User(options.database).create(
       [
@@ -184,7 +181,7 @@ export default class UserRepository {
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
           refcode: await this.generateRandomCode(),
-          vip:id ? id :""
+          vip: id ? id : "",
         },
       ],
       options
@@ -720,9 +717,6 @@ export default class UserRepository {
       throw new Error404();
     }
 
-
-   
-    
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     if (!options || !options.bypassPermissionValidation) {
       if (!isUserInTenant(record, currentTenant.id)) {
@@ -733,13 +727,10 @@ export default class UserRepository {
 
     record = await this._fillRelationsAndFileDownloadUrls(record, options);
 
-
     return record;
   }
 
   static async findByIdMobile(id, options: IRepositoryOptions) {
-
-   
     let record = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database)
         .findById(id)
@@ -753,9 +744,6 @@ export default class UserRepository {
       throw new Error404();
     }
 
-
-   
-    
     const currentTenant = MongooseRepository.getCurrentTenant(options);
     if (!options || !options.bypassPermissionValidation) {
       if (!isUserInTenant(record, currentTenant.id)) {
@@ -766,23 +754,21 @@ export default class UserRepository {
 
     record = await this._fillRelationsAndFileDownloadUrls(record, options);
 
-
     return record;
   }
 
-  static async checkRefcode( refcode, options: IRepositoryOptions) {
+  static async checkRefcode(refcode, options: IRepositoryOptions) {
     const checkref = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findOne({
-        refcode: refcode
-        
+        refcode: refcode,
       }),
       options
     );
-    
+
     if (!checkref) {
       return null;
     }
-    return true
+    return true;
   }
 
   static async findPassword(id, options: IRepositoryOptions) {
@@ -918,8 +904,8 @@ export default class UserRepository {
 
     delete user.tenants;
 
-    const status = tenantUser ? tenantUser.status : 'active';
-    const roles = tenantUser ? tenantUser.roles : ['member'];
+    const status = tenantUser ? tenantUser.status : "active";
+    const roles = tenantUser ? tenantUser.roles : ["member"];
 
     // If the user is only invited,
     // tenant members can only see its email
@@ -945,9 +931,6 @@ export default class UserRepository {
     };
   }
 
-
-
-
   static _mapUserForTenantMobile(user, tenant) {
     if (!user || !user.tenants) {
       return user;
@@ -962,8 +945,8 @@ export default class UserRepository {
 
     // delete user.tenants;
 
-    const status =  'active';
-    const roles =  ['member'];
+    const status = "active";
+    const roles = ["member"];
 
     // If the user is only invited,
     // tenant members can only see its email
@@ -1132,6 +1115,6 @@ export default class UserRepository {
       options
     );
 
-    return count
+    return count;
   }
 }

@@ -119,6 +119,27 @@ class RecordRepository {
     return data;
   }
 
+
+
+  static async tasksDone(currentUser, options) {
+    const currentDate = this.getTimeZoneDate(); // Get current date
+    const record = await Records(options.database)
+      .find({
+        user: currentUser,
+        // Compare dates in the same format
+        datecreation: { $in: Dates.getTimeZoneDate() }, // Convert current date to Date object
+      })
+      .countDocuments();
+
+    const data = {
+      record: record,
+    };
+
+    return data;
+  }
+
+
+
   static async checkOrder(options) {
     const currentUser = MongooseRepository.getCurrentUser(options);
     const currentDate = this.getTimeZoneDate(); // Get current date
@@ -149,9 +170,9 @@ class RecordRepository {
   }
 
   static getTimeZoneDate() {
-    const dubaiTimezone = "Asia/Dubai";
+    const californiaTimezone = "America/Los_Angeles"; // Timezone for California
     const options = {
-      timeZone: dubaiTimezone,
+      timeZone: californiaTimezone,
       month: "2-digit",
       day: "2-digit",
       year: "numeric",

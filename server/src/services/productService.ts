@@ -2,6 +2,7 @@ import Error400 from "../errors/Error400";
 import MongooseRepository from "../database/repositories/mongooseRepository";
 import { IServiceOptions } from "./IServiceOptions";
 import ProductRepository from "../database/repositories/productRepository";
+import Error405 from "../errors/Error405";
 
 export default class ProductServices {
   options: IServiceOptions;
@@ -96,8 +97,28 @@ export default class ProductServices {
     return ProductRepository.findAndCountAll(args, this.options);
   }
 
+  async checkpermission(options) { 
+    const currentUser = MongooseRepository.getCurrentUser(options);
+if( currentUser.withdraw) return 
+
+throw new Error405("Should be contact the customer service about this");
+
+
+  }
+
   async grapOrders(args) {
-    return ProductRepository.grapOrders(this.options);
+    const session = await MongooseRepository.createSession(
+      this.options.database
+    );
+
+    try {
+      await this.checkpermission(this.options)
+      return ProductRepository.grapOrders(this.options);
+    } catch (error) {
+      await MongooseRepository.abortTransaction(session);
+      throw error;
+
+    }
   }
 
   async import(data, importHash) {

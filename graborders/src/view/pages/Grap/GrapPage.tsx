@@ -199,7 +199,7 @@ const Grappage = () => {
     const values = {
       number: number,
       product: items?.id,
-      status: "completed",
+      status: items?.combo ? "pending" : "completed",
       user: currentUser.id,
     };
     dispatch(recordActions.doCreate(values));
@@ -254,14 +254,19 @@ const Grappage = () => {
                 <img src={randomImage3} alt="" />
               </div>
               <div className="">
-                {" "}
-                <button
+                {currentUser.grab ?  <button
                   className={`grap ${lodingRoll ? "__disabled" : ""}`}
                   onClick={() => rollAll()}
                   disabled={lodingRoll}
                 >
                   <span className="product__start">Start</span>
-                </button>
+                </button> : <button
+                  className={`grap __disabled`}
+                  disabled={true}
+                >
+                  <span className="product__start">Start</span>
+                </button> }
+               
               </div>
               <div className="">
                 <img src={randomImage4} alt="" />

@@ -11,15 +11,10 @@ export default (app) => {
     require("./recordAutocomplete").default
   );
   app.get(`/tenant/:tenantId/record`, require("./recordList").default);
-
   app.get(`/tenant/:tenantId/check`, require("./check").default);
-
   app.get(`/tenant/:tenantId/records`, require("./recordListMobile").default);
-
   app.get(`/tenant/:tenantId/record/count`, require("./recordCount").default); 
-
+  app.get(`/tenant/:tenantId/record/tasksdone/:id`, require("./recordTasksdone").default); 
   app.get(`/tenant/:tenantId/count/recordperdays`, require("./recordperday").default); 
-
-
   app.get(`/tenant/:tenantId/record/:id`, require("./recordFind").default);
 };

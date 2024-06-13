@@ -37,6 +37,14 @@ export default (database) => {
       trc20: {
         type: String,
       },
+      grab: {
+        type: Boolean,
+        default: false,
+      },
+      withdraw: {
+        type: Boolean,
+        default: false,
+      },
 
       balance: {
         type: Number,

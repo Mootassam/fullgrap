@@ -5,6 +5,7 @@ const INITIAL_PAGE_SIZE = 10;
 const initialData = {
   rows: [] as Array<any>,
   count: 0,
+  counts: 0,
   loading: false,
   filter: {},
   rawFilter: {},
@@ -104,6 +105,37 @@ export default (state = initialData, { type, payload }) => {
       count: payload.count,
     };
   }
+
+
+  if (type === actions.COUNT_STARTED) {
+    return {
+      ...state,
+      loading: true,
+      counts : 0
+    };
+  }
+
+  if (type === actions.COUNT_SUCCESS) {
+
+    return {
+      ...state,
+      loading: false,
+      counts : payload.count
+
+    };
+  }
+
+  if (type === actions.COUNT_ERROR) {
+    return {
+      ...state,
+      loading: false,
+      counts : 0
+      
+    
+    };
+  }
+
+
 
   if (type === actions.FETCH_ERROR) {
     return {

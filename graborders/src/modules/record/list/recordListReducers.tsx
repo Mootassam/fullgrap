@@ -133,7 +133,6 @@ export default (state = initialData, { type, payload }) => {
     return {
       ...state,
       loading: false,
-
     };
   }
 
@@ -142,12 +141,8 @@ export default (state = initialData, { type, payload }) => {
       ...state,
       loading: false,
       error: payload
-      
-    
     };
   }
-
-
 
 
   if (type === actions.COUNT_STARTED) {
@@ -164,7 +159,6 @@ export default (state = initialData, { type, payload }) => {
       ...state,
       loading: false,
       counts : payload.count
-
     };
   }
 
@@ -173,8 +167,6 @@ export default (state = initialData, { type, payload }) => {
       ...state,
       loading: false,
       counts : 0
-      
-    
     };
   }
 

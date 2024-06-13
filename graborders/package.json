@@ -49,6 +49,7 @@
     "react-syntax-highlighter": "15.4.3",
     "react-test-render": "1.1.2",
     "react-tooltip": "4.2.11",
+    "reactjs-popup": "^2.0.6",
     "redux": "4.0.5",
     "redux-devtools-extension": "2.13.8",
     "redux-thunk": "2.3.0",

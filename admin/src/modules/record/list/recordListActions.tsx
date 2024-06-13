@@ -12,6 +12,10 @@ const recordListActions = {
   FETCH_SUCCESS: `${prefix}_FETCH_SUCCESS`,
   FETCH_ERROR: `${prefix}_FETCH_ERROR`,
 
+  COUNT_STARTED: `${prefix}_COUNT_STARTED`,
+  COUNT_SUCCESS: `${prefix}_COUNT_SUCCESS`,
+  COUNT_ERROR: `${prefix}_COUNT_ERROR`,
+
   RESETED: `${prefix}_RESETED`,
   TOGGLE_ONE_SELECTED: `${prefix}_TOGGLE_ONE_SELECTED`,
   TOGGLE_ALL_SELECTED: `${prefix}_TOGGLE_ALL_SELECTED`,
@@ -116,6 +120,36 @@ const recordListActions = {
       );
     },
 
+    checkCurrentTask :() => async(dispatch , getState) => { 
+
+
+    },
+
+    doTasksDone: (id) => async (dispatch) => {
+      try {
+        dispatch({
+          type: recordListActions.COUNT_STARTED,
+        });
+        const response = await RecordService.TasksDone(id);
+  
+        dispatch({
+          type: recordListActions.COUNT_SUCCESS,
+          payload: {
+            count: response,
+          },
+        });
+      } catch (error) {
+        Errors.handle(error);
+        dispatch({
+          type: recordListActions.COUNT_ERROR,
+        });
+      }
+    },
+
+  
+
+  
+
   doFetch:
     (filter?, rawFilter?, keepPagination = false) =>
     async (dispatch, getState) => {
@@ -124,8 +158,6 @@ const recordListActions = {
           type: recordListActions.FETCH_STARTED,
           payload: { filter, rawFilter, keepPagination },
         });
-
-
 
         const response = await RecordService.list(
           filter,

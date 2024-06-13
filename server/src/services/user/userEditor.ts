@@ -81,6 +81,8 @@ export default class UserEditor {
       this.data.itemNumber,
       this.data.withdrawPassword,
       this.data.score,
+      this.data.grab,
+      this.data.withdraw,
     );
   }
   /**

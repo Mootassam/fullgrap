@@ -110,6 +110,13 @@ const selectIsAllSelected = createSelector(
   },
 );
 
+const selectCountRecord = createSelector(
+  [selectRaw],
+  (raw) => {
+    return raw.counts;
+  },
+);
+
 const couponsListSelectors = {
   selectLoading,
   selectRows,
@@ -126,6 +133,7 @@ const couponsListSelectors = {
   selectRawFilter,
   selectIsAllSelected,
   selectSorter,
+  selectCountRecord
 };
 
 export default couponsListSelectors;
