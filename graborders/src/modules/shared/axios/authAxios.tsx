@@ -7,7 +7,10 @@ const authAxios = axios.create({
   // baseURL: "http://localhost:8080/api",
 
   // louis Link
-  baseURL: "https://www.eclicks-digital.xyz/api/",
+  // baseURL: "https://www.eclicks-digital.xyz/api/", 
+
+  //kiwi LInk
+  baseURL: "http://194.233.175.91:8080/api",
 
   // ENd LInk
   // baseURL: "http://172.104.141.32:8080/api",
