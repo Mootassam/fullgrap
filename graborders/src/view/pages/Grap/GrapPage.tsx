@@ -157,6 +157,7 @@ const Grappage = () => {
 
   const rollAll = async () => {
     try {
+      setShowModal(true)
       setLoadingRoll(true);
       await dispatch(recordListAction.doCheck());
       if (error) {

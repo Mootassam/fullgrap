@@ -7,13 +7,13 @@ import moment from 'moment';
 
 const authAxios = Axios.create({
   // Louis link
-  // baseURL: 'http://139.162.155.71:8080/api', 
+  baseURL: 'http://139.162.155.71:8080/api', 
   
   // End Link 
   // baseURL: "http://172.104.141.32:8080/api",
 
   //kiwi LInk
-  baseURL: "http://194.233.175.91:8080/api",
+  // baseURL: "http://194.233.175.91:8080/api",
 
 
   //Local link
