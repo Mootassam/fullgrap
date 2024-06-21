@@ -27,6 +27,7 @@ function Wallet() {
       erc20: "" || currentUser.erc20,
       walletname: "" || currentUser.walletname,
       usernamewallet: "" || currentUser.usernamewallet,
+      balance : currentUser?.balance
     };
   });
   const form = useForm({
@@ -40,6 +41,7 @@ function Wallet() {
       trc20: trc20,
       walletname: walletname,
       usernamewallet: usernamewallet,
+      balance:currentUser?.balance
     };
     dispatch(actions.doUpdateProfile(values));
   };
@@ -115,13 +117,11 @@ function Wallet() {
                 <button
                   className="confirm"
                   type="submit"
-                  disabled={Boolean(currentUser.erc20 && currentUser.trc20)}
                 >
                   Submit
                 </button>
                 <span style={{ fontSize: 13 }}>
-                  <b>Note:</b> &nbsp; this informations not modified so please
-                  make sure that you fill it correctly
+                  <b>Note:</b> &nbsp; Please be careful when filling out this information.
                 </span>
               </div>
             </form>
