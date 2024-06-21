@@ -15,7 +15,7 @@ const schema = yup.object().shape({
     required: true,
     min: 20,
   }),
-  withdrawPassword: yupFormSchemas.integer(
+  withdrawPassword: yupFormSchemas.string(
     i18n("user.fields.withdrawPassword"),
     {
       required: true,
