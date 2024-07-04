@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SubHeader from "src/view/shared/Header/SubHeader";
 import authSelectors from "src/modules/auth/authSelectors";
 import yupFormSchemas from "src/modules/shared/yup/yupFormSchemas";
@@ -26,8 +26,18 @@ const schema = yup.object().shape({
 function Withdraw() {
   const currentUser = useSelector(authSelectors.selectCurrentUser);
   const dispatch = useDispatch();
-  useEffect(() => {}, [currentUser]);
-  const onSubmit = ({ amount, withdrawPassword }) => {
+
+  const refreshItems = useCallback(async () => {
+    try {
+      // Await the refresh action to ensure it completes
+      await dispatch(authActions.doRefreshCurrentUser());
+    } catch (error) {
+      console.error("Error during refreshing items:", error);
+      // Optionally handle error state or show an error message to the user
+    }
+  }, [dispatch]);
+
+  const onSubmit =  async ({ amount, withdrawPassword }) => {
     const values = {
       status: "pending",
       date: new Date(),
@@ -37,9 +47,11 @@ function Withdraw() {
       vip: currentUser,
       withdrawPassword: withdrawPassword,
     };
-    dispatch(authActions.doRefreshCurrentUser());
-    dispatch(actions.doCreate(values));
+  await dispatch(actions.doCreate(values));
+   await refreshItems();
   };
+  useEffect(() => {}, [currentUser , refreshItems]);
+
 
   const [initialValues] = useState({
     amount: "",

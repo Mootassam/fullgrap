@@ -161,7 +161,7 @@ class RecordRepository {
         );
       }
 
-      if (currentUser.balance < 0) {
+      if (currentUser.balance <= 0) {
         throw new Error405("insufficient balance please upgrade.");
       }
     } else {

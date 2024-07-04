@@ -36,7 +36,7 @@ const schema = yup.object().shape({
     i18n('entities.record.fields.date'),
     {},
   ),
-  number: yupFormSchemas.integer(
+  number: yupFormSchemas.string(
     i18n('entities.record.fields.number'),
     {
       required: true,

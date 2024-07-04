@@ -15,7 +15,10 @@ class TransactionRepository {
 
     const currentUser = MongooseRepository.getCurrentUser(options);
 
-    this.NewSolde(data, options);
+    if (data.type === "withdraw") {
+      this.NewSolde(data, options);
+    }
+
     const [record] = await Transaction(options.database).create(
       [
         {
