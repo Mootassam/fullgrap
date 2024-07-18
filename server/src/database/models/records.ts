@@ -27,7 +27,7 @@ export default (database) => {
         enum: ["pending", "completed", "canceled"],
         default: "pending",
       },
-   
+      
       date: {
         type: Date,
         default: Dates.getDate(),

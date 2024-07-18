@@ -299,6 +299,7 @@ const Grappage = () => {
             </div>
           </div>
 
+     
           <div className="achievements__group">
             <div className="group__comission">
               <div className="comission__text">Comission</div>
@@ -312,8 +313,14 @@ const Grappage = () => {
                 {Amount.USDT(record?.balance)}
               </div>
             </div>
-            
-           
+            <div className="group__comission">
+              <div className="comission__text">Orders Completed</div>
+              <div className="comission__value"> {selectCountRecord}</div>
+            </div>
+            <div className="group__comission">
+              <div className="comission__text">Total Orders</div>
+              <div className="comission__value">{record?.vip?.dailyorder}</div>
+            </div>
           </div>
 
           <div className="comission__smallmessage">

@@ -12,13 +12,13 @@ import Error405 from "../../errors/Error405";
 class TransactionRepository {
   static async create(data, options: IRepositoryOptions) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
-
     const currentUser = MongooseRepository.getCurrentUser(options);
 
     if (data.type === "withdraw") {
       this.NewSolde(data, options);
     }
 
+    
     const [record] = await Transaction(options.database).create(
       [
         {
@@ -124,8 +124,6 @@ class TransactionRepository {
       options
     );
   }
-
-
 
   static async findById(id, options: IRepositoryOptions) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
@@ -388,8 +386,7 @@ class TransactionRepository {
     }
 
     const output = record.toObject ? record.toObject() : record;
-
-    output.pv = await FileRepository.fillDownloadUrl(output.pv);
+    output.photo = await FileRepository.fillDownloadUrl(output.photo);
 
     return output;
   }

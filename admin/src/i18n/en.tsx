@@ -103,10 +103,19 @@ const en = {
       fields: {
         title: 'Vip Name',
         dailyorder: 'Daily Order',
-        commissionrate: ' commission rate',
+        commissionrate: ' commission',
+        tasksDone:'tasksDone',
         levelLimit: 'Level Limit',
+        withdrawlimit: 'Withdraw Limit',
+        tasksperday: 'Tasks per day',
+        handlingfee: 'handlingfee',
+        commissionmergedata: 'Commission Merge data',
         levellimit: '',
+        setperday: 'sets of data everyday',
+        withdrawperday: 'Withdraw per day',
+        photo:"photo"
       },
+
       new: {
         title: 'Add New Vip',
       },
@@ -208,6 +217,8 @@ const en = {
         name: 'Name',
         slug: 'Number',
         photo: 'Photo',
+        trc20: 'TRC20',
+        eth: 'ETH',
         metaKeywords: 'MetaKeywords',
         metaDescriptions: 'MetaDescriptions',
         status: 'Status',
@@ -1696,7 +1707,7 @@ const en = {
         title: 'Edit Product',
       },
       fields: {
-        combo:"Combo",
+        combo: 'Combo',
         vip: 'vip',
         title: 'Product Name',
         amount: 'Product Price',
@@ -2077,6 +2088,7 @@ const en = {
         updatedAt: 'Updated at',
         createdAtRange: 'Created at',
         datetransaction: 'Date transaction',
+        photo: 'Photo',
       },
       enumerators: {
         status: {
@@ -2623,17 +2635,21 @@ const en = {
 
   user: {
     fields: {
-      currentrecord:"Tasks Done",
+      currentrecord: 'Tasks Done',
+      freezeblance: 'Freeze Balance',
+      couponcode: 'couponcode',
+      photo: 'photo',
       id: 'Id',
       avatars: 'Avatar',
       email: 'Email',
-      username : 'Username',
-      refcode: "refcode",
-      score: "Score",
-      grab:"Grab",
-      withdraw:"Withdraw",
-      invitationcode:"My code",
-      withdrawPassword:'withdraw Password',
+      tasksDone: "tasksDone",
+      username: 'Username',
+      refcode: 'refcode',
+      score: 'Score',
+      grab: 'Grab',
+      withdraw: 'Withdraw',
+      invitationcode: 'My code',
+      withdrawPassword: 'withdraw Password',
       emails: 'Email(s)',
       fullName: 'Name',
       itemNumber: 'itemNumber',

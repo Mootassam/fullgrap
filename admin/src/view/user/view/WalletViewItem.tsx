@@ -30,13 +30,13 @@ function WalletViewItem(props) {
       
         <Col sm={4}>
           <TextViewItem
-            label={i18n('ERC20')}
+            label={i18n('Wallet Address')}
             value={user.erc20}
           />
         </Col>
         <Col sm={4}>
           <TextViewItem
-            label={i18n('TRC20')}
+            label={i18n('Wallet Address')}
             value={user.trc20}
           />
         </Col>

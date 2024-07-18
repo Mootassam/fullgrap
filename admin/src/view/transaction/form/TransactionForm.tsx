@@ -10,6 +10,8 @@ import InputFormItem from 'src/view/shared/form/items/InputFormItem';
 import SelectFormItem from 'src/view/shared/form/items/SelectFormItem';
 import transactionEnumerators from 'src/modules/transaction/transactionEnumerators';
 import UserAutocompleteFormItem from 'src/view/user/autocomplete/UserAutocompleteFormItem';
+import ImagesFormItem from 'src/view/shared/form/items/ImagesFormItem';
+import Storage from 'src/security/storage';
 
 const schema = yup.object().shape({
   status: yupFormSchemas.enumerator(
@@ -38,7 +40,6 @@ const schema = yup.object().shape({
       required: true,
     },
   ),
-  
 });
 
 function TransactionForm(props) {
@@ -46,11 +47,11 @@ function TransactionForm(props) {
     const record = props.record || {};
     return {
       status: record.status || [],
-      date  : record.date  || new Date(),
-      user  : record.user  || [],
-      type  : record.type  || 'in',
+      datetransaction: record.datetransaction || new Date(),
+      user: record.user ,
+      type: record.type,
       amount: record.amount || 0,
-    
+      photo: record.photo,
     };
   });
 
@@ -75,10 +76,12 @@ function TransactionForm(props) {
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="row">
-          <div className="col-lg-7 col-md-8 col-12">
+            <div className="col-lg-7 col-md-8 col-12">
               <SelectFormItem
                 name="status"
-                label={i18n('entities.transaction.fields.status')}
+                label={i18n(
+                  'entities.transaction.fields.status',
+                )}
                 options={transactionEnumerators.status.map(
                   (value) => ({
                     value,
@@ -99,11 +102,13 @@ function TransactionForm(props) {
                 required={true}
               />
             </div>
-            
+
             <div className="col-lg-7 col-md-8 col-12">
               <SelectFormItem
                 name="type"
-                label={i18n('entities.transaction.fields.type')}
+                label={i18n(
+                  'entities.transaction.fields.type',
+                )}
                 options={transactionEnumerators.type.map(
                   (value) => ({
                     value,
@@ -123,6 +128,15 @@ function TransactionForm(props) {
                   'entities.transaction.fields.amount',
                 )}
                 required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <ImagesFormItem
+                name="photo"
+                label={i18n('user.fields.photo')}
+                storage={Storage.values.galleryPhotos}
+                max={2}
               />
             </div>
           </div>

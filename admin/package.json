@@ -13,6 +13,7 @@
     "chart.js": "2.9.4",
     "connected-react-router": "6.8.0",
     "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
     "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "1.15.5",
     "file-saver": "2.0.5",
@@ -77,6 +78,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/draftjs-to-html": "^0.8.4",
+    "@types/html-to-draftjs": "^1.4.3",
     "@types/jest": "26.0.20",
     "cross-env": "7.0.3",
     "less": "4.0.0"

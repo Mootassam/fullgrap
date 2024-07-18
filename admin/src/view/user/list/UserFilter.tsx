@@ -47,6 +47,7 @@ const emptyValues = {
   email: null,
   role: null,
   status: null,
+ 
 };
 
 const previewRenders = {
@@ -66,6 +67,11 @@ const previewRenders = {
 
   invitationcode: {
     label: i18n('user.fields.invitationcode'),
+    render: filterRenders.generic(),
+  },
+
+  couponcode: {
+    label: i18n('user.fields.couponcode'),
     render: filterRenders.generic(),
   },
 
@@ -158,6 +164,12 @@ function UserFilter(props) {
                   <InputFormItem
                     name={'invitationcode'}
                     label={i18n('user.fields.invitationcode')}
+                  />
+                </div>
+                <div className="col-lg-4 col-12">
+                  <InputFormItem
+                    name={'couponcode'}
+                    label={i18n('user.fields.couponcode')}
                   />
                 </div>
                 <div className="col-lg-6 col-12">

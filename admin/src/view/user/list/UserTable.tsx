@@ -91,7 +91,7 @@ function UserTable() {
     <>
       <TableWrapper>
         <div className="table-responsive">
-          <table className="table table-striped     2">
+          <table className="table table-striped 2">
             <thead className="thead">
               <tr>
                 <TableColumnHeader className="th-checkbox">
@@ -146,6 +146,14 @@ function UserTable() {
                   name={'refcode'}
                   label={i18n('user.fields.refcode')}
                 />
+        <TableColumnHeader
+                  onSort={doChangeSort}
+                  hasRows={hasRows}
+                  sorter={sorter}
+                  name={'couponcode'}
+                  label={i18n('user.fields.couponcode')}
+                />
+
                 <TableColumnHeader
                   label={i18n('user.fields.roles')}
                 ></TableColumnHeader>
@@ -215,6 +223,8 @@ function UserTable() {
                     <td>{row.fullName}</td>
                     <td>{row.invitationcode}</td>
                     <td>{row.refcode}</td>
+                    <td>{row.couponcode}</td>
+
                     <td>
                       {row.roles.map((roleId) => (
                         <div key={roleId}>

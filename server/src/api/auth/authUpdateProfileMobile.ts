@@ -9,7 +9,7 @@ export default async (req, res, next) => {
     }
 
     let editor = new AuthProfileEditor(req);
-    await editor.execute(req.body.data);
+    await editor.executeMobile(req.body.data);
     const payload = true;
 
     await ApiResponseHandler.success(req, res, payload);

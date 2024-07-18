@@ -6,20 +6,17 @@ import Qs from 'qs';
 import moment from 'moment';
 
 const authAxios = Axios.create({
-  // Louis link
-  baseURL: 'http://139.162.155.71:8080/api', 
-  
-  // End Link 
+
+  //Local
+  // baseURL: "http://192.168.1.43:8080/api",
+
+  //END
   // baseURL: "http://172.104.141.32:8080/api",
 
-  //kiwi LInk
-  // baseURL: "http://194.233.175.91:8080/api",
+//Blade + Richie  + other guys for teting 
+baseURL: "http://139.162.155.71:8080/api",
 
 
-  //Local link
-  // baseURL: 'http://192.168.1.43:8080/api',  
-
-  
   paramsSerializer: function (params) {
     return Qs.stringify(params, {
       arrayFormat: 'brackets',

@@ -192,7 +192,6 @@ const [timemodal, setBigModal] = useState(true)
             </Link>
           ))}
         </div>
-
         <div className="advertise__content">
           <div className="content__header">
             <h3 className="hall">Business Hall</h3>
@@ -218,29 +217,36 @@ const [timemodal, setBigModal] = useState(true)
                       />
                     </div>
                     <div className="vip__text">
-                      <div className="vip__title">{item.title}</div>
+                      <div className="vip__title">{item?.title}</div>
+                      <div className="vip__price">USDT {item?.levellimit}</div>
                       <div className="vip__details">
-                        <div className="vip__description">
-                          <div className="description__key">Entry Limit:</div>
-                          <div className="description__value">
-                            {item.levellimit}
-                          </div>
+                        <div>
+                          <strong>● </strong>
+                          {item.comisionrate}% commission per data
                         </div>
+                        <div>
+                          <strong>● </strong>
+                          {item.commissionmergedata}% commission for merge data
+                        </div>
+                        <div>
+                          <strong>● </strong>
+                          Limited to {item.tasksperday} data per set,{" "}
+                          {item?.setperday} sets of data everyday
+                        </div>
+                        {item?.withdrawlimit && (
+                          <div>
+                            <strong>● </strong>
+                            Withdrawal limit: {item?.withdrawlimit}
+                          </div>
+                        )}
 
-                        <div className="vip__description">
-                          <div className="description__key">Daily order:</div>
-                          <div className="description__value">
-                            {item.dailyorder}
-                          </div>
+                        <div>
+                          <strong>● </strong>
+                          {item?.withdrawperday} times of withdrawal
                         </div>
-                        <div className="vip__description">
-                          <div className="description__key">
-                            Comimsion rate:
-                          </div>
-                          <div className="description__value">
-                            {" "}
-                            {item.comisionrate}
-                          </div>
+                        <div>
+                          <strong>● </strong>
+                          {item?.handlingfee}% handling fee
                         </div>
                       </div>
                     </div>
@@ -264,10 +270,10 @@ const [timemodal, setBigModal] = useState(true)
                   Level Limit: {selectedItem?.levellimit}
                 </div>
                 <div style={{ fontSize: 20 }}>
-                  Daily order: {selectedItem?.dailyorder}
+                Data per set: {selectedItem?.dailyorder}
                 </div>
                 <div style={{ fontSize: 20 }}>
-                  Commission Rate: {selectedItem?.comisionrate}
+                  Commission Rate: {selectedItem?.comisionrate}%
                 </div>
               </div>
               <div className="badge__ pending">
@@ -284,7 +290,7 @@ const [timemodal, setBigModal] = useState(true)
                     className="submit__product"
                     onClick={() => submit(selectedItem)}
                   >
-                    Submit
+                    Upgrage
                   </div>
                 </div>
               </div>

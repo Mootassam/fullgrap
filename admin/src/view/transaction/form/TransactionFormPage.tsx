@@ -12,6 +12,7 @@ import Spinner from 'src/view/shared/Spinner';
 import PageTitle from 'src/view/shared/styles/PageTitle';
 
 function TransactionFormPage(props) {
+  
   const [dispatched, setDispatched] = useState(false);
   const dispatch = useDispatch();
   const match = useRouteMatch();
@@ -23,8 +24,8 @@ function TransactionFormPage(props) {
     selectors.selectSaveLoading,
   );
   const record = useSelector(selectors.selectRecord);
-
   const isEditing = Boolean(match.params.id);
+  
   const title = isEditing
     ? i18n('entities.transaction.edit.title')
     : i18n('entities.transaction.new.title');
@@ -56,7 +57,6 @@ function TransactionFormPage(props) {
         <PageTitle>{title}</PageTitle>
 
         {initLoading && <Spinner />}
-
         {dispatched && !initLoading && (
           <CouponsForm
             saveLoading={saveLoading}

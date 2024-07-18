@@ -71,13 +71,17 @@ export default class UserRepository {
     withdrawPassword,
     score,
     grab,
-    withdraw
+    withdraw,
+    freezeblance,
+    tasksDone,
+    preferredcoin
   ) {
     const user = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).findById(id),
       options
     );
 
+    
     await User(options.database).updateOne(
       { _id: id },
       {
@@ -97,7 +101,10 @@ export default class UserRepository {
           score: score,
           grab: grab,
           withdraw: withdraw,
-          $tenant: { status },
+          freezeblance:freezeblance,
+          preferredcoin: preferredcoin,
+          tasksDone:tasksDone,
+          $tenant: { status }
         },
       },
       options
@@ -108,6 +115,14 @@ export default class UserRepository {
     const randomNumber = Math.floor(Math.random() * 10000000);
     const randomNumberPadded = randomNumber.toString().padStart(7, "0");
     const randomCode = await `ECL${randomNumberPadded}`;
+    return randomCode;
+  }
+
+
+  static async generateCouponCode() {
+    const randomNumber = Math.floor(Math.random() * 10000000);
+    const randomNumberPadded = randomNumber.toString().padStart(7, "0");
+    const randomCode = await `6L${randomNumberPadded}`;
     return randomCode;
   }
 
@@ -126,6 +141,7 @@ export default class UserRepository {
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
           refcode: await this.generateRandomCode(),
+          couponcode: await this.generateCouponCode(),
         },
       ],
       options
@@ -257,13 +273,13 @@ export default class UserRepository {
         updatedBy: currentUser.id,
         avatars: data.avatars || [],
         vip: data.vip || currentUser.vip,
-        balance: data.balance,
-        erc20: data.erc20 || currentUser.erc20,
+        balance: data.balance || currentUser.balance ,
         trc20: data.trc20 || currentUser.trc20,
         walletname: data.walletname || currentUser.walletname,
         usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product,
         itemNumber: data?.itemNumber,
+        preferredcoin:data?.preferredcoin
       },
       options
     );
@@ -299,6 +315,7 @@ export default class UserRepository {
         avatars: data.avatars || [],
         vip: data.vip || currentUser.vip,
         balance: data.balance,
+        freezeblance: data.freezeblance,
         erc20: data.erc20 || currentUser.erc20,
         trc20: data.trc20 || currentUser.trc20,
         walletname: data.walletname || currentUser.walletname,
@@ -531,7 +548,17 @@ export default class UserRepository {
           },
         });
       }
+      
+      if (filter.couponcode) {
+        criteriaAnd.push({
+          ["couponcode"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.couponcode),
+            $options: "i",
+          },
+        });
+      }
 
+      
       if (filter.status) {
         criteriaAnd.push({
           tenants: {

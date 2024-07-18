@@ -26,10 +26,11 @@ function LogoForm(props) {
   const [initialValues] = useState(() => {
     const [record] = props.record || {};
 
-
     return {
       name: record?.name,
       photo: record?.photo || [],
+      trc20: record?.trc20,
+      eth: record?.eth,
     };
   });
 
@@ -70,6 +71,28 @@ function LogoForm(props) {
                 name="name"
                 label={i18n(
                   'entities.category.fields.name',
+                )}
+                required={false}
+                autoFocus
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="trc20"
+                label={i18n(
+                  'entities.category.fields.trc20',
+                )}
+                required={false}
+                autoFocus
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="eth"
+                label={i18n(
+                  'entities.category.fields.eth',
                 )}
                 required={false}
                 autoFocus

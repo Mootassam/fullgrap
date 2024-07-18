@@ -26,9 +26,9 @@ function TabBottomNavigator() {
     },
 
     {
-      icon: "fas fa-newspaper",
+      icon: "fa-solid fa-headphones",
       path: "/Online",
-      name: "Online",
+      name: "CS",
     },
 
     {

@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import FileSchema from './schemas/fileSchema';
+import mongoose from "mongoose";
+import FileSchema from "./schemas/fileSchema";
 const Schema = mongoose.Schema;
 
 export default (database) => {
   try {
-    return database.model('vip');
+    return database.model("vip");
   } catch (error) {
     // continue, because model doesnt exist
   }
@@ -27,28 +27,36 @@ export default (database) => {
       comisionrate: {
         type: String,
       },
-    //   status: {
-    //     type: String,
-    //     enum: ['enable', 'disable'],
-    //     default: 'enable',
-    //   },
-  
+      setperday: {
+        type: String,
+      },
+      withdrawperday:{
+        type:String
+      },
+      commissionmergedata: {
+        type: String,
+      },
+      
+      tasksperday: { type: String },
+      handlingfee: { type: String },
+      withdrawlimit: { type: String },
+
       tenant: {
         type: Schema.Types.ObjectId,
-        ref: 'tenant',
+        ref: "tenant",
         required: true,
       },
       createdBy: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: "user",
       },
       updatedBy: {
         type: Schema.Types.ObjectId,
-        ref: 'user',
+        ref: "user",
       },
       importHash: { type: String },
     },
-    { timestamps: true },
+    { timestamps: true }
   );
 
   VipSchema.index(
@@ -56,23 +64,23 @@ export default (database) => {
     {
       unique: true,
       partialFilterExpression: {
-        importHash: { $type: 'string' },
+        importHash: { $type: "string" },
       },
-    },
+    }
   );
 
-  VipSchema.virtual('id').get(function () {
+  VipSchema.virtual("id").get(function () {
     // @ts-ignore
     return this._id.toHexString();
   });
 
-  VipSchema.set('toJSON', {
+  VipSchema.set("toJSON", {
     getters: true,
   });
 
-  VipSchema.set('toObject', {
+  VipSchema.set("toObject", {
     getters: true,
   });
 
-  return database.model('vip', VipSchema);
+  return database.model("vip", VipSchema);
 };

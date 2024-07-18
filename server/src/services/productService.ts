@@ -112,7 +112,7 @@ throw new Error405("Should be contact the customer service about this");
     );
 
     try {
-      await this.checkpermission(this.options)
+      // await this.checkpermission(this.options)
       return ProductRepository.grapOrders(this.options);
     } catch (error) {
       await MongooseRepository.abortTransaction(session);

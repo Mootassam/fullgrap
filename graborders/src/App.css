@@ -27,7 +27,7 @@
 }
 .score {
   font-weight: bold;
-  color: white;
+  color: #000;
   padding: 7px 25px;
   display: flex;
   align-items: center;
@@ -250,13 +250,16 @@ td {
 /* styling the market page */
 
 .market__header {
-  background-color: #232323;
+  background-color: #fff;
   width: 100%;
   height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 6px 0;
+  position: absolute;
+  left: 0;
+  top:0;
 }
 
 .logo__header {
@@ -264,8 +267,11 @@ td {
 }
 .advertise__header {
   width: 100dvw;
+  max-width: 500px;
+  margin: auto;
   display: flex;
   overflow: hidden;
+  margin-top: 50px;
 }
 
 .image {
@@ -291,6 +297,8 @@ td {
 
 .image {
   width: 100dvw;
+  max-width: 500px;
+  margin: auto;
   height: auto;
 }
 
@@ -317,6 +325,7 @@ td {
   justify-content: space-between;
   gap: 10px;
   margin-top: 10px;
+  display: none;
 }
 
 .button__deposit,
@@ -368,6 +377,7 @@ td {
 
 .adverstise__actions {
   align-items: center;
+  background-color: white;
   text-align: center;
   margin-top: 10px;
   padding: 10px 10px;
@@ -432,12 +442,13 @@ td {
 }
 
 .vip__image {
-  width: 50%;
   border-radius: 10px;
 }
+
 .vip__level {
-  height: 100px !important;
+  height: 60px !important;
 }
+
 
 .content__footer {
   display: flex;
@@ -501,9 +512,8 @@ td {
 
 .vip__title {
   font-size: large;
-  color: #000;
-  font-weight: bold;
-  margin-bottom: 10px;
+  color: brown;
+  margin-bottom: 3px;
 }
 
 .header_order {
@@ -684,6 +694,7 @@ td {
 .image__ {
   box-shadow: 0 0 0 1px #cdd1d6;
   width: 115px;
+  height: 90px;
   background-color: white;
 }
 
@@ -697,7 +708,8 @@ td {
   border: 1px solid #cfd1d5;
   border-radius: 10px;
   width: 100%;
-
+  max-width: 500px;
+  margin: auto;
   padding: 15px 10px;
 }
 
@@ -707,10 +719,28 @@ td {
   width: 100%;
 }
 
+
 .vip__title {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 16px;
 }
+
+.vip__price {
+  color: rgb(0, 20, 96);
+  line-height: 1.2; 
+   font-weight: 500;
+}
+
+.vip__details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+  color: #818181;
+  margin-top: 5px;
+  /* padding-left: 10px; */
+}
+
 
 .grap__order {
   width: 100%;
@@ -753,6 +783,8 @@ td {
   padding: 10px 20px;
   margin: 20px 0;
   border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
 }
 
 .button__upgrade {
@@ -823,6 +855,9 @@ td {
   padding: 10px;
   padding: 20px;
   border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+  margin-top: 20px;
 }
 
 li {
@@ -1041,7 +1076,7 @@ img {
   padding-left: 
   500px;
   display: inline-block;
-  animation: marquee 15s linear infinite;
+  animation: marquee 25s linear infinite;
 }
 
 @keyframes marquee {
@@ -1093,6 +1128,8 @@ img {
 .home__section {
   padding-left: 2%;
   padding-right: 2%;
+  /* max-width: 500px; */
+  /* margin: auto; */
 }
 
 /* Styling the grapPage */
@@ -1450,8 +1487,7 @@ button:disabled {
   position: fixed;
   z-index: 200;
   top: 0;
-
-  /* Shadow effect */
+  left: 0;
 }
 
 .modal__product {
@@ -1621,12 +1657,17 @@ button:disabled {
 
 .invitation__absolute {
   background: linear-gradient(185deg, #076bff, #3486ff, #38a6fd);
-
   position: absolute;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   z-index: 1;
+}
+
+.invitation__code{ 
+  display: flex;
+gap:30px;
 }
 
 .number__link {
@@ -1646,6 +1687,7 @@ button:disabled {
 
 .customer__image {
   border-radius: 0px !important;
+  height: auto;
 }
 .header__left {
   display: flex;
@@ -2017,15 +2059,12 @@ button:disabled {
 }
 
 .loading__page {
-  height: 100px;
-  width: 200px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  z-index: 100;
+  position: fixed; /* Use fixed to keep it centered even if you scroll */
+  top: 50%;        /* Move to the center vertically */
+  left: 50%;  
+  padding: 25px 90px;     /* Move to the center horizontally */
+  transform: translate(-50%, -50%); /* Center it properly */
+  z-index: 100;    /* Keep it above other content */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2154,7 +2193,7 @@ button:disabled {
 }
 
 .list__ofproduct > div {
-  height: 120px;
+  height: 110px;
   background-image: radial-gradient(
     circle at 100% 0%,
     rgb(247, 236, 238) 0%,
@@ -2183,13 +2222,13 @@ button:disabled {
 .profiles__header {
 }
 .carde__profile {
-  background-color: #2e3142;
+  background-color: #fff;
   border-radius: 15px;
   background-repeat: no-repeat;
   position: relative;
   background-size: contain;
   position: relative;
-  top: -140px;
+  top: -90px;
   margin-left: 2%;
   margin-right: 2%;
 }
@@ -2201,18 +2240,22 @@ button:disabled {
 }
 .cadre__left {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 16px;
 }
 .left__details {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
   width: 100%;
+  position: relative;
+  top:-45px;
 }
 
 .cadre__top {
-  padding: 20px;
-  display: flex;
+  padding: 0px 20px 0px 20px;
   align-items: center;
   justify-content: space-between;
 }
@@ -2220,19 +2263,19 @@ button:disabled {
 .user__title {
   font-size: 19px;
   font-weight: bold;
-  color: white;
+  color: #000;
 }
 
 .small__invitation {
-  font-size: 13px;
-  color: white;
+  font-size: 16px;
+  color: #c91e22;
   font-weight: bold;
   align-items: flex-end;
 }
 
 .cadre__bottom {
   display: flex;
-  padding: 20px;
+  padding: 20px 30px;
   justify-content: space-between;
   width: 100%;
 }
@@ -2246,17 +2289,17 @@ button:disabled {
 }
 
 .second__cadre {
-  border-right: 2px solid #fff;
+  border-right: 1px solid rgb(214, 215, 217)
 }
 
 .title__cadre {
-  color: #b1b4c3 !important;
+  color: #987f38 !important;
   font-weight: bold;
   font-size: 14px;
 }
 
 .amount__cadre {
-  color: white;
+  color: #000;
   font-size: 14px;
   font-weight: bold;
 }
@@ -2269,7 +2312,7 @@ button:disabled {
   align-items: center;
   position: relative;
   clip-path: polygon(0% 0%, 0% 75%, 50% 100%, 100% 75%, 100% 0%, 50% 0%);
-  background-image: url("/images/digitalmarketing.jpg");
+  /* background-image: url("/images/digitalmarketing.jpg"); */
   background-size: cover;
   background-position: left;
   background-repeat: no-repeat;
@@ -2279,7 +2322,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   position: relative;
-  top: -120px;
+  top: -70px;
 }
 
 .titre {
@@ -2299,7 +2342,7 @@ button:disabled {
   margin-right: 2%;
   border-radius: 5px;
   font-weight: bold;
-  top: -90px;
+  top: -50px;
   position: relative;
 }
 
@@ -2363,16 +2406,17 @@ button:disabled {
   height: 100%;
 position: fixed;
 z-index: 100;
+left: 0;
+margin: auto;
 
 }
 
 .modal__time {
   position: fixed;
+  top: 50%;
+  left: 50%;
   margin: auto;
-  top: 30%;
-  left: 0;
-  right: 0;
-
+  transform: translate(-50%, -50%);
   max-width: 450px;
   width: 80%;
   display: flex;
@@ -2424,5 +2468,59 @@ z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+}
+
+
+.home__pagesa{ 
+  background-image: url("/images/home/home__.jpg");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  top:-45px;
+
+}
+
+.small__inviation__left{ 
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.score__profile{ 
+display: flex;
+align-items: center;
+padding: 0 70px;
+position: relative;
+top:-16px;
+}
+.score__right{
+   background-color: #F9BD0D;
+   height: 8px;
+   width: 100%;
+   border-radius: 6px ;
+   display: flex;
+   align-items: center;
+}
+.profile__text{ 
+  width: 200px;
+}
+
+.score__level {
+  position: relative;
+  right: 0;
+  background-color: #ead66a;
+  padding: 5px 13px;
+  font-weight: bold;
+  width: max-content;
+  border-radius: 30px;
+  color: #000;
+  font-size: 13px;
+}
+
+.white__header{ 
+  background-color: white;
+
 }

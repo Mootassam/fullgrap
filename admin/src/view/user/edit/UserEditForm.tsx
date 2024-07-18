@@ -11,23 +11,16 @@ import * as yup from 'yup';
 import yupFormSchemas from 'src/modules/shared/yup/yupFormSchemas';
 import userEnumerators from 'src/modules/user/userEnumerators';
 import { yupResolver } from '@hookform/resolvers/yup';
-import userSecteur from 'src/modules/user/userSecteur';
-import userEtat from 'src/modules/user/userEtat';
 import InputFormItem from 'src/view/shared/form/items/InputFormItem';
-import moment from 'moment';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import CouponsAutocompleteFormItem from 'src/coupons/autocomplete/CouponsAutocompleteFormItem';
 import SwitchFormItem from 'src/view/shared/form/items/SwitchFormItem';
 import ImagesFormItem from 'src/view/shared/form/items/ImagesFormItem';
 import Storage from 'src/security/storage';
-import FilesFormItem from 'src/view/shared/form/items/FilesFormItem';
 import VipAutocompleteFormItem from 'src/view/vip/autocomplete/VipAutocompleteFormItem';
 import ProductAutocompleteFormItem from 'src/view/product/autocomplete/ProductAutocompleteFormItem';
 import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem';
-import InputRangeFormItem from 'src/view/shared/form/items/InputRangeFormItem';
-import InputNumberRangeFormItem from 'src/view/shared/form/items/InputNumberRangeFormItem';
-import { min } from 'lodash';
+
 
 const schema = yup.object().shape({
   roles: yupFormSchemas.stringArray(
@@ -53,10 +46,9 @@ const schema = yup.object().shape({
 
   score: yupFormSchemas.integer(i18n('score'), {
     required: false,
-    min:0,
-    max:100
+    min: 0,
+    max: 100,
   }),
-
 
   product: yupFormSchemas.relationToOne(
     i18n('prodcut'),
@@ -80,7 +72,7 @@ function UserEditForm(props) {
   // const [initialValues] = useState(() => props.user || {});
   const [initialValues] = useState(() => {
     const record = props.user || {};
-
+    
     return {
       roles: record.roles[0],
       phoneNumber: record.phoneNumber,
@@ -98,8 +90,11 @@ function UserEditForm(props) {
       status: record.status,
       product: record.product || [],
       itemNumber: record.itemNumber,
-      grab:record.grab,
-withdraw:record.withdraw,
+      grab: record.grab,
+      withdraw: record.withdraw,
+      freezeblance: record.freezeblance,
+      tasksDone: record.tasksDone,
+      
     };
   });
 
@@ -208,26 +203,21 @@ withdraw:record.withdraw,
 
           <Row>
             <Col sm={4}>
-            <SwitchFormItem
+              <SwitchFormItem
                 name="grab"
-                label={i18n(
-                  'user.fields.grab',
-                )}
+                label={i18n('user.fields.grab')}
               />
             </Col>
           </Row>
 
           <Row>
             <Col sm={4}>
-            <SwitchFormItem
+              <SwitchFormItem
                 name="withdraw"
-                label={i18n(
-                  'user.fields.withdraw',
-                )}
+                label={i18n('user.fields.withdraw')}
               />
             </Col>
           </Row>
-
 
           <Row>
             <Col sm={4}>
@@ -238,6 +228,27 @@ withdraw:record.withdraw,
               />
             </Col>
           </Row>
+
+          <Row>
+            <Col sm={4}>
+              <InputFormItem
+                name="freezeblance"
+                label={i18n('user.fields.freezeblance')}
+                required={true}
+              />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>
+              <InputNumberFormItem
+                name="tasksDone"
+                label={i18n('user.fields.tasksDone')}
+              />
+            </Col>
+          </Row>
+
+
           <Row>
             <Col sm={4}>
               <VipAutocompleteFormItem
@@ -249,18 +260,15 @@ withdraw:record.withdraw,
             </Col>
           </Row>
           <Row>
-          <Col sm={4}> 
-            <ImagesFormItem
-              name="passportPhoto"
-              label={i18n('user.fields.passportphoto')}
-              storage={Storage.values.galleryPhotos}
-              max={2}
-            />
+            <Col sm={4}>
+              <ImagesFormItem
+                name="passportPhoto"
+                label={i18n('user.fields.passportphoto')}
+                storage={Storage.values.galleryPhotos}
+                max={2}
+              />
             </Col>
           </Row>
-
-
-        
 
           {/* <Row>
             <FilesFormItem
@@ -301,13 +309,12 @@ withdraw:record.withdraw,
           </Row>
 
           <Row>
-          <Col sm={4}>
-            <InputNumberFormItem
-              name="score"
-              label={i18n('user.fields.score')}
-             
-            />
-              </Col>
+            <Col sm={4}>
+              <InputNumberFormItem
+                name="score"
+                label={i18n('user.fields.score')}
+              />
+            </Col>
           </Row>
 
           <Row>

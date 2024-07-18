@@ -7,28 +7,27 @@ import authActions from "src/modules/auth/authActions";
 import authSelectors from "src/modules/auth/authSelectors";
 import Amount from "src/shared/Amount";
 import { useHistory } from "react-router-dom"; // Assuming you're using React Router
-import actions from 'src/modules/record/list/recordListActions';
+import actions from "src/modules/record/list/recordListActions";
 import selectors from "src/modules/record/list/recordListSelectors";
 import { log } from "console";
-import styles from '../../shared/form/styles/styles';
+import styles from "../../shared/form/styles/styles";
 import Message from "src/view/shared/message";
 
 function Profile() {
   const dispatch = useDispatch();
   const total = useSelector(selectors.selectTotal);
-  const totalperday = useSelector(selectors.selectTotalPerday)
-
-  useEffect(() => {
-    const values = {
-      "status": "completed"
-    };
-    dispatch(actions.doCountDay());
-    dispatch(actions.doFetch(values, values));
-  }, [dispatch]);
+  const totalperday = useSelector(selectors.selectTotalPerday);
 
 
 
   
+  useEffect(() => {
+    const values = {
+      status: "completed",
+    };
+    dispatch(actions.doCountDay());
+    dispatch(actions.doFetch(values, values));
+  }, [dispatch]);
 
   const doSignout = () => {
     dispatch(authActions.doSignout());
@@ -61,7 +60,7 @@ function Profile() {
   ];
   const referenceCodeRef = useRef<any>(null);
 
-  const copyToClipboard = () => {
+  const copyToClipboardCoupon = () => {
     const referenceCode = referenceCodeRef.current.innerText;
 
     // Check if the browser supports the modern clipboard API
@@ -88,115 +87,83 @@ function Profile() {
 
       // You can add any additional logic here for the fallback mechanism
     }
-  }; 
+  };
 
   return (
     <div className="app__profile">
-      {/* <div className="profile__arc">
-
-
-        <div className="arc__header">
-          <div className="arc__left">
-        <img src="/icons/vip.png" alt=""  className="diamond__vip" /> 
-          <div className="dashboard__title">{currentUser?.vip?.title}</div>
-          </div>
-          <div className="arc__right" onClick={()=> doSignout()}>
-          <i className="fa-solid fa-right-from-bracket " style={{ color:"white", fontSize:30, cursor:'pointer'}}></i>
-          </div>
-        </div>
-        <div className="dashboard__user">
-          Hi, {currentUser?.fullName}!
-        </div>
-
-        <div className="dashbaord__balance">
-        <label htmlFor="" className="label__balance">Total Balance</label>
-        <span className="total__amount">{Amount.Dollar(currentUser?.balance)}</span>
-        </div>
-
-      </div>
-      
-
-      <div className="button__profile">
-        <div className="send__money" onClick={() => goto("/online")}>
-          <img src="/icons/send.svg" alt="" />
-          Deposit Money
-        </div>
-
-        <div  className="receive_money" onClick={() => goto("/withdraw")}>
-        <img src="/icons/request.svg" alt="" />
-          Request Money
-  
-        </div>
-   
-      </div>
-
-      <div className="profile__content">
-        {data.map((item, index) => (
-          <Link to={item.url} className="remove__ligne" key={index}>
-            <div className="tasks__">
-            <div className="profile__link">
-              <div className="profile__links">
-              <div>
-                <i className={`${item.icon} profile__icon`}></i>
-              </div>
-              <div>{item.name}</div>
-            </div>
-            </div>
-            <div>
-              <i className="fa fa-arrow-right " ></i>
-            </div>
-            </div>
-          </Link>
-        ))}
-      </div> */}
-
+      <div className="market__header"></div>
       <div className="profiles__header">
         <div className="header__background"></div>
         <div className="carde__profile">
           <div className="cadre__top">
             <div className="cadre__left">
-              <div>
-                <img src="/images/user.png" alt="" style={{ height: 70 }} />
+              <div className="home__pagesa">
+                {/* <img src="/images/home/home__.jpg" alt="" style={{ height: 90 }}  className="orange__image"/> */}
               </div>
               <div className="left__details">
                 <div className="user__title">{currentUser?.fullName}</div>
                 <div className="small__invitation">
-                <div className="small__inviation__left">InvitationCode : <span ref={referenceCodeRef}> {currentUser?.refcode}</span></div>
-               
-                  
+
+                  <div className="invitation__code">
+                  <div className="small__inviation__left">
+                    InvitationCode :
+                    <span ref={referenceCodeRef}> {currentUser?.refcode}</span>
+                  </div>
+
+                  <div>
+                  <i
+                    className="fa-regular fa-copy"
+                    onClick={() => copyToClipboardCoupon()}
+                    style={{fontSize:24}}
+                  />
+                </div>
+                </div>
                 </div>
               </div>
             </div>
-            <div className="cadre__right">
+          </div>
 
-                  <i className="fa-regular fa-copy" style={{fontSize:30, color:'orange'}} onClick={copyToClipboard} />
-             
+          <div className="score__profile">
+            <div className="profile__text"> Credit Score:</div>
+            <div className="score__right">
+              <div
+                className="score__level"
+                style={{
+                  left: `calc(${
+                    currentUser?.score ? currentUser.score : 100
+                  }% - 30px)`,
+                }}
+              >
+                {currentUser?.score ? currentUser.score : 100}%
+              </div>
             </div>
           </div>
 
-          <div className="score">
+          {/* <div className="score">
             <div className="score__right">Credit Score:</div>
             <div className="score__left">{currentUser?.score ? currentUser.score : 100}%</div>
           </div>
           <div className="bar">
     <div className="progress-value" style={{width: `${currentUser?.score ? currentUser.score : 100}%`  }}></div>
-  </div>
+  </div> */}
           <div className="cadre__bottom">
             <div className="firt__cadre">
-              <span className="title__cadre">Wallet Amount</span>
+              <span className="title__cadre">Balance</span>
               <span className="amount__cadre">
                 {currentUser?.balance?.toFixed(2) || 0.0} USDT
               </span>
             </div>
             <div className="second__cadre"></div>
             <div className="">
-              <span className="title__cadre">Daily Comission</span>
+              <span className="title__cadre">Today Profit</span>
               <span className="amount__cadre">{totalperday} USDT </span>
             </div>
             <div className="second__cadre"></div>
             <div>
-              <span className="title__cadre">Total Profit </span>
-              <span className="amount__cadre">{total} USDT</span>
+              <span className="title__cadre">Frozen amount</span>
+              <span className="amount__cadre">
+                {currentUser?.freezeblance?.toFixed(2)} USDT
+              </span>
             </div>
           </div>
         </div>
@@ -237,6 +204,18 @@ function Profile() {
             My Details
           </label>
           <div className="detail__section">
+            <Link to="/online" className="remove__ligne">
+              <div className="line__section border__">
+                <div className="titre__section">
+                  <i className="fa-solid fa-headphones"></i>
+                  <span>Contact us</span>
+                </div>
+                <div>
+                  <i className="fa fa-arrow-right " />
+                </div>
+              </div>
+            </Link>
+
             <Link to="/myprofile" className="remove__ligne">
               <div className="line__section border__">
                 <div className="titre__section">
@@ -252,7 +231,7 @@ function Profile() {
               <div className="line__section">
                 <div className="titre__section">
                   <i className="fa-solid fa-wallet profile__icon"></i>
-                  <span>Wallet</span>
+                  <span>Update withdrawal details</span>
                 </div>
                 <div>
                   <i className="fa fa-arrow-right " />

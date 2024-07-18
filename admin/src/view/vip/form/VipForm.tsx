@@ -21,13 +21,13 @@ const schema = yup.object().shape({
   ),
   photo: yupFormSchemas.images(
     i18n('entities.vip.fields.photo'),
-    {},
+    {
+      required: true,
+    },
   ),
   entrylimit: yupFormSchemas.string(
     i18n('entities.vip.fields.entrylimit'),
-    {
-
-    },
+    {},
   ),
   levellimit: yupFormSchemas.decimal(
     i18n('entities.vip.fields.levelLimit'),
@@ -42,25 +42,61 @@ const schema = yup.object().shape({
     },
   ),
   comisionrate: yupFormSchemas.decimal(
-    i18n('entities.vip.fields.comisionrate'),
+    i18n('entities.vip.fields.commissionrate'),
     {
       required: true,
     },
   ),
 
+  handlingfee: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.handlingfee'),
+    {
+      required: true,
+    },
+  ),
+  setperday: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.setperday'),
+    {
+      required: true,
+    },
+  ),
+  tasksperday: yupFormSchemas.integer(
+    i18n('entities.vip.fields.tasksperday'),
+    {
+      required: true,
+    },
+  ),
 
+  withdrawperday: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.withdrawperday'),
+    {
+      required: true,
+    },
+  ),
+  commissionmergedata: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.commissionmergedata'),
+    {
+      required: true,
+    },
+  ),
 });
 
 function VipForm(props) {
   const [initialValues] = useState(() => {
     const record = props.record || {};
     return {
-      title : record.title, 
+      title: record.title,
       photo: record.photo || [],
-      entrylimit : record.entrylimit, 
-      levellimit : record.levellimit, 
-      dailyorder : record.dailyorder, 
-      comisionrate : record.comisionrate, 
+      entrylimit: record.entrylimit,
+      levellimit: record.levellimit,
+      dailyorder: record.dailyorder,
+      comisionrate: record.comisionrate,
+      commissionmergedata: record.commissionmergedata,
+      tasksperday: record.tasksperday,
+      handlingfee: record.handlingfee,
+      setperday: record.setperday,
+      withdrawperday: record.withdrawperday,
+      withdrawlimit: record.withdrawlimit,
     };
   });
 
@@ -88,43 +124,9 @@ function VipForm(props) {
             <div className="col-lg-7 col-md-8 col-12">
               <InputFormItem
                 name="title"
-                label={i18n(
-                  'entities.vip.fields.title',
-                )}
+                label={i18n('entities.vip.fields.title')}
                 required={true}
                 autoFocus
-              />
-            </div>
-            <div className="col-lg-7 col-md-8 col-12">
-            <ImagesFormItem
-                name="photo"
-                label={i18n(
-                  'entities.paymentsettings.fields.photo',
-                )}
-                required={false}
-                storage={
-                  Storage.values.categoryPhoto
-                }
-                max={undefined}
-              />
-               </div>
-
-               <div className="col-lg-7 col-md-8 col-12">
-              <InputNumberFormItem
-                name="dailyorder"
-                label={i18n(
-                  'entities.vip.fields.dailyorder',
-                )}
-                required={true}
-              />
-            </div>
-            <div className="col-lg-7 col-md-8 col-12">
-              <InputNumberFormItem
-                name="comisionrate"
-                label={i18n(
-                  'entities.vip.fields.commissionrate',
-                )}
-                required={true}
               />
             </div>
 
@@ -136,6 +138,99 @@ function VipForm(props) {
                 )}
                 required={true}
                 autoFocus
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="comisionrate"
+                label={i18n(
+                  'entities.vip.fields.commissionrate',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="commissionmergedata"
+                label={i18n(
+                  'entities.vip.fields.commissionmergedata',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="dailyorder"
+                label={i18n(
+                  'entities.vip.fields.dailyorder',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="setperday"
+                label={i18n(
+                  'entities.vip.fields.setperday',
+                )}
+                required={true}
+              />
+            </div>
+
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="withdrawlimit"
+                label={i18n(
+                  'entities.vip.fields.withdrawlimit',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="withdrawperday"
+                label={i18n(
+                  'entities.vip.fields.withdrawperday',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="tasksperday"
+                label={i18n(
+                  'entities.vip.fields.tasksperday',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputNumberFormItem
+                name="handlingfee"
+                label={i18n(
+                  'entities.vip.fields.handlingfee',
+                )}
+                required={true}
+              />
+            </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <ImagesFormItem
+                name="photo"
+                label={i18n(
+                  'entities.paymentsettings.fields.photo',
+                )}
+                required={false}
+                storage={Storage.values.categoryPhoto}
+                max={undefined}
               />
             </div>
           </div>

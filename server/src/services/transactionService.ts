@@ -17,20 +17,19 @@ export default class TransactionService {
       this.options.database
     );
 
-
     try {
-
       // await this.checkpermission(this.options)
       await this.checkSolde(data, { ...this.options });
 
       const values = {
         status: data.status,
-        date: data.date,
+        datetransaction: data.datetransaction,
         user: data.user,
         type: data.type,
         amount: data.amount,
-        vip: data.vip,
+        photo: data.photo,
       };
+
       const record = await TransactionRepository.create(values, {
         ...this.options,
         session,
@@ -54,13 +53,11 @@ export default class TransactionService {
 
   async checkPasswprd(data, options) {}
 
-  async checkpermission(options) { 
+  async checkpermission(options) {
     const currentUser = MongooseRepository.getCurrentUser(options);
-if( currentUser.withdraw) return 
+    if (currentUser.withdraw) return;
 
-throw new Error405("Should be contact the customer service about this");
-
-
+    throw new Error405("Should be contact the customer service about this");
   }
 
   async checkSolde(data, options) {
@@ -71,21 +68,25 @@ throw new Error405("Should be contact the customer service about this");
     }
     const amount = data.amount;
     const type = data.type;
-
+    if (!currentUser.erc20 || !currentUser.trc20) {
+      throw new Error405(
+        'Please go to the "Wallet" section to bind your USDT (TRC20) or ERC20 address before submitting a withdrawal request.'
+      );
+    }
     if (type === "withdraw") {
-      
-      if(currentUser.withdrawPassword == data.withdrawPassword) {
-      if (currentUser.balance < amount) {
+      if (currentUser.solde < amount) {
+      }
+      if (currentUser.withdrawPassword == data.withdrawPassword) {
+        if (currentUser.balance < amount) {
+          throw new Error405(
+            "It looks like your withdrawal amount exceeds your balance"
+          );
+        }
+      } else {
         throw new Error405(
-          "It looks like your withdrawal amount exceeds your balance"
+          "Your withdraw Password is not correct please check again"
         );
       }
-    }
-    else { 
-      throw new Error405(
-        "Your withdraw Password is not correct please check again"
-      ); 
-    }
     }
   }
 
