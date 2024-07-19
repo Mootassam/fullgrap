@@ -185,11 +185,11 @@ const Grappage = () => {
     displayRandomImage();
   }, [dispatch]);
 
+
   const calcule__total = (price, comission) => {
-    const total = (parseFloat(price) * parseFloat(comission)) / 100;
+    const total = (parseFloat(comission) / 100) * parseFloat(price);
     return total.toFixed(3);
   };
-
   const currentUser = useSelector(authSelectors.selectCurrentUser);
 
   const submit = async () => {

@@ -37,7 +37,7 @@ function Withdraw() {
     }
   }, [dispatch]);
 
-  const onSubmit =  async ({ amount, withdrawPassword }) => {
+  const onSubmit = async ({ amount, withdrawPassword }) => {
     const values = {
       status: "pending",
       date: new Date(),
@@ -47,11 +47,10 @@ function Withdraw() {
       vip: currentUser,
       withdrawPassword: withdrawPassword,
     };
-  await dispatch(actions.doCreate(values));
-   await refreshItems();
+    await dispatch(actions.doCreate(values));
+    await refreshItems();
   };
-  useEffect(() => {}, [currentUser , refreshItems]);
-
+  useEffect(() => {}, [currentUser, refreshItems]);
 
   const [initialValues] = useState({
     amount: "",

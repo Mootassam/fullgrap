@@ -19,8 +19,9 @@ export default class TransactionService {
 
     try {
       // await this.checkpermission(this.options)
+      if (data.type === "withdraw") {
       await this.checkSolde(data, { ...this.options });
-
+      }
       const values = {
         status: data.status,
         datetransaction: data.datetransaction,
