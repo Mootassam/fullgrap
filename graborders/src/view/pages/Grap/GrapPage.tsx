@@ -216,7 +216,7 @@ const Grappage = () => {
           <div className="order__top">
             <div className="first__order">
               <div className="vip__title"> {record?.vip?.title}</div>
-              <div><b>{selectCountRecord} / {record?.vip?.dailyorder} </b></div>
+              <div><b>{currentUser?.tasksDone} / {record?.vip?.dailyorder} </b></div>
               <div>
                 <label className="vip__commission">Commission Rate: </label>
                 <label className="comission">{record?.vip?.comisionrate}</label>
@@ -315,7 +315,7 @@ const Grappage = () => {
             </div>
             <div className="group__comission">
               <div className="comission__text">Orders Completed</div>
-              <div className="comission__value"> {selectCountRecord}</div>
+              <div className="comission__value"> {currentUser?.tasksDone}</div>
             </div>
             <div className="group__comission">
               <div className="comission__text">Total Orders</div>

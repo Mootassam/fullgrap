@@ -92,8 +92,8 @@ function Wallet() {
                     <div className="input__div">
                       <InputFormItem
                         type="text"
-                        name="erc20"
-                        placeholder={i18n("user.fields.erc20")}
+                        name="trc20"
+                        placeholder={i18n("user.fields.trc20")}
                         className="input__"
                       />
                     </div>
@@ -106,7 +106,7 @@ function Wallet() {
                     <div className="input__div">
                       <InputFormItem
                         type="text"
-                        name="trc20"
+                        name="erc20"
                         placeholder={i18n("user.fields.erc20")}
                         className="input__"
                       />

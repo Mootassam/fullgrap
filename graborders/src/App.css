@@ -267,7 +267,7 @@ td {
 }
 .advertise__header {
   width: 100dvw;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: auto;
   display: flex;
   overflow: hidden;
@@ -297,7 +297,7 @@ td {
 
 .image {
   width: 100dvw;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: auto;
   height: auto;
 }
@@ -708,7 +708,7 @@ td {
   border: 1px solid #cfd1d5;
   border-radius: 10px;
   width: 100%;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: auto;
   padding: 15px 10px;
 }
@@ -783,7 +783,7 @@ td {
   padding: 10px 20px;
   margin: 20px 0;
   border-radius: 10px;
-  max-width: 500px;
+  /* max-width: 500px; */
   margin: auto;
 }
 

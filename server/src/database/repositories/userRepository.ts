@@ -275,6 +275,7 @@ export default class UserRepository {
         vip: data.vip || currentUser.vip,
         balance: data.balance || currentUser.balance ,
         trc20: data.trc20 || currentUser.trc20,
+        erc20: data.erc20 || currentUser.erc20,
         walletname: data.walletname || currentUser.walletname,
         usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product,

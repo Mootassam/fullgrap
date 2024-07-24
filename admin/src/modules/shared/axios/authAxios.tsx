@@ -10,10 +10,7 @@ const authAxios = Axios.create({
   //Local
   // baseURL: "http://192.168.1.43:8080/api",
 
-  //END
-  // baseURL: "http://172.104.141.32:8080/api",
-
-//Blade + Richie  + other guys for teting 
+//Louis
 baseURL: "http://139.162.155.71:8080/api",
 
 

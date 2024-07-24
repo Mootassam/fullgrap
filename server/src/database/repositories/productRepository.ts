@@ -238,10 +238,10 @@ class ProductRepository {
   static async grapOrders(options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
     const currentVip = MongooseRepository.getCurrentUser(options).vip.id;
-    const Orderdone = (await RecordRepository.CountOrder(options)).record;
+    // const Orderdone = (await RecordRepository.CountOrder(options)).record;
     const mergeDataPosition = currentUser.itemNumber;
 
-    if (currentUser && currentUser.product && currentUser.product.id && Orderdone === mergeDataPosition) {
+    if (currentUser && currentUser.product && currentUser.product.id && currentUser.tasksDone === mergeDataPosition) {
 
       let prodcut = currentUser.product;
       prodcut.photo = await FileRepository.fillDownloadUrl(prodcut?.photo);
