@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/styles.css";
 import { useDispatch, useSelector } from "react-redux";
 import authSelectors from "src/modules/auth/authSelectors";
@@ -9,413 +9,868 @@ import Dates from "src/view/shared/utils/Dates";
 import recordActions from "src/modules/record/form/recordFormActions";
 import recordListAction from "src/modules/record/list/recordListActions";
 import recordSelector from "src/modules/record/list/recordListSelectors";
-import sound from "/Audio/slots.mp3";
 import Image from "src/shared/Images";
-import { useHistory } from "react-router-dom";
-import authActions from "src/modules/auth/authActions";
-import Amount from "src/shared/Amount";
-const iconHeight = 79;
-const numIcons = 9;
-const timePerIcons = 100;
+import GrapModal from "./GrapModal";
+import productListActions from "src/modules/product/list/productListActions";
+import PrizeModal from "./PrizeModal";
+import { i18n } from "../../../i18n";
+import Message from "src/view/shared/message";
 
 const Grappage = () => {
-  const [randomImage, setRandomImage] = useState("");
-  const [randomImage1, setRandomImage1] = useState("");
-  const [randomImage2, setRandomImage2] = useState("");
-  const [randomImage3, setRandomImage3] = useState("");
-  const [randomImage4, setRandomImage4] = useState("");
-  const [randomImage5, setRandomImage5] = useState("");
-  const [randomImage6, setRandomImage6] = useState("");
-  const [randomImage7, setRandomImage7] = useState("");
-  const [randomImage8, setRandomImage8] = useState("");
+  const [images, setImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const history = useHistory();
   const dispatch = useDispatch();
   const record = useSelector(authSelectors.selectCurrentUser);
   const items = useSelector(selector.selectRows);
   const loading = useSelector(selector.selectLoading);
-  // const numberRecord = useSelector(recordSelector.selectCount);
-  const [showModal, setShowModal] = useState(false);
-  const [lodingRoll, setLoadingRoll] = useState(false);
-  const selectCountRecord = useSelector(recordSelector.selectCountRecord);
+  const Modal = useSelector(selector.showModal);
 
-  const error = useSelector(recordSelector.selectError);
+  const [number] = useState(Dates.Number());
+  const currentUser = useSelector(authSelectors.selectCurrentUser);
+  const totalperday = useSelector(recordSelector.selectTotalPerday);
 
-  const refreshItems = useCallback(() => {
-    dispatch(recordListAction.doFetch());
-    dispatch(actions.doFetch());
-    dispatch(authActions.doRefreshCurrentUser());
-  }, [dispatch]);
-
-  const roll = useCallback(async (reel, offset = 0) => {
-    const delta =
-      (offset + 2) * numIcons + Math.round(Math.random() * numIcons);
-
-    const style = getComputedStyle(reel);
-    const backgroundPositionY = parseFloat(style["background-position-y"]);
-    const targetBackgroundPositionY = backgroundPositionY + delta * iconHeight;
-    const normTargetBackgroundPositionY =
-      targetBackgroundPositionY % (numIcons * iconHeight);
-
-    reel.style.transition = `background-position-y ${
-      (8 + 1 * delta) * timePerIcons
-    }ms cubic-bezier(.41,-0.01,.63,1.09)`;
-    reel.style.backgroundPositionY = `${
-      backgroundPositionY + delta * iconHeight
-    }px`;
-
-    await new Promise((resolve) =>
-      setTimeout(resolve, (8 + 1 * delta) * timePerIcons + offset * 150)
-    );
-
-    reel.style.transition = `none`;
-    reel.style.backgroundPositionY = `${normTargetBackgroundPositionY}px`;
-    return delta % numIcons;
-  }, []);
-
-  const displayRandomImage = () => {
-    // Function to update the image source
-    const updateImage = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage1 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage1(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage2 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage2(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage3 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage3(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage4 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage4(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage5 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage5(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage6 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage6(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage7 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage7(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-    const updateImage8 = async () => {
-      const randomImage = await Image.randomImages();
-
-      setRandomImage8(randomImage);
-      // Example: document.getElementById('imageElement').src = randomImage;
-    };
-
-    // Display the first random image immediately
-    updateImage();
-    updateImage1();
-    updateImage2();
-    updateImage3();
-    updateImage4();
-    updateImage5();
-    updateImage6();
-    updateImage7();
-
-    // Set an interval to change the image every 3 seconds
-    setInterval(updateImage, 3000);
-    setInterval(updateImage1, 4000);
-    setInterval(updateImage2, 2000);
-    setInterval(updateImage3, 4000);
-    setInterval(updateImage4, 5000);
-    setInterval(updateImage5, 2000);
-    setInterval(updateImage6, 3000);
-    setInterval(updateImage7, 4000);
-    setInterval(updateImage7, 3000);
-  };
-
-  const rollAll = async () => {
+  // Initialize images
+  const initializeImages = async () => {
     try {
-      setShowModal(true);
-      setLoadingRoll(true);
-      await dispatch(recordListAction.doCheck());
-      if (error) {
-        return;
-      }
-      await dispatch(actions.doFetch());
-
-      setTimeout(() => {
-        setShowModal(true);
-      }, 1000);
-
-      setLoadingRoll(false);
+      const initialImages = await Promise.all(
+        Array(9).fill(0).map(() => Image.randomImages())
+      );
+      setImages(initialImages);
+      setIsInitialized(true);
     } catch (error) {
-      console.log(error);
-      // Handle other errors
-      setLoadingRoll(false);
+      console.error("Error loading images:", error);
+      const defaultImages = Array(9).fill("https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?q=80&w=878&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+      setImages(defaultImages);
+      setIsInitialized(true);
     }
   };
 
-  const hideModal = () => {
-    setShowModal(false);
+  // Get visible images
+  const getVisibleImages = () => {
+    if (images.length < 3) {
+      return Array(3).fill("https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?q=80&w=878&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    }
+
+    const visible = [];
+    for (let i = 0; i < 3; i++) {
+      const index = (currentIndex + i) % images.length;
+      visible.push({
+        src: images[index],
+        id: `${index}-${Date.now()}-${Math.random()}`,
+        position: i
+      });
+    }
+    return visible;
   };
 
-  const [number] = useState(Dates.Number());
+  // Handle slide to next
+  const slideToNext = () => {
+    if (isAnimating || !isInitialized) return;
 
+    setIsAnimating(true);
+    setTimeout(() => {
+      setCurrentIndex(prev => (prev + 1) % images.length);
+      setTimeout(() => setIsAnimating(false), 50);
+    }, 600);
+  };
+
+  // Initialize and start slider
   useEffect(() => {
     dispatch(recordListAction.doCount());
-    displayRandomImage();
+    dispatch(recordListAction.doCountDay());
+    initializeImages();
   }, [dispatch]);
 
+  // Start automatic sliding
+  useEffect(() => {
+    if (!isInitialized) return;
+    const interval = setInterval(slideToNext, 3000);
+    return () => clearInterval(interval);
+  }, [isInitialized, isAnimating]);
 
-  const calcule__total = (price, comission) => {
-    const total = (parseFloat(comission) / 100) * parseFloat(price);
-    return total.toFixed(3);
+  // Check user conditions - Show messages on mount when conditions are met
+  useEffect(() => {
+    if (currentUser.balance <= 0) {
+      Message.error('Insufficient balance. Please top up your account to continue.');
+    }
+
+    if (currentUser.tasksDone >= currentUser.vip.dailyorder) {
+      Message.success('You have completed all available tasks. Please contact customer support to reset your account.');
+    }
+  }, [currentUser.balance, currentUser.tasksDone, currentUser.vip.dailyorder]);
+
+  const rollAll = async () => {
+    if (currentUser.balance <= 0) {
+      Message.error('Insufficient balance. Please top up your account to continue.');
+      return; // Don't proceed to rollAll
+    }
+
+    if (currentUser.tasksDone >= currentUser.vip.dailyorder) {
+      Message.success('You have completed all available tasks. Please contact customer support to reset your account.');
+      return; // Don't proceed to rollAll
+    }
+
+    // If all conditions pass, execute rollAll
+    await dispatch(actions.doFetch());
   };
-  const currentUser = useSelector(authSelectors.selectCurrentUser);
+
+  const hideModal = () => {
+    dispatch(productListActions.doCloseModal());
+  };
+
 
   const submit = async () => {
+
+    const total = (parseFloat(items?.commission) / 100) * parseFloat(items?.amount);
+    
     const values = {
       number: number,
       product: items?.id,
-      status: items?.combo ? "pending" : "completed",
+      price : items.amount,
+      commission: items?.commission,
+      status: items?.type === "combo" ? "pending" : "completed",
       user: currentUser.id,
     };
-    dispatch(recordActions.doCreate(values));
-    await refreshItems();
-    setShowModal(false);
+    await dispatch(recordActions.doCreate(values));
   };
 
-  const goto = (param) => {
-    history.push(param);
-  };
+  const visibleImages = getVisibleImages();
+
   return (
-    <>
-      <div className="app__grappage">
-        <div className="online__service">{/* <h4>Grap</h4> */}</div>
-
-        <div className="grap__order">
-          <div className="order__top">
-            <div className="first__order">
-              <div className="vip__title"> {record?.vip?.title}</div>
-              <div><b>{currentUser?.tasksDone} / {record?.vip?.dailyorder} </b></div>
-              <div>
-                <label className="vip__commission">Commission Rate: </label>
-                <label className="comission">{record?.vip?.comisionrate}</label>
-              </div>
-            </div>
-            <div className="second__order">
-              <div>
-                <span className="exclusive__channel">
-                  Exclusive channel for exclsuive members
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="grap__products">
-            <div className="list__ofproduct">
-              <div className="">
-                <img src={randomImage} alt="" />
-              </div>
-              <div className="">
-                <img src={randomImage1} alt="" />
-              </div>
-              <div className="">
-                <img src={randomImage2} alt="" />
-              </div>
-            </div>
-            <div className="list__ofproduct">
-              <div className="">
-                <img src={randomImage3} alt="" />
-              </div>
-              <div className="">
-                {currentUser.grab ? (
-                  <button
-                    className={`grap ${lodingRoll ? "__disabled" : ""}`}
-                    onClick={() => rollAll()}
-                    disabled={lodingRoll}
-                  >
-                    <span className="product__start">Start</span>
-                  </button>
-                ) : (
-                  <button className={`grap __disabled`} disabled={true}>
-                    <span className="product__start">Start</span>
-                  </button>
-                )}
-              </div>
-              <div className="">
-                <img src={randomImage4} alt="" />
-              </div>
-            </div>
-            <div className="list__ofproduct">
-              <div className="">
-                <img src={randomImage5} alt="" />
-              </div>
-              <div className="">
-                <img src={randomImage6} alt="" />
-              </div>
-              <div className="">
-                <img src={randomImage7} />
-              </div>
-            </div>
-          </div>
-
-          <div style={{ paddingTop: 10 }}>
-            <span className="exclusive__chaneels">
-              Exclusive channel for exclsuive members
+    <div className="grappage-container">
+      {/* Header Section */}
+      <div className="grappage-header">
+        <div className="user-greeting">
+          <div className="greeting-content">
+            <img src="/images/user.png" alt="User" className="user-avatar" />
+            <span className="greeting-text">
+              {i18n('pages.grab.greeting', currentUser.fullName)}
             </span>
           </div>
-        </div>
-
-        <div className="button__grap"></div>
-
-        <div className="order__comission">
-          <div className="today__achievements">
-            <div className="comission__title">Today's achievements</div>
-            <div className="achivemnts__refreshe">
-              <i
-                className="fa-solid fa-rotate-right click"
-                onClick={() => refreshItems()}
-              ></i>
-            </div>
-          </div>
-
-     
-          <div className="achievements__group">
-            <div className="group__comission">
-              <div className="comission__text">Comission</div>
-              <div className="comission__value">
-                {record?.vip?.comisionrate}
-              </div>
-            </div>
-            <div className="group__comission">
-              <div className="comission__text"> Availbale Balance </div>
-              <div className="comission__value">
-                {Amount.USDT(record?.balance)}
-              </div>
-            </div>
-            <div className="group__comission">
-              <div className="comission__text">Orders Completed</div>
-              <div className="comission__value"> {currentUser?.tasksDone}</div>
-            </div>
-            <div className="group__comission">
-              <div className="comission__text">Total Orders</div>
-              <div className="comission__value">{record?.vip?.dailyorder}</div>
-            </div>
-          </div>
-
-          <div className="comission__smallmessage">
-            A higher rank member can unlock more orders and get more commission
+          <div className="vip-badge">
+            <b>{currentUser.vip.title}</b>
           </div>
         </div>
-
-        <div className="rules__description">
-          <div className="rules__title">Rules Description</div>
-          <ul className="rules__list">
-            <li>
-              (1) Every user in the platform should be able to submit all daily
-              orders before withdrawal
-            </li>
-            <li>(2) commissions depends on the vip level</li>
-            <li>
-              (3) The system automatically dispatch’s the products through the
-              cloud after submission
-            </li>
-            <li>
-              (4) If the order is not submitted, the user will not be able to
-              continue with the next product. The user need to submit the
-              previous product to continue with the task
-            </li>
-          </ul>
-        </div>
-
-        {loading && <LoadingModal />}
-
-        {!loading && showModal && items && (
-          <div className="modal__grap">
-            <div className="modal__product">
-              <div className="single__product">
-                <div className="single__header">{items?.vip?.title}</div>
-                <div className="order__time">
-                  <div>Order Time: {Dates.current()}</div>
-                  <div>Order Number: N{number}</div>
-                </div>
-                <div className="badge__ pending">
-                  <label>Pending</label>
-                </div>
-                <div className="product__image">
-                  <div className="image__">
-                    {items?.photo && items?.photo[0]?.downloadUrl && (
-                      <img src={items?.photo[0]?.downloadUrl} alt="" />
-                    )}
-                  </div>
-                  <div className="product__detail">
-                    <div className="detail__name">{items?.title}</div>
-                    <div className="detail__price">
-                      <div> {items?.amount}</div>
-                      <div>X 1</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bottom__cadre">
-                  <div className="cadre__detail">
-                    <div>Total order amount</div>
-                    <div>{items?.amount} USDT</div>
-                  </div>
-
-                  <div className="cadre__detail">
-                    <div>Commission</div>
-                    <div>{items?.commission}</div>
-                  </div>
-
-                  <div className="cadre__detail">
-                    <div>Estimated return</div>
-                    <div>
-                      {calcule__total(items?.amount, items?.commission)} USDT
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bottom__submit">
-                  <div className="submit__ligne"></div>
-                  <div className="sumbit__buttons">
-                    <div
-                      className="cancel__product"
-                      onClick={() => hideModal()}
-                    >
-                      Cancel
-                    </div>
-                    <div className="submit__product" onClick={() => submit()}>
-                      Submit
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-    </>
+
+      {/* Stats Cards */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-content">
+            <div className="stat-icon">
+              <img src="/images/wallet.png" alt="Wallet" />
+            </div>
+            <div className="stat-info">
+              <div className="stat-title">{i18n('pages.grab.totalAmount')}</div>
+              <div className="stat-subtitle">{i18n('pages.grab.profitsAdded')}</div>
+            </div>
+          </div>
+          <div className="stat-amount">
+            <div className="amount-value">{currentUser.balance.toFixed(2)}</div>
+            <div className="amount-currency">{i18n('pages.grab.currency')}</div>
+          </div>
+        </div>
+
+        <div className="stat-card">
+          <div className="stat-content">
+            <div className="stat-icon">
+              <img src="/images/T.png" alt="Commission" />
+            </div>
+            <div className="stat-info">
+              <div className="stat-title">{i18n('pages.grab.todaysCommission')}</div>
+              <div className="stat-subtitle">{i18n('pages.grab.commissionEarned')}</div>
+            </div>
+          </div>
+          <div className="stat-amount">
+            <div className="amount-value">{totalperday}</div>
+            <div className="amount-currency">{i18n('pages.grab.currency')}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Optimization Section */}
+      <div className="optimization-section">
+        <div className="optimization-header">
+          <span>{i18n('pages.grab.startOptimization')}</span>
+          <span className="progress-count">
+            {i18n('pages.grab.progressCount', currentUser?.tasksDone, currentUser?.vip?.dailyorder)}
+          </span>
+        </div>
+      </div>
+
+      {/* Main Game Area */}
+      <div className="game-grid-section">
+        <div className="game-header">
+          <div className="vip-info">
+            <div className="vip-title">{record?.vip?.title}</div>
+            <div className="commission-rate">
+              <span className="rate-label">{i18n('pages.grab.commissionRate')}: </span>
+              <span className="rate-value">{record?.vip?.comisionrate}%</span>
+            </div>
+          </div>
+          <div className="channel-info">
+            <span>{i18n('pages.grab.exclusiveChannel')}</span>
+          </div>
+        </div>
+
+        {/* Slider Container */}
+        <div className="slider-container">
+          <div className="slider-wrapper">
+            <div className={`slider-viewport ${isAnimating ? 'sliding' : ''}`}>
+              {visibleImages.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`slider-item ${index === 1 ? 'active' : ''}`}
+                  data-position={index}
+                >
+                  <div className="image-container">
+                    <img
+                      src={item.src}
+                      alt={`Product ${index + 1}`}
+                      className="slider-image"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Start Button - Always clickable */}
+          <div className="game-grid">
+            <button
+              className={`start-button ${loading ? "loading" : ""}`}
+              onClick={rollAll}
+              disabled={loading} // Only disable when loading
+            >
+              <span className="button-text">
+                {loading ? i18n('pages.grab.processing') : i18n('pages.grab.startButton')}
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div className="channel-footer">
+          <span>{i18n('pages.grab.exclusiveChannel')}</span>
+        </div>
+      </div>
+
+      {/* Notice Section */}
+      <div className="notice-section">
+        <div className="notice-header">
+          <b>{i18n('pages.grab.notice')}:</b>
+        </div>
+        <ul className="notice-list">
+          <li>{i18n('pages.grab.supportHours')}</li>
+          <li>{i18n('pages.grab.contactSupport')}</li>
+        </ul>
+      </div>
+
+      {/* Loading and Modals */}
+      {loading && <LoadingModal />}
+      {items && items?.type === "prizes" && Modal && !loading && (
+        <PrizeModal
+          items={items}
+          number={number}
+          hideModal={hideModal}
+          submit={submit}
+        />
+      )}
+      {Modal && !loading && (
+        <GrapModal
+          items={items}
+          number={number}
+          hideModal={hideModal}
+          submit={submit}
+        />
+      )}
+
+      <style>{`
+        .grappage-container {
+          margin: 0 auto;
+          padding: 20px;
+          background: linear-gradient(135deg, #EDF1F7 0%, #F7FAFC 100%);
+          min-height: 100vh;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Header Styles */
+        .grappage-header {
+          margin-bottom: 20px;
+        }
+
+        .user-greeting {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background: #FFFFFF;
+          padding: 16px 20px;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border: 1px solid #E2E8F0;
+        }
+
+        .greeting-content {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          border: 2px solid #E2E8F0;
+        }
+
+        .greeting-text {
+          font-size: 16px;
+          color: #2D3748;
+          font-weight: 500;
+        }
+
+        .vip-badge {
+          background: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 12px;
+          margin-bottom: 20px;
+        }
+
+        .stat-card {
+          background: #FFFFFF;
+          padding: 20px;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border: 1px solid #E2E8F0;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .stat-content {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .stat-icon {
+          width: 48px;
+          height: 48px;
+          background: #F7FAFC;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid #E2E8F0;
+        }
+
+        .stat-icon img {
+          width: 24px;
+          height: 24px;
+        }
+
+        .stat-info {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .stat-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #1A202C;
+        }
+
+        .stat-subtitle {
+          font-size: 12px;
+          color: #718096;
+        }
+
+        .stat-amount {
+          text-align: right;
+        }
+
+        .amount-value {
+          font-size: 18px;
+          font-weight: 700;
+          color: #4299E1;
+        }
+
+        .amount-currency {
+          font-size: 12px;
+          color: #718096;
+          font-weight: 500;
+        }
+
+        /* Optimization Section */
+        .optimization-section {
+          background: #FFFFFF;
+          padding: 16px 20px;
+          border-radius: 16px;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          border: 1px solid #E2E8F0;
+        }
+
+        .optimization-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 16px;
+          font-weight: 600;
+          color: #1A202C;
+        }
+
+        .progress-count {
+          background: #48BB78;
+          color: white;
+          padding: 6px 12px;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        /* Game Grid Section */
+        .game-grid-section {
+          background: #FFFFFF;
+          padding: 20px;
+          border-radius: 20px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+          border: 1px solid #E2E8F0;
+          margin-bottom: 20px;
+        }
+
+        .game-header {
+          margin-bottom: 20px;
+        }
+
+        .vip-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+        }
+
+        .vip-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #1A202C;
+        }
+
+        .commission-rate {
+          font-size: 14px;
+        }
+
+        .rate-label {
+          color: #718096;
+        }
+
+        .rate-value {
+          color: #4299E1;
+          font-weight: 600;
+        }
+
+        .channel-info {
+          text-align: center;
+          color: #718096;
+          font-size: 12px;
+        }
+
+        /* Slider Container */
+        .slider-container {
+          margin: 20px 0;
+          position: relative;
+        }
+
+        .slider-wrapper {
+          position: relative;
+          width: 100%;
+          height: 250px;
+          overflow: hidden;
+        }
+
+        .slider-viewport {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          position: relative;
+          width: 100%;
+        }
+
+        .slider-viewport.sliding {
+          animation: slideViewport 0.6s ease-in-out;
+        }
+
+        @keyframes slideViewport {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.33%);
+          }
+        }
+
+        .slider-item {
+          position: absolute;
+          transition: all 0.6s ease;
+          border-radius: 16px;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .slider-item[data-position="0"] {
+          width: 180px;
+          height: 180px;
+          left: 10%;
+          opacity: 0.7;
+          transform: translateX(0) scale(0.85);
+          z-index: 1;
+        }
+
+        .slider-item[data-position="1"] {
+          width: 250px;
+          height: 250px;
+          left: 50%;
+          transform: translateX(-50%) scale(1);
+          opacity: 1;
+          z-index: 3;
+          box-shadow: 0 10px 40px rgba(66, 153, 225, 0.4);
+        }
+
+        .slider-item[data-position="2"] {
+          width: 180px;
+          height: 180px;
+          left: 90%;
+          transform: translateX(-100%) scale(0.85);
+          opacity: 0.7;
+          z-index: 1;
+        }
+
+        .slider-item.active .image-container {
+          border: 3px solid #4299E1;
+        }
+
+        .image-container {
+          width: 100%;
+          height: 100%;
+          border-radius: 16px;
+          overflow: hidden;
+          border: 2px solid #E2E8F0;
+          background: #F7FAFC;
+        }
+
+        .slider-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+
+        .slider-item.active .slider-image:hover {
+          transform: scale(1.05);
+        }
+
+        /* Game Grid for Start Button */
+        .game-grid {
+          margin: 20px 0;
+          display: flex;
+          justify-content: center;
+        }
+
+        /* Start Button - Always enabled */
+        .start-button {
+          width: 280px;
+          height: 60px;
+          background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
+          border: none;
+          border-radius: 16px;
+          color: white;
+          font-size: 18px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .start-button:hover:not(.loading) {
+          transform: translateY(-3px);
+          box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
+          background: linear-gradient(135deg, #38A169 0%, #2F855A 100%);
+        }
+
+        .start-button:active:not(.loading) {
+          transform: translateY(0);
+          box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+        }
+
+        .start-button.loading {
+          background: linear-gradient(135deg, #A0AEC0 0%, #718096 100%);
+          cursor: not-allowed;
+        }
+
+        .start-button.loading::after {
+          content: '';
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top-color: white;
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .button-text {
+          font-size: 18px;
+          font-weight: 700;
+          text-align: center;
+        }
+
+        .start-button.loading .button-text {
+          margin-right: 10px;
+        }
+
+        .channel-footer {
+          text-align: center;
+          color: #718096;
+          font-size: 12px;
+          padding-top: 20px;
+          border-top: 1px solid #E2E8F0;
+          margin-top: 10px;
+        }
+
+        /* Notice Section */
+        .notice-section {
+          background: #FFF5F5;
+          padding: 16px 20px;
+          border-radius: 12px;
+          border: 1px solid #FED7D7;
+          margin-bottom: 80px;
+        }
+
+        .notice-header {
+          color: #C53030;
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+
+        .notice-list {
+          color: #718096;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .notice-list li {
+          margin-bottom: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .slider-wrapper {
+            height: 220px;
+          }
+          
+          .slider-item[data-position="0"],
+          .slider-item[data-position="2"] {
+            width: 150px;
+            height: 150px;
+          }
+          
+          .slider-item[data-position="1"] {
+            width: 220px;
+            height: 220px;
+          }
+          
+          .slider-item[data-position="0"] {
+            left: 5%;
+          }
+          
+          .slider-item[data-position="2"] {
+            left: 95%;
+          }
+          
+          .start-button {
+            width: 240px;
+            height: 56px;
+          }
+          
+          .button-text {
+            font-size: 16px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .slider-wrapper {
+            height: 200px;
+          }
+          
+          .slider-item[data-position="0"],
+          .slider-item[data-position="2"] {
+            width: 120px;
+            height: 120px;
+            left: 0%;
+          }
+          
+          .slider-item[data-position="1"] {
+            width: 180px;
+            height: 180px;
+          }
+          
+          .slider-item[data-position="2"] {
+            left: 100%;
+            transform: translateX(-120%) scale(0.85);
+          }
+          
+          .start-button {
+            width: 200px;
+            height: 52px;
+          }
+          
+          .button-text {
+            font-size: 14px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .grappage-container {
+            padding: 16px;
+          }
+          
+          .user-greeting {
+            padding: 14px 16px;
+            gap: 12px;
+            align-items: flex-start;
+          }
+          
+          .vip-badge {
+            align-self: flex-end;
+          }
+          
+          .stat-card {
+            padding: 16px;
+
+            // flex-direction: column;
+            gap: 15px;
+            text-align: center;
+          }
+          
+          .stat-content {
+            // flex-direction: column;
+            text-align: left;
+          }
+          
+          .stat-amount {
+            text-align: center;
+          }
+          
+          .game-grid-section {
+            padding: 16px;
+          }
+          
+          .slider-wrapper {
+            height: 180px;
+          }
+          
+          .slider-item[data-position="0"],
+          .slider-item[data-position="2"] {
+            width: 100px;
+            height: 100px;
+          }
+          
+          .slider-item[data-position="1"] {
+            width: 160px;
+            height: 160px;
+          }
+          
+          .start-button {
+            width: 180px;
+            height: 48px;
+          }
+          
+          .button-text {
+            font-size: 14px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .slider-wrapper {
+            height: 160px;
+          }
+          
+          .slider-item[data-position="0"],
+          .slider-item[data-position="2"] {
+            width: 80px;
+            height: 80px;
+          }
+          
+          .slider-item[data-position="1"] {
+            width: 140px;
+            height: 140px;
+          }
+          
+          .start-button {
+            width: 160px;
+            height: 44px;
+          }
+          
+          .button-text {
+            font-size: 13px;
+          }
+        }
+
+        @media (max-width: 320px) {
+          .slider-wrapper {
+            height: 140px;
+          }
+          
+          .slider-item[data-position="0"],
+          .slider-item[data-position="2"] {
+            width: 70px;
+            height: 70px;
+          }
+          
+          .slider-item[data-position="1"] {
+            width: 120px;
+            height: 120px;
+          }
+          
+          .start-button {
+            width: 140px;
+            height: 40px;
+          }
+          
+          .button-text {
+            font-size: 12px;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
 

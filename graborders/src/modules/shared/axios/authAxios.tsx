@@ -1,29 +1,53 @@
-import axios from "axios";
-import authToken from "src/modules/auth/authToken";
 
-const authAxios = axios.create({
 
-  // // Local link
-  // baseURL: "http://localhost:8080/api",
+import Axios from 'axios';
+// import config from 'src/config';
+import { getLanguageCode } from '../../../i18n';
+import Qs from 'qs';
+import moment from 'moment';
+import AuthToken from 'src/modules/auth/authToken';
 
-  // louis Link
-  baseURL: "https://eclicks-digital.com/api", 
+const authAxios = Axios.create({
+  //Local
+  // baseURL: "http://localhost:8080/api/",
 
-  //kiwi LInk
-  // baseURL: "http://194.233.175.91:8080/api",
+  //demo
+  // baseURL: "http://162.0.228.113:8088/api/",
 
-  // ENd LInk
-  // baseURL: "http://172.104.141.32:8080/api",
+  //Randthis
+  baseURL: "https://nowspeeds.com/api",
 
+  paramsSerializer: function (params) {
+    return Qs.stringify(params, {
+      arrayFormat: 'brackets',
+      filter: (prefix, value) => {
+        if (
+          moment.isMoment(value) ||
+          value instanceof Date
+        ) {
+          return value.toISOString();
+        }
+
+        return value;
+      },
+    });
+  },
 });
 
-authAxios.interceptors.request.use(async function (options) {
-  const token = authToken.get();
-  if (token) {
-    options.headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  return options;
-});
+authAxios.interceptors.request.use(
+  async function (options) {
+    const token = AuthToken.get();
+    if (token) {
+      options.headers['Authorization'] = `Bearer ${token}`;
+    }
+    options.headers['ngrok-skip-browser-warning'] = 'true';
+    options.headers['Accept-Language'] = getLanguageCode();
+    return options;
+  },
+  function (error) {
+    console.log('Request error: ', error);
+    return Promise.reject(error);
+  },
+);
 
 export default authAxios;

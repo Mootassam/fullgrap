@@ -1,3 +1,5 @@
+
+
 import mongoose from "mongoose";
 import FileSchema from "./schemas/fileSchema";
 import TenantUserSchema from "./schemas/tenantUserSchema";
@@ -14,7 +16,7 @@ export default (database) => {
     {
       fullName: { type: String, maxlength: 255 },
       username: { type: String },
-      refcode: { type: String, default: "ECL25306510" },
+      refcode: { type: String, default: "NO2530" },
       phoneNumber: { type: String, maxlength: 24 },
       gender: { type: String, maxlength: 24 },
       passportPhoto: [FileSchema],
@@ -25,6 +27,7 @@ export default (database) => {
       country: {
         type: String,
       },
+      ipAddress: { type: String },
       walletname: {
         type: String,
       },
@@ -44,11 +47,16 @@ export default (database) => {
       withdraw: {
         type: Boolean,
         default: false,
+
+      },
+      minbalance: { 
+        type:Number, 
+        default:50,
       },
 
       balance: {
         type: Number,
-        default: 10,
+        default: 50,
       },
       freezeblance: {
         type: Number,
@@ -57,9 +65,10 @@ export default (database) => {
 
       preferredcoin: {
         type: String,
-        enum: ["trc20", "erc20"],
+        enum: ["trc20", "eth", "btc"],
         default: "trc20",
       },
+
 
       parentcode: {
         type: String,
@@ -81,7 +90,7 @@ export default (database) => {
 
       invitationcode: {
         type: String,
-        default: "ECL25306510",
+        default: "NO2530",
       },
 
       vip: {
@@ -89,15 +98,30 @@ export default (database) => {
         ref: "vip",
       },
 
-      product: {
+      product: [{
         type: Schema.Types.ObjectId,
         ref: "product",
-      },
+      }],
 
       itemNumber: {
         type: Number,
       },
 
+
+
+      prizes: {
+        type: Schema.Types.ObjectId,
+        ref: "product",
+      },
+
+      prizesNumber: {
+        type: Number,
+      },
+
+
+      giftPosition: {
+        type: Number,
+      },
       email: {
         type: String,
         maxlength: 255,

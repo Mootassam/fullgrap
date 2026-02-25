@@ -11,6 +11,7 @@ import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem'
 
 import ImagesFormItem from 'src/view/shared/form/items/ImagesFormItem';
 import Storage from 'src/security/storage';
+import CheckboxFormItem from 'src/view/shared/form/items/CheckboxFormItem';
 
 const schema = yup.object().shape({
   title: yupFormSchemas.string(
@@ -60,12 +61,7 @@ const schema = yup.object().shape({
       required: true,
     },
   ),
-  tasksperday: yupFormSchemas.integer(
-    i18n('entities.vip.fields.tasksperday'),
-    {
-      required: true,
-    },
-  ),
+
 
   withdrawperday: yupFormSchemas.decimal(
     i18n('entities.vip.fields.withdrawperday'),
@@ -75,6 +71,19 @@ const schema = yup.object().shape({
   ),
   commissionmergedata: yupFormSchemas.decimal(
     i18n('entities.vip.fields.commissionmergedata'),
+    {
+      required: true,
+    },
+  ),
+
+  min: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.min'),
+    {
+      required: true,
+    },
+  ),
+  max: yupFormSchemas.decimal(
+    i18n('entities.vip.fields.max'),
     {
       required: true,
     },
@@ -92,11 +101,13 @@ function VipForm(props) {
       dailyorder: record.dailyorder,
       comisionrate: record.comisionrate,
       commissionmergedata: record.commissionmergedata,
-      tasksperday: record.tasksperday,
+      isFixedAmount:record.isFixedAmount,
+      min: record.min,
+      max: record.max,
       handlingfee: record.handlingfee,
       setperday: record.setperday,
       withdrawperday: record.withdrawperday,
-      withdrawlimit: record.withdrawlimit,
+      // withdrawlimit: record.withdrawlimit,
     };
   });
 
@@ -180,8 +191,7 @@ function VipForm(props) {
                 required={true}
               />
             </div>
-
-
+            {/* 
             <div className="col-lg-7 col-md-8 col-12">
               <InputFormItem
                 name="withdrawlimit"
@@ -191,6 +201,7 @@ function VipForm(props) {
                 required={true}
               />
             </div>
+*/}
 
             <div className="col-lg-7 col-md-8 col-12">
               <InputNumberFormItem
@@ -202,15 +213,7 @@ function VipForm(props) {
               />
             </div>
 
-            <div className="col-lg-7 col-md-8 col-12">
-              <InputNumberFormItem
-                name="tasksperday"
-                label={i18n(
-                  'entities.vip.fields.tasksperday',
-                )}
-                required={true}
-              />
-            </div>
+
 
             <div className="col-lg-7 col-md-8 col-12">
               <InputNumberFormItem
@@ -221,7 +224,37 @@ function VipForm(props) {
                 required={true}
               />
             </div>
+            <div className="col-lg-7 col-md-8 col-12">
+              <CheckboxFormItem
+                name="isFixedAmount"
+                label={i18n(
+                  'entities.vip.fields.isFixedAmount',
+                )}
+                required={true}
+              />
+            </div>
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="min"
+                label={i18n(
+                  'entities.vip.fields.min',
+                )}
+                required={true}
+                autoFocus
+              />
+            </div>
 
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="max"
+                label={i18n(
+                  'entities.vip.fields.max',
+                )}
+                required={true}
+                autoFocus
+              />
+            </div>
             <div className="col-lg-7 col-md-8 col-12">
               <ImagesFormItem
                 name="photo"

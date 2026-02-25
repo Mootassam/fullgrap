@@ -1,18 +1,20 @@
+
 import { AuthToken } from 'src/modules/auth/authToken';
 import Axios from 'axios';
-// import config from 'src/config'; 
+// import config from 'src/config';
 import { getLanguageCode } from 'src/i18n';
 import Qs from 'qs';
 import moment from 'moment';
 
 const authAxios = Axios.create({
+  //Randthis
+  baseURL: "http://162.0.228.113:8080/api", 
 
+
+  // demo
+  // baseURL:"http://162.0.228.113:8088/api/"
   //Local
-  // baseURL: "http://192.168.1.43:8080/api",
-
-//Louis
-baseURL: "http://159.198.47.173:8080/api",
-
+  // baseURL: 'http://localhost:8080/api/',
 
   paramsSerializer: function (params) {
     return Qs.stringify(params, {

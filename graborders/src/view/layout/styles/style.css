@@ -29,7 +29,8 @@
 .children__content {
   align-items: center;
   justify-content: center;
-  max-width: 100%;
+  max-width: 1000px;
+  margin: auto;
 
   margin-bottom: 60px;
 }
@@ -43,18 +44,21 @@
 /* styles the tabbarBottom */
 .tabbottomNavigator {
   position: fixed;
-  background-color: #ffff;
+  background-color: #000;
   border-top-left-radius: 19px;
   border-top-right-radius: 19px;
-  border-top: 2px solid #afafaa;
   width: auto;
   height: 60px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  z-index: 1;
+  z-index: 10;
   bottom: 0;
+  max-width: 1000px;
+  margin: auto;
+  left: 0;
+  right: 0;
 }
 
 .text__link {
@@ -63,7 +67,7 @@
 }
 
 .active {
-  color: #0056b3 !important;
+  color: #93B958 important;
 }
 
 .singleTab {
@@ -72,6 +76,8 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  max-width: 30px;
+  text-align: center;
 }
 
 .left__header {

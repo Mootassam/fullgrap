@@ -1,10 +1,13 @@
+
 const en = {
   common: {
+    actions:"actions",
     or: 'Or',
     cancel: 'Cancel',
     reset: 'Reset',
     save: 'Save',
     search: 'Search',
+    freeze: 'Freeze',
     edit: 'Edit',
     new: 'New',
     export: 'Export to Excel',
@@ -102,9 +105,9 @@ const en = {
       },
       fields: {
         title: 'Vip Name',
-        dailyorder: 'Daily Order',
+        dailyorder: 'Max Order per set',
         commissionrate: ' commission',
-        tasksDone:'tasksDone',
+        tasksDone: 'tasksDone',
         levelLimit: 'Level Limit',
         withdrawlimit: 'Withdraw Limit',
         tasksperday: 'Tasks per day',
@@ -113,7 +116,10 @@ const en = {
         levellimit: '',
         setperday: 'sets of data everyday',
         withdrawperday: 'Withdraw per day',
-        photo:"photo"
+        photo: "photo",
+        isFixedAmount:"Use fixed amount (checked = price, unchecked = % of balance)",
+        min: "Minimum product price for this VIP ",
+        max: "Maximum product price for this VIP"
       },
 
       new: {
@@ -218,6 +224,7 @@ const en = {
         slug: 'Number',
         photo: 'Photo',
         trc20: 'TRC20',
+        defaultBalance:"Default balance",
         eth: 'ETH',
         metaKeywords: 'MetaKeywords',
         metaDescriptions: 'MetaDescriptions',
@@ -1749,6 +1756,14 @@ const en = {
         createdAtRange: 'Created at',
       },
       enumerators: {
+        type: {
+          prizes: "prizes",
+          combo: "combo",
+          normal: "normal",
+
+        },
+
+
         status: {
           enable: 'Enable',
           disable: 'Disable',
@@ -2634,21 +2649,30 @@ const en = {
   },
 
   user: {
+    sections: {
+      basicInfo: 'Basic Info',
+      accountSettings: 'Account Settings',
+      permissions: 'Permissions',
+      additionalInfo: 'VIP + COMBO',
+      prizeInfo: 'Prizes'
+    },
+
     fields: {
       currentrecord: 'Tasks Done',
       freezeblance: 'Freeze Balance',
       couponcode: 'couponcode',
+      minbalance: "Minimum start-up amount",
       photo: 'photo',
       id: 'Id',
       avatars: 'Avatar',
       email: 'Email',
       tasksDone: "tasksDone",
       username: 'Username',
-      refcode: 'refcode',
+           refcode: 'Invitation Code',
       score: 'Score',
       grab: 'Grab',
       withdraw: 'Withdraw',
-      invitationcode: 'My code',
+      invitationcode: 'Parent Code',
       withdrawPassword: 'withdraw Password',
       emails: 'Email(s)',
       fullName: 'Name',
@@ -2888,11 +2912,11 @@ const en = {
     valider: 'validate',
     file: 'No file selected',
     typecsv: 'Invalid file type. Please select a CSV file.',
-    menu: 'Dashboard',
+    menu: 'Users',
     reset: 'Reset',
     phone: 'Visa',
-    check: 'Social Media',
-    company: 'company',
+    check: 'Customer Support',
+    company: 'Company',
     record: 'record',
     product: 'Product',
     transaction: 'transaction',

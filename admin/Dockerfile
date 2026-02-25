@@ -1,8 +1,8 @@
-# FROM node:14 as builder
+# FROM node:20 AS builder
 # WORKDIR /app
 # COPY package*.json ./
 # COPY package-lock.json ./
-# RUN npm install --silent
+# RUN npm install --legacy-peer-deps
 # COPY . .
 # RUN npm run build:production
 
@@ -12,3 +12,4 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 
 
+ 

@@ -46,6 +46,7 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.1",
     "react-select": "3.1.1",
+    "react-smart-scroller": "^1.1.22",
     "react-syntax-highlighter": "15.4.3",
     "react-test-render": "1.1.2",
     "react-tooltip": "4.2.11",

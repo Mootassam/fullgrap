@@ -3,6 +3,7 @@ import Message from 'src/view/shared/message';
 import { getHistory } from 'src/modules/store';
 import { i18n } from 'src/i18n';
 import TransactionService from 'src/modules/transaction/transactionService';
+import transactionListActions from 'src/modules/transaction/list/transactionListActions';
 
 const prefix = 'TRANSACTION_FORM';
 
@@ -89,6 +90,34 @@ const transactionFormActions = {
       Message.success(
         i18n('entities.transaction.update.success'),
       );
+
+      getHistory().push('/transaction');
+    } catch (error) {
+      Errors.handle(error);
+
+      dispatch({
+        type: transactionFormActions.UPDATE_ERROR,
+      });
+    }
+  },
+
+    doUpdateStatus: (values) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: transactionFormActions.UPDATE_STARTED,
+      });
+
+      await TransactionService.transactionStatus(values);
+
+      dispatch({
+        type: transactionFormActions.UPDATE_SUCCESS,
+      });
+
+      Message.success(
+        i18n('entities.transaction.update.success'),
+      );
+
+      dispatch(transactionListActions.doFetch())
 
       getHistory().push('/transaction');
     } catch (error) {

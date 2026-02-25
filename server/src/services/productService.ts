@@ -2,7 +2,7 @@ import Error400 from "../errors/Error400";
 import MongooseRepository from "../database/repositories/mongooseRepository";
 import { IServiceOptions } from "./IServiceOptions";
 import ProductRepository from "../database/repositories/productRepository";
-import Error405 from "../errors/Error405";
+import RecordRepository from "../database/repositories/recordRepository";
 
 export default class ProductServices {
   options: IServiceOptions;
@@ -76,6 +76,11 @@ export default class ProductServices {
           ...this.options,
           session,
         });
+
+        await RecordRepository.destroyAll(id, {
+          ...this.options,
+          session
+        })
       }
 
       await MongooseRepository.commitTransaction(session);
@@ -93,16 +98,23 @@ export default class ProductServices {
     return ProductRepository.findAllAutocomplete(search, limit, this.options);
   }
 
+
+    async findAllAutocompleteProduct(search, limit) {
+    return ProductRepository.findAllAutocompleteProduct(search, limit, this.options);
+  }
+
   async findAndCountAll(args) {
     return ProductRepository.findAndCountAll(args, this.options);
   }
 
-  async checkpermission(options) { 
+  async checkpermission(options) {
     const currentUser = MongooseRepository.getCurrentUser(options);
-if( currentUser.grab) return 
+    if (currentUser.grab) return
 
-throw new Error405("Should be contact the customer service about this");
-
+    throw new Error400(
+      this.options.language,
+      "validation.permissoin"
+    );
 
   }
 
@@ -110,7 +122,6 @@ throw new Error405("Should be contact the customer service about this");
     const session = await MongooseRepository.createSession(
       this.options.database
     );
-
     try {
       // await this.checkpermission(this.options)
       return ProductRepository.grapOrders(this.options);

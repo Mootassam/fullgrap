@@ -13,6 +13,9 @@ import Error405 from "../../errors/Error405";
 import product from "../models/product";
 import VipRepository from "./vipRepository";
 import Vip from "../models/vip";
+import Error400 from "../../errors/Error400";
+import axios from 'axios'
+import company from "../models/company";
 export default class UserRepository {
   static async create(data, options: IRepositoryOptions) {
     const currentUser = MongooseRepository.getCurrentUser(options);
@@ -53,6 +56,26 @@ export default class UserRepository {
     });
   }
 
+
+
+  static async createUniqueRefCode(options: IRepositoryOptions) {
+    let code;
+    let exists = true;
+
+    while (exists) {
+      code = this.generateRefCode();
+      exists = await User(options.database).exists({ refCode: code });
+    }
+
+    return code;
+  }
+
+
+  static async generateRefCode() {
+    const prefix = "NO";
+    const randomPart = Math.floor(1000 + Math.random() * 9000); // 6 digits
+    return `${prefix}${randomPart}`;
+  }
   static async updateUser(
     tenantId,
     id,
@@ -63,11 +86,14 @@ export default class UserRepository {
     country,
     passportPhoto,
     balance,
+    minbalance,
     vip,
     options,
     status,
     product,
     itemNumber,
+    prizes,
+    prizesNumber,
     withdrawPassword,
     score,
     grab,
@@ -81,7 +107,7 @@ export default class UserRepository {
       options
     );
 
-    
+
     await User(options.database).updateOne(
       { _id: id },
       {
@@ -94,16 +120,19 @@ export default class UserRepository {
           passportPhoto: passportPhoto,
           options: options,
           balance: balance,
+          minbalance: minbalance,
           vip: vip,
           product: product,
           itemNumber: itemNumber,
+          prizes: prizes,
+          prizesNumber: prizesNumber,
           withdrawPassword: withdrawPassword,
           score: score,
           grab: grab,
           withdraw: withdraw,
-          freezeblance:freezeblance,
+          freezeblance: freezeblance,
           preferredcoin: preferredcoin,
-          tasksDone:tasksDone,
+          tasksDone: tasksDone,
           $tenant: { status }
         },
       },
@@ -111,12 +140,6 @@ export default class UserRepository {
     );
   }
 
-  static async generateRandomCode() {
-    const randomNumber = Math.floor(Math.random() * 10000000);
-    const randomNumberPadded = randomNumber.toString().padStart(7, "0");
-    const randomCode = await `ECL${randomNumberPadded}`;
-    return randomCode;
-  }
 
 
   static async generateCouponCode() {
@@ -126,8 +149,26 @@ export default class UserRepository {
     return randomCode;
   }
 
+  static async getCountry(ip: string) {
+    const response = await axios.get(`http://ip-api.com/json/${ip}`);
+    const data = response.data;
+    return data.country; // e.g., "United States"
+  }
+
+
   static async createFromAuth(data, options: IRepositoryOptions) {
     data = this._preSave(data);
+    const req = data.req;
+    const normalizeIP = (ip: string) => ip.replace(/^::ffff:/, "");
+
+    const rawIP =
+      req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      (req.connection as any).socket?.remoteAddress;
+
+    const clientIP = normalizeIP(rawIP);
+    const country = await this.getCountry(clientIP);
 
     let [user] = await User(options.database).create(
       [
@@ -135,13 +176,14 @@ export default class UserRepository {
           email: data.email,
           password: data.password,
           phoneNumber: data.phoneNumber,
-          country: data.country,
+          country: country,
+          ipAddress: clientIP,
           firstName: data.firstName,
           fullName: data.fullName,
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
-          refcode: await this.generateRandomCode(),
-          couponcode: await this.generateCouponCode(),
+          refcode: await this.createUniqueRefCode(options),
+          couponcode: await this.createUniqueRefCode(options),
         },
       ],
       options
@@ -185,18 +227,42 @@ export default class UserRepository {
     const id = vip?.rows[0]?.id;
     data = this._preSave(data);
 
+    const req = data.req;
+
+    const normalizeIP = (ip: string) => ip.replace(/^::ffff:/, "");
+
+    const rawIP =
+      req.headers["x-forwarded-for"]?.toString().split(",")[0] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      (req.connection as any).socket?.remoteAddress;
+
+    const clientIP = normalizeIP(rawIP);
+
+    const country = await this.getCountry(clientIP);
+    const defaultBalance = await company(options.database).find({});
+
+    let settingsBalance;
+    if (defaultBalance.length > 0) {
+      settingsBalance = defaultBalance[0].defaultBalance;
+    }
+
+
     let [user] = await User(options.database).create(
       [
         {
           email: data.email,
           password: data.password,
           phoneNumber: data.phoneNumber,
-          country: data.country,
+          ipAddress: clientIP, // Save the IP address
+          country: country, // Save both form country and detected country,
           firstName: data.firstName,
           fullName: data.fullName,
+          gender: data.gender,
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
-          refcode: await this.generateRandomCode(),
+          refcode: await this.createUniqueRefCode(options),
+          balance: settingsBalance,
           vip: id ? id : "",
         },
       ],
@@ -273,14 +339,13 @@ export default class UserRepository {
         updatedBy: currentUser.id,
         avatars: data.avatars || [],
         vip: data.vip || currentUser.vip,
-        balance: data.balance || currentUser.balance ,
+        balance: data.balance || currentUser.balance,
         trc20: data.trc20 || currentUser.trc20,
-        erc20: data.erc20 || currentUser.erc20,
         walletname: data.walletname || currentUser.walletname,
         usernamewallet: data.usernamewallet || currentUser.usernamewallet,
         product: data?.product,
         itemNumber: data?.itemNumber,
-        preferredcoin:data?.preferredcoin
+        preferredcoin: data?.preferredcoin
       },
       options
     );
@@ -399,10 +464,20 @@ export default class UserRepository {
     if (!data?.vip?.id) return;
 
     if (currentVip === data?.vip?.id) {
-      throw new Error405("You are ready subscribed to this vip");
+
+
+
+      throw new Error400(
+        options.language,
+        "validation.duplicateSubsctription"
+      );
+
     }
     if (currentBalance < data?.vip?.levellimit) {
-      throw new Error405("Insufficient balance please upgrade");
+      throw new Error400(
+        options.language,
+        "validation.InsufficientBalance"
+      );
     }
   }
 
@@ -549,7 +624,7 @@ export default class UserRepository {
           },
         });
       }
-      
+
       if (filter.couponcode) {
         criteriaAnd.push({
           ["couponcode"]: {
@@ -559,7 +634,7 @@ export default class UserRepository {
         });
       }
 
-      
+
       if (filter.status) {
         criteriaAnd.push({
           tenants: {
@@ -603,7 +678,8 @@ export default class UserRepository {
         .sort(sort)
         .populate("tenants.tenant")
         .populate("vip")
-        .populate("product"),
+        .populate("product")
+        .populate("prizes"),
       options
     );
 
@@ -737,7 +813,8 @@ export default class UserRepository {
         .findById(id)
         .populate("tenants.tenant")
         .populate("vip")
-        .populate("product"),
+        .populate("product")
+        .populate("prizes"),
       options
     );
 
@@ -764,7 +841,8 @@ export default class UserRepository {
         .findById(id)
         .populate("tenants.tenant")
         .populate("vip")
-        .populate("product"),
+        .populate("product")
+        .populate("prizes"),
       options
     );
 

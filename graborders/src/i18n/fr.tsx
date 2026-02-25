@@ -1,2994 +1,988 @@
+import Withdraw from "src/view/pages/withdraw/Withdraw";
+
 const fr = {
-  common: {
-    or: 'Or',
-    cancel: 'Cancel',
-    reset: 'Reset',
-    save: 'Save',
-    search: 'Search',
-    edit: 'Edit',
-    new: 'New',
-    export: 'Export to Excel',
-    noDataToExport: 'No data to export',
-    import: 'Import',
-    discard: 'Discard',
-    yes: 'Yes',
-    no: 'No',
-    pause: 'Pause',
-    areYouSure: 'Are you sure?',
-    view: 'View',
-    destroy: 'Delete',
-    mustSelectARow: 'Must select a row',
-    start: 'Start',
-    end: 'End',
-    select: 'Select',
-    continue: 'Continue',
-    filters: 'Filters',
-    gallery: 'Gallery Imgaes',
-    hightlight: 'Hightlight',
-    attributes: 'Attributes',
-    attributeoptions: 'Attribute options',
-    administration: 'Administration',
-    community: 'Community',
-    news: 'News',
-    membership: 'MemberShip',
-    accounting: 'Accounting',
-
-    selectbank:"Select bank",
-    selectsize:"select size",
-    writeamount:"write amount",
-    tools:"tools",
-    brushsize:"Brush size",
-    configurations: 'Configurations',
-    logout:"Logout"
-  },
-
   app: {
-    title: 'E-CLICKS DIGITAL',
+    title: "Nowspeed"
   },
+  
+  pages: {
+    home: {
+      levels: "Niveaux VIP",
+      chooseLevel: "Choisissez votre niveau pour maximiser vos gains",
+      welcome: "Bienvenue",
+      announcement: "Chers utilisateurs, la plateforme Nowspeed est de retour au meilleur et normal, continuez à gagner autant que possible depuis la plateforme",
 
-  api: {
-    menu: 'API',
-  },
+      // Action Buttons
+      services: "Services",
+      events: "Événements",
+      about: "À propos",
+      terms: "CG",
+      certificate: "Certificat",
+      faqs: "FAQ",
 
-  entities: {
-    record:{
-      menu:"Records",
-      fields:{
-        user:"user",
-        product:"product",
-        number:"record Number",
-        status:"status"
-      },
-      list:{
-        title:"List of records"
-      },
-      view:{ 
-        title:"Record Detail"
-      },
-      edit:{
-        title: "Edit Record"
-      },
-      create: {
-        success: 'Record successfully saved',
-      },
-      update: {
-        success: 'Record successfully saved',
-      },
-      destroy: {
-        success: 'Record successfully deleted',
-      },
-      destroyAll: {
-        success: 'Record successfully deleted',
-      },
-      enumerators :{ 
-        status :{ 
-          pending:"Pending", 
-          completed:"Completed",
-          canceled:"Canceled"
-        }
+      // VIP Level Cards
+      currentLevel: "Actuel",
+      upgrade: "Mettre à niveau",
+      profitNormal: "de profit sur les produits normaux",
+      profitPremium: "de profit sur les produits premium",
+      maxOrders: "Commandes max par jour",
+
+      // Modal
+      modal: {
+        levelDetails: "Détails du niveau",
+        levelLimit: "Limite de niveau",
+        dailyOrders: "Commandes quotidiennes",
+        commissionRate: "Taux de commission",
+        cancel: "Annuler",
+        upgradeNow: "Mettre à niveau maintenant"
       }
     },
-    typeProjet: {
-      name: 'typeProjet',
-      label: 'TypeProjets',
-      menu: 'TypeProjets',
-      exporterFileName: 'typeProjet_export',
-      list: {
-        menu: 'TypeProjets',
-        title: 'TypeProjets',
+
+tabBottomNavigator: {
+    home: "Accueil",
+    grap: "Saisir",
+    records: "Enregistrements",
+    starting: "Démarrer"
+  },
+    transaction: {
+      title: "Historique des Transactions",
+      filters: {
+        all: "Toutes",
+        withdraw: "Retrait",
+        deposit: "Dépôt"
       },
-      create: {
-        success: 'TypeProjet successfully saved',
+      recentTransactions: "Transactions Récentes",
+      transactionCount: "{0} transactions",
+      types: {
+        deposit: "Dépôt",
+        withdrawal: "Retrait"
       },
-      update: {
-        success: 'TypeProjet successfully saved',
+      status: {
+        completed: "Terminé",
+        processing: "En traitement",
+        canceled: "Annulé"
       },
-      destroy: {
-        success: 'TypeProjet successfully deleted',
+      amount: {
+        deposit: "+${0}",
+        withdraw: "-${0}",
+        canceled: "${0}"
+      }
+    },
+
+
+    profile: {
+      title: "Profil",
+      invitationCode: "Code d'invitation",
+      creditScore: "Score de crédit",
+      balance: "Solde",
+      todayProfit: "Profit du jour",
+      frozenAmount: "Montant gelé",
+      usd: "USD",
+
+      // Menu Sections
+      myFinancial: "Mes finances",
+      myDetails: "Mes détails",
+      other: "Autre",
+
+      // Financial Items
+      recharge: "Recharger",
+      withdraw: "Retirer",
+
+      // Details Items
+      contactUs: "Nous contacter",
+      profile: "Profil",
+      updateWithdrawal: "Mettre à jour les détails de retrait",
+
+      // Other Items
+      transaction: "Transaction",
+      tasksHistory: "Historique des tâches",
+      security: "Sécurité",
+      notifications: "Notifications",
+      languages: "Langues",
+
+      // Buttons
+      logout: "Déconnexion",
+      confirm: "Confirmer",
+      copied: "Copié",
+
+      // Modals
+      rechargeModal: {
+        title: "Rechargement",
+        text: "Veuillez contacter le service client pour recharger"
       },
-      destroyAll: {
-        success: 'TypeProjet(s) successfully deleted',
+      withdrawModal: {
+        title: "Retrait",
+        text: "Veuillez contacter le service client pour procéder à votre retrait."
+      }
+    },
+
+    team: {
+      title: "Profil",
+      personalInformation: "Informations personnelles",
+      accountDetails: "Vos détails de compte et informations personnelles",
+
+      // Info Items
+      fullName: "Nom complet",
+      email: "Email",
+      phoneNumber: "Numéro de téléphone",
+      country: "Pays",
+      gender: "Genre",
+      invitationCode: "Code d'invitation",
+
+      // Gender Values
+      genderNotSpecified: "Non spécifié",
+
+      // Placeholders
+      notAvailable: "—"
+    },
+
+    language: {
+      title: "Langue de l'application",
+      selectLanguage: "Sélectionner la langue",
+      choosePreferred: "Choisissez votre langue préférée",
+      searchPlaceholder: "Rechercher des langues...",
+      currentLanguage: "Langue actuelle",
+
+      // Language names (if needed for dynamic content)
+      languages: {
+        english: "Anglais",
+        french: "Français",
+        russian: "Russe",
+        german: "Allemand",
+        spanish: "Espagnol"
       },
-      edit: {
-        title: 'Edit TypeProjet',
+      nativeNames: {
+        english: "English",
+        french: "Français",
+        russian: "Русский",
+        german: "Deutsch",
+        spanish: "Español"
+      }
+    },
+
+    online: {
+      title: "Service client",
+      description: "Si vous avez des questions ou rencontrez des problèmes, veuillez nous envoyer un email ou discuter avec notre équipe de support client en ligne.",
+      contactWhatsApp: "Contacter sur WhatsApp",
+      contactTelegram: "Contacter sur Telegram"
+    },
+
+    notifications: {
+      title: "Notifications",
+      filters: {
+        all: "Toutes",
+        deposit: "Dépôt",
+        withdraw: "Retrait"
       },
+      unreadCount: "{0} non lues",
+      emptyState: {
+        title: "Aucune notification trouvée",
+        description: "Vous n'avez pas encore de notifications {0}."
+      },
+
+      // Notification Types
+      types: {
+        deposit_success: "Dépôt réussi",
+        deposit_canceled: "Dépôt annulé",
+        withdraw_success: "Retrait réussi",
+        withdraw_canceled: "Retrait annulé",
+        system: "Notification système",
+        alert: "Alerte importante",
+        default: "Notification"
+      },
+
+      // Notification Messages
+      messages: {
+        deposit_success: "Votre dépôt de ${0} a été complété avec succès.",
+        deposit_canceled: "Votre demande de dépôt de ${0} a été annulée.",
+        withdraw_success: "Votre retrait de ${0} a été complété avec succès.",
+        withdraw_canceled: "Votre demande de retrait de ${0} a été annulée.",
+        system: "Notification système",
+        alert: "Notification d'alerte importante",
+        default: "Mise à jour de notification"
+      },
+
+      // Status
+      status: {
+        unread: "non lue",
+        read: "lue"
+      }
+    },
+
+    portfolio: {
+      // Status Tabs
+      completed: "Terminées",
+      pending: "En attente",
+      canceled: "Annulées",
+
+      // Order Information
+      orderTime: "Heure de commande",
+      orderNumber: "Numéro de commande",
+      totalOrderAmount: "Montant total de la commande",
+      commission: "Commission",
+      estimatedReturn: "Retour estimé",
+
+      // Product Details
+      quantity: "X 1",
+      currency: "USD",
+
+      // Status Labels
+      status: {
+        completed: "Terminée",
+        pending: "En attente",
+        canceled: "Annulée"
+      }
+    },
+
+    changePassword: {
+      title: "Changer le mot de passe",
+      header: "Changer le mot de passe",
+      oldPassword: "Ancien mot de passe",
+      newPassword: "Nouveau mot de passe",
+      confirmPassword: "Confirmer le mot de passe",
+      submit: "Soumettre",
+      note: "Veuillez remplir ces informations soigneusement",
+      requiredField: "*"
+    },
+
+    withdraw: {
+      title: "Retrait",
+      withdrawAmount: "Montant du retrait",
+      withdrawPassword: "Mot de passe de retrait",
+      availableBalance: "Solde disponible",
+      confirm: "Confirmer",
+      rulesDescription: "Description des règles",
+      rules: {
+        minimum: "(1) Le retrait minimum est de 100 USD",
+        paymentTime: "(2) Le paiement sera effectué dans l'heure suivante, après l'approbation de la demande de retrait.",
+        orderCompletion: "(3) La soumission incomplète des commandes quotidiennes est soumise à aucun retrait, tous les produits doivent être soumis pour le retrait"
+      }
+    },
+
+    wallet: {
+      title: "Portefeuille",
+      withdrawalMethod: "Informations sur la méthode de retrait",
+      username: "Nom d'utilisateur",
+      walletName: "Nom du portefeuille",
+      choosePreferredCoin: "Choisir la pièce préférée",
+      walletAddress: "Adresse du portefeuille",
+      withdrawPassword: "Mot de passe de retrait",
+      submit: "Soumettre",
+      note: "Veuillez être prudent lors du remplissage de ces informations",
+      requiredField: "*"
+    },
+
+    grab: {
+      // Header Section
+      greeting: "Salut {0} 👏",
+
+      // Stats Cards
+      totalAmount: "Montant total",
+      profitsAdded: "Les profits seront ajoutés ici",
+      todaysCommission: "Commission du jour",
+      commissionEarned: "Commission gagnée",
+      currency: "USD",
+
+      // Optimization Section
+      startOptimization: "Démarrer l'optimisation",
+      progressCount: "{0}/{1}",
+
+      // Game Section
+      commissionRate: "Taux de commission",
+      exclusiveChannel: "Canal exclusif pour les membres exclusifs",
+      startButton: "Démarrer",
+      processing: "Traitement en cours...",
+
+      // Notice Section
+      notice: "Avis",
+      supportHours: "Heures de support en ligne 10:00 - 22:00",
+      contactSupport: "Veuillez contacter le support en ligne pour votre assistance!"
+    },
+
+    grapModal: {
+      orderTime: "Heure de commande",
+      orderNumber: "Numéro de commande",
+      totalOrderAmount: "Montant total de la commande",
+      commission: "Commission",
+      estimatedReturn: "Retour estimé",
+      cancel: "Annuler",
+      submit: "Soumettre",
+      quantity: "X 1",
+      currency: "USD"
+    },
+
+    actions: {
+      event: "Événements",
+      tc: "Conditions générales",
+      certificate: "Certificat",
+      faq: "Foire aux questions",
+      company: "Entreprise"
+    },
+
+    auth: {
+      signin: {
+        welcomeBack: "Content de vous revoir!",
+        signinToAccount: "Connectez-vous à votre compte marketing",
+        signinButton: "Se connecter",
+        noAccount: "Vous n'avez pas de compte?",
+        signupHere: "Inscrivez-vous ici."
+      },
+      signup: {
+        createAccount: "Créer un compte",
+        signupForAccount: "Inscrivez-vous pour un compte marketing",
+        signupButton: "S'inscrire",
+        alreadyHaveAccount: "Vous avez déjà un compte?",
+        phonePlaceholder: "Entrez votre numéro de téléphone",
+        searchCountries: "Rechercher des pays..."
+      }
+    },
+
+    csPage: {
+      customerSupport: "Service client",
+      hereToHelp: "Nous sommes là pour vous aider!",
+      howCanWeHelp: "Comment pouvons-nous vous aider aujourd'hui?",
+      platformNames: {
+        whatsapp: "WhatsApp",
+        telegram: "Telegram"
+      }
+    },
+  },
+
+
+  entities: {
+    record: {
+      menu: "Enregistrements",
       fields: {
-        id: 'Id',
-        nom: 'Nom',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
+        user: "utilisateur",
+        product: "produit",
+        number: "numéro d'enregistrement",
+        status: "statut",
       },
-      enumerators: {},
-      placeholders: {
-        nom: 'Nom',
-      },
-      hints: {},
-      new: {
-        title: 'New TypeProjet',
+      list: {
+        title: "Liste des enregistrements",
       },
       view: {
-        title: 'View TypeProjet',
+        title: "Détail de l'enregistrement",
       },
-      importer: {
-        title: 'Import TypeProjets',
-        fileName: 'typeProjet_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
+      edit: {
+        title: "Modifier l'enregistrement",
+      },
+      create: {
+        success: "Produit soumis avec succès.",
+      },
+      update: {
+        success: "Produit soumis avec succès.",
+      },
+      destroy: {
+        success: "Enregistrement supprimé avec succès",
+      },
+      destroyAll: {
+        success: "Enregistrement supprimé avec succès",
+      },
+      enumerators: {
+        status: {
+          pending: "En attente",
+          completed: "Terminé",
+          canceled: "Annulé",
+        },
       },
     },
+
     category: {
-      name: 'category',
-      label: 'Categories',
-      menu: 'Categories',
-      exporterFileName: 'category_export',
+      name: "catégorie",
+      label: "Catégories",
+      menu: "Catégories",
+      exporterFileName: "export_categorie",
       list: {
-        menu: 'Categories',
-        title: 'Categories',
+        menu: "Catégories",
+        title: "Catégories",
       },
       create: {
-        success: 'Category successfully saved',
+        success: "Catégorie enregistrée avec succès",
       },
       update: {
-        success: 'Category successfully saved',
+        success: "Catégorie enregistrée avec succès",
       },
       destroy: {
-        success: 'Category successfully deleted',
+        success: "Catégorie supprimée avec succès",
       },
       destroyAll: {
-        success: 'Category(s) successfully deleted',
+        success: "Catégorie(s) supprimée(s) avec succès",
       },
       edit: {
-        title: 'Edit Category',
+        title: "Modifier la catégorie",
       },
       fields: {
-        id: 'Id',
-        name: 'Name',
-        slug: 'Slug',
-        photo: 'Photo',
-        metaKeywords: 'MetaKeywords',
-        metaDescriptions: 'MetaDescriptions',
-        status: 'Status',
-        isFeature: 'IsFeature',
-        serialRange: 'Serial',
-        serial: 'Serial',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
+        id: "Id",
+        name: "Nom",
+        slug: "Slug",
+        photo: "Photo",
+        metaKeywords: "Mots-clés Meta",
+        metaDescriptions: "Descriptions Meta",
+        status: "Statut",
+        isFeature: "Est en vedette",
+        serialRange: "Série",
+        serial: "Série",
+        createdAt: "Créé à",
+        updatedAt: "Mis à jour à",
+        createdAtRange: "Créé à",
       },
       enumerators: {
         status: {
-          enable: 'Enable',
-          disable: 'Disable',
+          enable: "Activer",
+          disable: "Désactiver",
         },
       },
       placeholders: {},
       hints: {},
       new: {
-        title: 'New Category',
+        title: "Nouvelle catégorie",
       },
       view: {
-        title: 'View Category',
+        title: "Voir la catégorie",
       },
       importer: {
-        title: 'Import Categories',
-        fileName: 'category_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    palier: {
-      name: 'Level',
-      label: 'Levels',
-      menu: 'Levels',
-      exporterFileName: 'Level_export',
-      list: {
-        menu: 'Levels',
-        title: 'Levels',
-      },
-      create: {
-        success: 'Level successfully saved',
-      },
-      update: {
-        success: 'Level successfully saved',
-      },
-      destroy: {
-        success: 'Level successfully deleted',
-      },
-      destroyAll: {
-        success: 'Level(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Level',
-      },
-      fields: {
-        id: 'Id',
-        title: 'Title',
-        montantRange: 'Amount',
-        montant: 'Amount',
-        details: 'Details',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Level',
-      },
-      view: {
-        title: 'View Level',
-      },
-      importer: {
-        title: 'Import Levels',
-        fileName: 'Level_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    projet: {
-      name: 'Project',
-      label: 'Projects',
-      menu: 'Projects',
-      exporterFileName: 'project_export',
-      list: {
-        menu: 'Projects',
-        title: 'Projects',
-      },
-      create: {
-        success: 'Project successfully saved',
-      },
-      update: {
-        success: 'Project successfully saved',
-      },
-      destroy: {
-        success: 'Project successfully deleted',
-      },
-      destroyAll: {
-        success: 'Project(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Project',
-      },
-      fields: {
-        id: 'Id',
-        titre: 'Title',
-        description: 'Description',
-        details: 'Details',
-        typeProjet: 'Type',
-        statutProjet: 'Status',
-        photoPrincipal: 'Main Photo',
-        budgetRange: 'Budget',
-        budget: 'Budget',
-        lieu: 'Place',
-        dateDebutProjetRange: 'Project Start Date',
-        dateDebutProjet: 'Project Start Date',
-        dateFinProjetRange: 'Project End Date',
-        dateFinProjet: 'Project End Date',
-        dateDebutDonRange: 'Donation Start Date',
-        dateDebutDon: 'Donation Start Date',
-        dateFinDonRange: 'Donation End Date',
-        dateFinDon: 'Donation End Date',
-        photos: 'Pictures',
-        attachements: 'Attachments',
-        votes: 'Votes',
-        dons: 'Donation',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        typeProjet: {
-          idee: 'Idea',
-          projet_ligue: 'League Project',
-          projet_ca: 'CA Project',
-        },
-        statutProjet: {
-          draft: 'Draft',
-          actif: 'Active',
-          canceled: 'Canceled',
-          closed: 'Closed',
-        },
-      },
-      placeholders: {
-        typeProjet: 'Type',
-      },
-      hints: {},
-      new: {
-        title: 'New Project',
-      },
-      view: {
-        title: 'View Project',
-      },
-      importer: {
-        title: 'Import Projects',
-        fileName: 'project_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    votes: {
-      name: 'Votes',
-      label: 'Votes',
-      menu: 'Votes',
-      exporterFileName: 'votes_export',
-      list: {
-        menu: 'Votes',
-        title: 'Votes',
-      },
-      create: {
-        success: 'Votes successfully saved',
-      },
-      update: {
-        success: 'Votes successfully saved',
-      },
-      destroy: {
-        success: 'Votes successfully deleted',
-      },
-      destroyAll: {
-        success: 'Votes(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Votes',
-      },
-      fields: {
-        id: 'Id',
-        adherent: 'Member',
-        votesRange: 'Votes',
-        votes: 'Votes',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Votes',
-      },
-      view: {
-        title: 'View Votes',
-      },
-      importer: {
-        title: 'Import Votes',
-        fileName: 'votes_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    dons: {
-      name: 'Donations',
-      label: 'Donations',
-      menu: 'Donations',
-      exporterFileName: 'Donations_export',
-      list: {
-        menu: 'Donations',
-        title: 'Donations',
-      },
-      create: {
-        success: 'Donations successfully saved',
-      },
-      update: {
-        success: 'Donations successfully saved',
-      },
-      destroy: {
-        success: 'Donations successfully deleted',
-      },
-      destroyAll: {
-        success: 'Donations(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Donations',
-      },
-      fields: {
-        id: 'Id',
-        adherent: 'Member',
-        montantRange: 'Amount',
-        montant: 'Amount',
-        typePaiement: 'Payment type',
-        attachements: 'Attachments',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        typePaiement: {
-          paymee: 'Paymee',
-          cb: 'Bank card',
-          virement: 'Transfer',
-          especes: 'Cash',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Donations',
-      },
-      view: {
-        title: 'View Donations',
-      },
-      importer: {
-        title: 'Import Donations',
-        fileName: 'Donations_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    subcategories: {
-      name: 'Sub Categories',
-      label: 'Sub Categories',
-      menu: 'Sub Categories',
-      exporterFileName: 'Sub Categories_export',
-      list: {
-        menu: 'Sub Categories',
-        title: 'Sub Categories',
-      },
-      create: {
-        success: 'Sub Categories successfully saved',
-      },
-      update: {
-        success: 'Sub Categories successfully saved',
-      },
-      destroy: {
-        success: 'Sub Categories successfully deleted',
-      },
-      destroyAll: {
-        success: 'Sub Categories(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Sub Categories',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        slug: 'Slug',
-        status: 'Status',
-        categoryId: 'Category',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Sub Categories',
-      },
-      view: {
-        title: 'View Sub Categories',
-      },
-      importer: {
-        title: 'Import Sub Categories',
-        fileName: 'Sub Categories_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    chieldCategories: {
-      name: 'Chield Categories',
-      label: 'Chield Categories',
-      menu: 'Chield Categories',
-      exporterFileName: 'Chield Categories_export',
-      list: {
-        menu: 'Chield Categories',
-        title: 'Chield Categories',
-      },
-      create: {
-        success: 'Chield Categories successfully saved',
-      },
-      update: {
-        success: 'Chield Categories successfully saved',
-      },
-      destroy: {
-        success: 'Chield Categories successfully deleted',
-      },
-      destroyAll: {
-        success:
-          'Chield Categories(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Chield Categories',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        slug: 'Slug',
-        status: 'Status',
-        categoryId: 'Category',
-        subcategoryId: 'Sub Category',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {
-        subcategoryId: ' ',
-      },
-      hints: {},
-      new: {
-        title: 'New Chield Categories',
-      },
-      view: {
-        title: 'View Chield Categories',
-      },
-      importer: {
-        title: 'Import Chield Categories',
-        fileName: 'Chield Categories_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    taxes: {
-      name: 'taxes',
-      label: 'Taxes',
-      menu: 'Taxes',
-      exporterFileName: 'taxes_export',
-      list: {
-        menu: 'Taxes',
-        title: 'Taxes',
-      },
-      create: {
-        success: 'Taxes successfully saved',
-      },
-      update: {
-        success: 'Taxes successfully saved',
-      },
-      destroy: {
-        success: 'Taxes successfully deleted',
-      },
-      destroyAll: {
-        success: 'Taxes(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Taxes',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Title',
-        valueRange: 'Value',
-        value: 'Tax',
-        status: 'Status',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Taxes',
-      },
-      view: {
-        title: 'View Taxes',
-      },
-      importer: {
-        title: 'Import Taxes',
-        fileName: 'taxes_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    brands: {
-      name: 'brands',
-      label: 'Brands',
-      menu: 'Brands',
-      exporterFileName: 'brands_export',
-      list: {
-        menu: 'Brands',
-        title: 'Brands',
-      },
-      create: {
-        success: 'Brands successfully saved',
-      },
-      update: {
-        success: 'Brands successfully saved',
-      },
-      destroy: {
-        success: 'Brands successfully deleted',
-      },
-      destroyAll: {
-        success: 'Brands(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Brands',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        slug: 'Slug',
-        photo: 'Photo',
-        status: 'Status',
-        isPopular: 'Popular',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-        isPopular: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Brands',
-      },
-      view: {
-        title: 'View Brands',
-      },
-      importer: {
-        title: 'Import Brands',
-        fileName: 'brands_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    edit: {
-      name: 'edit',
-      label: 'Edits',
-      menu: 'Edits',
-      exporterFileName: 'edit_export',
-      list: {
-        menu: 'Edits',
-        title: 'Edits',
-      },
-      create: {
-        success: 'Edit successfully saved',
-      },
-      update: {
-        success: 'Edit successfully saved',
-      },
-      destroy: {
-        success: 'Edit successfully deleted',
-      },
-      destroyAll: {
-        success: 'Edit(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Edit',
-      },
-      fields: {
-        id: 'Id',
-        campaignTitle: 'Campaign Title',
-        campaignLastDateTimeRange: 'Campaign Last DateTime',
-        campaignLastDateTime: 'Campaign Last DateTime',
-        status: 'Status',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Edit',
-      },
-      view: {
-        title: 'View Edit',
-      },
-      importer: {
-        title: 'Import Edits',
-        fileName: 'edit_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    campaignItems: {
-      name: 'Campaign Offres',
-      label: 'Campaign Offres',
-      menu: 'Campaign Offres',
-      exporterFileName: 'Campaign Offres_export',
-      list: {
-        menu: 'Campaign Offres',
-        title: 'Campaign Offres',
-      },
-      create: {
-        success: 'Campaign Offres successfully saved',
-      },
-      update: {
-        success: 'Campaign Offres successfully saved',
-      },
-      destroy: {
-        success: 'Campaign Offres successfully deleted',
-      },
-      destroyAll: {
-        success: 'Campaign Offres(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Campaign Offres',
-      },
-      fields: {
-        id: 'Id',
-        status: 'Status',
-        isFeature: 'Show Home Page',
-        itemId: 'ItemId',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-        photo: 'photo',
-        name: 'name',
-        price: 'price',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-        isFeature: {
-          publish: 'Publish',
-          unpublish: 'Unpublish',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Campaign Offres',
-      },
-      view: {
-        title: 'View Campaign Offres',
-      },
-      importer: {
-        title: 'Import Campaign Offres',
-        fileName: 'Campaign Offres_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    gallery: {
-      name: 'gallery',
-      label: 'Galleries',
-      menu: 'Galleries',
-      exporterFileName: 'gallery_export',
-      list: {
-        menu: 'Galleries',
-        title: 'Galleries',
-      },
-      create: {
-        success: 'Gallery successfully saved',
-      },
-      update: {
-        success: 'Gallery successfully saved',
-      },
-      destroy: {
-        success: 'Gallery successfully deleted',
-      },
-      destroyAll: {
-        success: 'Gallery(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Gallery',
-      },
-      fields: {
-        id: 'Id',
-        photos: 'Photos',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Gallery',
-      },
-      view: {
-        title: 'View Gallery',
-      },
-      importer: {
-        title: 'Import Galleries',
-        fileName: 'gallery_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    election: {
-      name: 'election',
-      label: 'Elections',
-      menu: 'Elections',
-      exporterFileName: 'election_export',
-      list: {
-        menu: 'Elections',
-        title: 'Elections',
-      },
-      create: {
-        success: 'Election successfully saved',
-      },
-      update: {
-        success: 'Election successfully saved',
-      },
-      destroy: {
-        success: 'Election successfully deleted',
-      },
-      destroyAll: {
-        success: 'Election(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Election',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        members: 'Members',
-        startDateRange: 'StartDate',
-        startDate: 'StartDate',
-        endDateRange: 'EndDate',
-        endDate: 'EndDate',
-        pv: 'Pv',
-        objectifs: 'Goals',
-        association: 'Association',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Election',
-      },
-      view: {
-        title: 'View Election',
-      },
-      importer: {
-        title: 'Import Elections',
-        fileName: 'election_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    association: {
-      name: 'association',
-      label: 'Associations',
-      menu: 'Associations',
-      exporterFileName: 'association_export',
-      list: {
-        menu: 'Associations',
-        title: 'Associations',
-      },
-      create: {
-        success: 'Association successfully saved',
-      },
-      update: {
-        success: 'Association successfully saved',
-      },
-      destroy: {
-        success: 'Association successfully deleted',
-      },
-      destroyAll: {
-        success: 'Association(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Association',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        logo: 'Logo',
-        email: 'Email',
-        phone: 'Phone',
-        postalCodeRange: 'PostalCode',
-        postalCode: 'PostalCode',
-        city: 'City',
-        country: 'Country',
-        admins: 'Admins',
-        elections: 'Elections',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Association',
-      },
-      view: {
-        title: 'View Association',
-      },
-      importer: {
-        title: 'Import Associations',
-        fileName: 'association_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    newsCategory: {
-      name: 'newsCategory',
-      label: 'NewsCategories',
-      menu: 'NewsCategories',
-      exporterFileName: 'newsCategory_export',
-      list: {
-        menu: 'NewsCategories',
-        title: 'NewsCategories',
-      },
-      create: {
-        success: 'NewsCategory successfully saved',
-      },
-      update: {
-        success: 'NewsCategory successfully saved',
-      },
-      destroy: {
-        success: 'NewsCategory successfully deleted',
-      },
-      destroyAll: {
-        success: 'NewsCategory(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit NewsCategory',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        description: 'Description',
-        news: 'News',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New NewsCategory',
-      },
-      view: {
-        title: 'View NewsCategory',
-      },
-      importer: {
-        title: 'Import NewsCategories',
-        fileName: 'newsCategory_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    tag: {
-      name: 'newsTag',
-      label: 'NewsTags',
-      menu: 'NewsTags',
-      exporterFileName: 'newsTag_export',
-      list: {
-        menu: 'NewsTags',
-        title: 'NewsTags',
-      },
-      create: {
-        success: 'NewsTag successfully saved',
-      },
-      update: {
-        success: 'NewsTag successfully saved',
-      },
-      destroy: {
-        success: 'NewsTag successfully deleted',
-      },
-      destroyAll: {
-        success: 'NewsTag(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit NewsTag',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        description: 'Description',
-        news: 'News',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New NewsTag',
-      },
-      view: {
-        title: 'View NewsTag',
-      },
-      importer: {
-        title: 'Import NewsTags',
-        fileName: 'newsTag_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    news: {
-      name: 'news',
-      label: 'News',
-      menu: 'News',
-      exporterFileName: 'news_export',
-      list: {
-        menu: 'News',
-        title: 'News',
-      },
-      create: {
-        success: 'News successfully saved',
-      },
-      update: {
-        success: 'News successfully saved',
-      },
-      destroy: {
-        success: 'News successfully deleted',
-      },
-      destroyAll: {
-        success: 'News(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit News',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        type: 'Type',
-        shortDescription: 'ShortDescription',
-        description: 'Description',
-        image: 'Image',
-        attachements: 'Attachements',
-        category: 'Category',
-        tags: 'Tags',
-        published: 'Published',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          news: 'News',
-          appelOffre: 'AppelOffre',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New News',
-      },
-      view: {
-        title: 'View News',
-      },
-      importer: {
-        title: 'Import News',
-        fileName: 'news_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    partner: {
-      name: 'partner',
-      label: 'Partners',
-      menu: 'Partners',
-      exporterFileName: 'partner_export',
-      list: {
-        menu: 'Partners',
-        title: 'Partners',
-      },
-      create: {
-        success: 'Partner successfully saved',
-      },
-      update: {
-        success: 'Partner successfully saved',
-      },
-      destroy: {
-        success: 'Partner successfully deleted',
-      },
-      destroyAll: {
-        success: 'Partner(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Partner',
-      },
-      fields: {
-        id: 'Id',
-        acronym: 'Acronym',
-        name: 'Name',
-        email: 'Email',
-        logo: 'Logo',
-        postalAddress: 'PostalAddress',
-        postalCode: 'PostalCode',
-        city: 'City',
-        country: 'Country',
-        members: 'Members',
-        type: 'Type',
-        group: 'Group',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          association: 'Association',
-          funder: 'Funder',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Partner',
-      },
-      view: {
-        title: 'View Partner',
-      },
-      importer: {
-        title: 'Import Partners',
-        fileName: 'partner_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    group: {
-      name: 'group',
-      label: 'Groups',
-      menu: 'Groups',
-      exporterFileName: 'group_export',
-      list: {
-        menu: 'Groups',
-        title: 'Groups',
-      },
-      create: {
-        success: 'Group successfully saved',
-      },
-      update: {
-        success: 'Group successfully saved',
-      },
-      destroy: {
-        success: 'Group successfully deleted',
-      },
-      destroyAll: {
-        success: 'Group(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Group',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        logo: 'Logo',
-        admin: 'Admin',
-        members: 'Members',
-        partners: 'Partners',
-        type: 'Type',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          administrative: 'Administrative',
-          cultural: 'Cultural',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Group',
-      },
-      view: {
-        title: 'View Group',
-      },
-      importer: {
-        title: 'Import Groups',
-        fileName: 'group_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    formule: {
-      name: 'formule',
-      label: 'Formules',
-      menu: 'Formules',
-      exporterFileName: 'formule_export',
-      list: {
-        menu: 'Formules',
-        title: 'Formules',
-      },
-      create: {
-        success: 'Formule successfully saved',
-      },
-      update: {
-        success: 'Formule successfully saved',
-      },
-      destroy: {
-        success: 'Formule successfully deleted',
-      },
-      destroyAll: {
-        success: 'Formule(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Formule',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        description: 'Description',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        membership: 'Membership',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Formule',
-      },
-      view: {
-        title: 'View Formule',
-      },
-      importer: {
-        title: 'Import Formules',
-        fileName: 'formule_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    membership: {
-      name: 'membership',
-      label: 'Memberships',
-      menu: 'Memberships',
-      exporterFileName: 'membership_export',
-      list: {
-        menu: 'Memberships',
-        title: 'Memberships',
-      },
-      create: {
-        success: 'Membership successfully saved',
-      },
-      update: {
-        success: 'Membership successfully saved',
-      },
-      destroy: {
-        success: 'Membership successfully deleted',
-      },
-      destroyAll: {
-        success: 'Membership(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Membership',
-      },
-      fields: {
-        id: 'Id',
-        status: 'Status',
-        paymentMethod: 'PaymentMethod',
-        formule: 'Formule',
-        attachements: 'Attachements',
-        member: 'Member',
-        campaign: 'Campaign',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          paid: 'Paid',
-          waiting: 'Waiting',
-        },
-        paymentMethod: {
-          cash: 'Cash',
-          check: 'Check',
-          bank: 'Bank',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Membership',
-      },
-      view: {
-        title: 'View Membership',
-      },
-      importer: {
-        title: 'Import Memberships',
-        fileName: 'membership_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    campaign: {
-      name: 'campaign',
-      label: 'Campaigns',
-      menu: 'Campaigns',
-      exporterFileName: 'campaign_export',
-      list: {
-        menu: 'Campaigns',
-        title: 'Campaigns',
-      },
-      create: {
-        success: 'Campaign successfully saved',
-      },
-      update: {
-        success: 'Campaign successfully saved',
-      },
-      destroy: {
-        success: 'Campaign successfully deleted',
-      },
-      destroyAll: {
-        success: 'Campaign(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Campaign',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        membership: 'Membership',
-        status: 'Status',
-        yearRange: 'Year',
-        year: 'Year',
-        startDateRange: 'StartDate',
-        startDate: 'StartDate',
-        endDateRange: 'EndDate',
-        endDate: 'EndDate',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          published: 'Published',
-          draft: 'Draft',
-          suspended: 'Suspended',
-          archived: 'Archived',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Campaign',
-      },
-      view: {
-        title: 'View Campaign',
-      },
-      importer: {
-        title: 'Import Campaigns',
-        fileName: 'campaign_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    objectif: {
-      name: 'objectif',
-      label: 'Objectifs',
-      menu: 'Objectifs',
-      exporterFileName: 'objectif_export',
-      list: {
-        menu: 'Objectifs',
-        title: 'Objectifs',
-      },
-      create: {
-        success: 'Objectif successfully saved',
-      },
-      update: {
-        success: 'Objectif successfully saved',
-      },
-      destroy: {
-        success: 'Objectif successfully deleted',
-      },
-      destroyAll: {
-        success: 'Objectif(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Objectif',
-      },
-      fields: {
-        id: 'Id',
-        numberRange: 'Number',
-        number: 'Number',
-        title: 'Title',
-        description: 'Description',
-        status: 'Status',
-        yearRange: 'Year',
-        year: 'Year',
-        progression: 'Progress',
-        startDateRange: 'StartDate',
-        startDate: 'StartDate',
-        endDateRange: 'EndDate',
-        endDate: 'EndDate',
-        election: 'Election',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          achieved: 'Achieved',
-          waiting: 'Waiting',
-          progress: 'In progress',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Objectif',
-      },
-      view: {
-        title: 'View Objectif',
-      },
-      importer: {
-        title: 'Import Objectifs',
-        fileName: 'objectif_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    entree: {
-      name: 'entree',
-      label: 'Revenues',
-      menu: 'Revenues',
-      exporterFileName: 'entree_export',
-      list: {
-        menu: 'Revenues',
-        title: 'Revenues',
-      },
-      create: {
-        success: 'Revenue successfully saved',
-      },
-      update: {
-        success: 'Revenue successfully saved',
-      },
-      destroy: {
-        success: 'Revenue successfully deleted',
-      },
-      destroyAll: {
-        success: 'Revenue(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Revenue',
-      },
-      fields: {
-        id: 'Id',
-        type: 'Type',
-        sourceLink: 'Source Link',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        dateRange: 'Date',
-        date: 'Date',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          'e-commerce': 'E-commerce',
-          boutique: 'Shop',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Revenue',
-      },
-      view: {
-        title: 'View Revenue',
-      },
-      importer: {
-        title: 'Import Revenues',
-        fileName: 'entree_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    depense: {
-      name: 'depense',
-      label: 'Expenses',
-      menu: 'Expenses',
-      exporterFileName: 'depense_export',
-      list: {
-        menu: 'Expenses',
-        title: 'Expenses',
-      },
-      create: {
-        success: 'Expense successfully saved',
-      },
-      update: {
-        success: 'Expense successfully saved',
-      },
-      destroy: {
-        success: 'Expense successfully deleted',
-      },
-      destroyAll: {
-        success: 'Expense(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Expense',
-      },
-      fields: {
-        id: 'Id',
-        facture: 'Billed',
-        charge: 'Charge',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        type: 'Type',
-        dateRange: 'Date',
-        date: 'Date',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          salaires: 'Salaries',
-          loyers: 'Rents',
-          impots: 'Taxes',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Expense',
-      },
-      view: {
-        title: 'View Expense',
-      },
-      importer: {
-        title: 'Import Expenses',
-        fileName: 'depense_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    charge: {
-      name: 'charge',
-      label: 'Charges',
-      menu: 'Charges',
-      exporterFileName: 'charge_export',
-      list: {
-        menu: 'Charges',
-        title: 'Charges',
-      },
-      create: {
-        success: 'Charge successfully saved',
-      },
-      update: {
-        success: 'Charge successfully saved',
-      },
-      destroy: {
-        success: 'Charge successfully deleted',
-      },
-      destroyAll: {
-        success: 'Charge(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Charge',
-      },
-      fields: {
-        id: 'Id',
-        type: 'Type',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        depense: 'Expense',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        type: {
-          salaires: 'Salaries',
-          loyers: 'Rents',
-          impots: 'Taxes',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Charge',
-      },
-      view: {
-        title: 'View Charge',
-      },
-      importer: {
-        title: 'Import Charges',
-        fileName: 'charge_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
+        title: "Importer des catégories",
+        fileName: "modèle_import_categorie",
+        hint: "Les colonnes Fichiers/Images doivent être les URL des fichiers séparés par un espace.",
       },
     },
 
     product: {
-      name: 'product',
-      label: 'Products',
-      menu: 'Products',
-      exporterFileName: 'product_export',
+      name: "produit",
+      label: "Produits",
+      menu: "Produits",
+      exporterFileName: "export_produit",
       list: {
-        menu: 'Products',
-        title: 'Products',
+        menu: "Produits",
+        title: "Produits",
       },
       create: {
-        success: 'Product successfully saved',
+        success: "Produit enregistré avec succès",
       },
       update: {
-        success: 'Product successfully saved',
+        success: "Produit enregistré avec succès",
       },
       destroy: {
-        success: 'Product successfully deleted',
+        success: "Produit supprimé avec succès",
       },
       destroyAll: {
-        success: 'Product(s) successfully deleted',
+        success: "Produit(s) supprimé(s) avec succès",
       },
       edit: {
-        title: 'Edit Product',
+        title: "Modifier le produit",
       },
       fields: {
-        id: 'Id',
-        name: 'Name',
-        slug: 'Slug',
-        tags: 'Tags',
-        video: 'Video',
-        specificationName: 'Specification Name',
-        specificationDesciption: 'Specification Desciption',
-        isSpecification: 'Is Specification',
-        details: 'Details',
-        photo: 'Photo',
-        discountPriceRange: 'Discount Price',
-        discountPrice: 'Current Price',
-        previousPriceRange: 'Previous Price',
-        previousPrice: 'Previous Price',
-        stockRange: 'Stock',
-        stock: 'Stock',
-        metaKeywords: 'MetaKeywords',
-        metaDesctiption: 'Short Description',
-        status: 'Status',
-        isType: 'Type',
-        dateRange: 'Date',
-        date: 'Date',
-        itemType: 'Item Type',
-        file: 'File',
-        link: 'Link',
-        fileType: 'File Type',
-        taxe: 'Taxe',
-        category: 'Category',
-        subcategory: 'Sub Category',
-        childcategory: 'Child Category',
-        brand: 'Brand',
-        gallery: 'Gallery',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
+        id: "Id",
+        name: "Nom",
+        slug: "Slug",
+        tags: "Tags",
+        video: "Vidéo",
+        specificationName: "Nom de la spécification",
+        specificationDesciption: "Description de la spécification",
+        isSpecification: "Est une spécification",
+        details: "Détails",
+        photo: "Photo",
+        discountPriceRange: "Prix remisé",
+        discountPrice: "Prix actuel",
+        previousPriceRange: "Prix précédent",
+        previousPrice: "Prix précédent",
+        stockRange: "Stock",
+        stock: "Stock",
+        metaKeywords: "Mots-clés Meta",
+        metaDesctiption: "Description courte",
+        status: "Statut",
+        isType: "Type",
+        dateRange: "Date",
+        date: "Date",
+        itemType: "Type d'article",
+        file: "Fichier",
+        link: "Lien",
+        fileType: "Type de fichier",
+        taxe: "Taxe",
+        category: "Catégorie",
+        subcategory: "Sous-catégorie",
+        childcategory: "Sous-sous-catégorie",
+        brand: "Marque",
+        gallery: "Galerie",
+        createdAt: "Créé à",
+        updatedAt: "Mis à jour à",
+        createdAtRange: "Créé à",
       },
       enumerators: {
         status: {
-          enable: 'Enable',
-          disable: 'Disable',
+          enable: "Activer",
+          disable: "Désactiver",
         },
         itemType: {
-          physical: 'physical',
-          digitale: 'Digitale',
+          physical: "physique",
+          digitale: "Numérique",
         },
         fileType: {
-          file: 'File',
-          link: 'Link',
+          file: "Fichier",
+          link: "Lien",
         },
         isType: {
-          new_arrival: 'New Arrival',
-          feature_product: 'Features Product',
-          top_pdroduct: 'Top Product',
-          best_product: 'Best Product',
-          flash_deal_product: 'Flash Deal Product',
+          new_arrival: "Nouvelle arrivée",
+          feature_product: "Produit vedette",
+          top_pdroduct: "Produit populaire",
+          best_product: "Meilleur produit",
+          flash_deal_product: "Produit en promotion flash",
         },
       },
       placeholders: {},
       hints: {},
       new: {
-        title: 'New Product',
+        title: "Nouveau produit",
       },
       view: {
-        title: 'View Product',
+        title: "Voir le produit",
       },
       importer: {
-        title: 'Import Products',
-        fileName: 'product_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
+        title: "Importer des produits",
+        fileName: "modèle_import_produit",
+        hint: "Les colonnes Fichiers/Images doivent être les URL des fichiers séparés par un espace.",
       },
     },
-
-    shippingservice: {
-      name: 'Shipping',
-      label: 'Shipping',
-      menu: 'Shipping',
-      exporterFileName: 'shippingservice_export',
-      list: {
-        menu: 'Shipping',
-        title: 'Shipping',
-      },
-      create: {
-        success: 'Shipping service successfully saved',
-      },
-      update: {
-        success: 'Shipping service successfully saved',
-      },
-      destroy: {
-        success: 'Shipping service successfully deleted',
-      },
-      destroyAll: {
-        success: 'Shipping service(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Shipping',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Title',
-        priceRange: 'Price',
-        price: 'Shipping Cost',
-        status: 'Status',
-        minimumPriceRange: 'Minimum Price',
-        minimumPrice: 'Minimum Price',
-        isCondition: 'IsCondition',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Shipping',
-      },
-      view: {
-        title: 'View Shipping',
-      },
-      importer: {
-        title: 'Import Shipping',
-        fileName: 'shippingservice_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    typeDepense: {
-      name: 'type Depense',
-      label: 'Type Depenses',
-      menu: 'Type Depenses',
-      exporterFileName: 'Type Depense_export',
-      list: {
-        menu: 'Type Depenses',
-        title: 'Type Depenses',
-      },
-      create: {
-        success: 'Type Depense successfully saved',
-      },
-      update: {
-        success: 'Type Depense successfully saved',
-      },
-      destroy: {
-        success: 'Type Depense successfully deleted',
-      },
-      destroyAll: {
-        success: 'Type Depense(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit type Depense',
-      },
-      fields: {
-        id: 'Id',
-        nom: 'Nom',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New type Depense',
-      },
-      view: {
-        title: 'View type Depense',
-      },
-      importer: {
-        title: 'Import Type Depenses',
-        fileName: 'Type Depense_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    typeCharge: {
-      name: 'Type Charge',
-      label: 'Type Charges',
-      menu: 'Type Charges',
-      exporterFileName: 'type_Charge_export',
-      list: {
-        menu: 'Type Charges',
-        title: 'Type Charges',
-      },
-      create: {
-        success: 'Type Charge successfully saved',
-      },
-      update: {
-        success: 'Type Charge successfully saved',
-      },
-      destroy: {
-        success: 'Type Charge successfully deleted',
-      },
-      destroyAll: {
-        success: 'Type Charge(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit TypeCharge',
-      },
-      fields: {
-        id: 'Id',
-        nom: 'Nom',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Type Charge',
-      },
-      view: {
-        title: 'View Type Charge',
-      },
-      importer: {
-        title: 'Import TypeCharges',
-        fileName: 'Type Charge_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    typeRevenue: {
-      name: 'Type Revenue',
-      label: 'Type Revenues',
-      menu: 'Type Revenues',
-      exporterFileName: 'type_Revenue_export',
-      list: {
-        menu: 'Type Revenues',
-        title: 'Type Revenues',
-      },
-      create: {
-        success: 'Type Revenue successfully saved',
-      },
-      update: {
-        success: 'Type Revenue successfully saved',
-      },
-      destroy: {
-        success: 'Type Revenue successfully deleted',
-      },
-      destroyAll: {
-        success: 'Type Revenue(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Type Revenue',
-      },
-      fields: {
-        id: 'Id',
-        nom: 'Nom',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Type Revenue',
-      },
-      view: {
-        title: 'View Type Revenue',
-      },
-      importer: {
-        title: 'Import TypeRevenues',
-        fileName: 'Type Revenue_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    coupons: {
-      name: 'coupons',
-      label: 'Coupons',
-      menu: 'Coupons',
-      exporterFileName: 'coupons_export',
-      list: {
-        menu: 'Coupons',
-        title: 'Coupons',
-      },
-      create: {
-        success: 'Coupons successfully saved',
-      },
-      update: {
-        success: 'Coupons successfully saved',
-      },
-      destroy: {
-        success: 'Coupons successfully deleted',
-      },
-      destroyAll: {
-        success: 'Coupons(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Coupons',
-      },
-      fields: {
-        id: 'Id',
-        title: 'Title',
-        codeName: 'Code Name',
-        discountRange: 'Discount',
-        discount: 'Discount',
-        noOfTimesRange: 'Number Of Times ',
-        noOfTimes: 'Number Of Times ',
-        status: 'Status',
-        type: 'Type',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-        type: {
-          'Percentage (%)': 'Percentage (%)',
-          'amount ( TND)': 'Amount ( TND)',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Coupons',
-      },
-      view: {
-        title: 'View Coupons',
-      },
-      importer: {
-        title: 'Import Coupons',
-        fileName: 'coupons_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
     transaction: {
-      name: 'transaction',
-      label: 'Transactions',
-      menu: 'Transactions',
-      exporterFileName: 'transaction_export',
+      name: "transaction",
+      label: "Transactions",
+      menu: "Transactions",
+      exporterFileName: "export_transaction",
       list: {
-        menu: 'Transactions',
-        title: 'Transactions',
+        menu: "Transactions",
+        title: "Transactions",
       },
       create: {
-        success: 'Transaction successfully send',
+        success: "Transaction envoyée avec succès",
       },
       update: {
-        success: 'Transaction successfully saved',
+        success: "Transaction enregistrée avec succès",
       },
       destroy: {
-        success: 'Transaction successfully deleted',
+        success: "Transaction supprimée avec succès",
       },
       destroyAll: {
-        success: 'Transaction(s) successfully deleted',
+        success: "Transaction(s) supprimée(s) avec succès",
       },
       edit: {
-        title: 'Edit Transaction',
+        title: "Modifier la transaction",
       },
       fields: {
-        id: 'Id',
-        amountRange: 'Amount',
-        amount: 'Amount',
-        email: 'Email',
-        tax: 'Tax',
-        currencySign: 'CurrencySign',
-        currencyValue: 'CurrencyValue',
-        orderId: 'OrderId',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
+        id: "Id",
+        amountRange: "Montant",
+        amount: "Montant",
+        email: "Email",
+        tax: "Taxe",
+        currencySign: "Signe monétaire",
+        currencyValue: "Valeur monétaire",
+        orderId: "ID de commande",
+        createdAt: "Créé à",
+        updatedAt: "Mis à jour à",
+        createdAtRange: "Créé à",
       },
       enumerators: {
-        status :{
-          pending :"Pending", 
-          completed:"Success",
-          canceled :"Canceled"
-        }
+        status: {
+          pending: "En attente",
+          completed: "Succès",
+          canceled: "Annulé",
+        },
       },
       placeholders: {},
       hints: {},
       new: {
-        title: 'New Transaction',
+        title: "Nouvelle transaction",
       },
       view: {
-        title: 'View Transaction',
+        title: "Voir la transaction",
       },
       importer: {
-        title: 'Import Transactions',
-        fileName: 'transaction_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    trackOrder: {
-      name: 'trackOrder',
-      label: 'TrackOrders',
-      menu: 'TrackOrders',
-      exporterFileName: 'trackOrder_export',
-      list: {
-        menu: 'TrackOrders',
-        title: 'TrackOrders',
-      },
-      create: {
-        success: 'TrackOrder successfully saved',
-      },
-      update: {
-        success: 'TrackOrder successfully saved',
-      },
-      destroy: {
-        success: 'TrackOrder successfully deleted',
-      },
-      destroyAll: {
-        success: 'TrackOrder(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit TrackOrder',
-      },
-      fields: {
-        id: 'Id',
-        title: 'Title',
-        item: 'Item',
-        order: 'Order',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New TrackOrder',
-      },
-      view: {
-        title: 'View TrackOrder',
-      },
-      importer: {
-        title: 'Import TrackOrders',
-        fileName: 'trackOrder_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
+        title: "Importer des transactions",
+        fileName: "modèle_import_transaction",
+        hint: "Les colonnes Fichiers/Images doivent être les URL des fichiers séparés par un espace.",
       },
     },
 
     order: {
-      name: 'order',
-      label: 'Orders',
-      menu: 'Orders',
-      exporterFileName: 'order_export',
+      name: "commande",
+      label: "Commandes",
+      menu: "Commandes",
+      exporterFileName: "export_commande",
       list: {
-        menu: 'Orders',
-        title: 'Orders',
+        menu: "Commandes",
+        title: "Commandes",
       },
       create: {
-        success: 'Order successfully saved',
+        success: "Commande enregistrée avec succès",
       },
       update: {
-        success: 'Order successfully saved',
+        success: "Commande enregistrée avec succès",
       },
       destroy: {
-        success: 'Order successfully deleted',
+        success: "Commande supprimée avec succès",
       },
       destroyAll: {
-        success: 'Order(s) successfully deleted',
+        success: "Commande(s) supprimée(s) avec succès",
       },
       edit: {
-        title: 'Edit Order',
+        title: "Modifier la commande",
       },
       fields: {
-        id: 'Id',
-        userId: 'User',
-        cart: 'Cart',
-        shipping: 'Shipping',
-        discountRange: 'Discount',
-        discount: 'Discount',
-        paymentMethod: 'PaymentMethod',
-        taxe: 'Taxe',
-        transactionNumber: 'TransactionNumber',
-        orderStatus: 'OrderStatus',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
+        id: "Id",
+        userId: "Utilisateur",
+        cart: "Panier",
+        shipping: "Livraison",
+        discountRange: "Remise",
+        discount: "Remise",
+        paymentMethod: "Méthode de paiement",
+        taxe: "Taxe",
+        transactionNumber: "Numéro de transaction",
+        orderStatus: "Statut de commande",
+        createdAt: "Créé à",
+        updatedAt: "Mis à jour à",
+        createdAtRange: "Créé à",
       },
       enumerators: {
         orderStatus: {
-          pending: 'Pending',
-          in_progress: 'In_progress',
-          delivered: 'Delivered',
-          canceled: 'Canceled',
+          pending: "En attente",
+          in_progress: "En cours",
+          delivered: "Livré",
+          canceled: "Annulé",
         },
       },
       placeholders: {},
       hints: {},
       new: {
-        title: 'New Order',
+        title: "Nouvelle commande",
       },
       view: {
-        title: 'View Order',
+        title: "Voir la commande",
       },
       importer: {
-        title: 'Import Orders',
-        fileName: 'order_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    state: {
-      name: 'state',
-      label: 'States',
-      menu: 'States',
-      exporterFileName: 'state_export',
-      list: {
-        menu: 'States',
-        title: 'States',
-      },
-      create: {
-        success: 'State successfully saved',
-      },
-      update: {
-        success: 'State successfully saved',
-      },
-      destroy: {
-        success: 'State successfully deleted',
-      },
-      destroyAll: {
-        success: 'State(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit State',
-      },
-      fields: {
-        id: 'Id',
-        name: 'State',
-        priceRange: 'Price',
-        price: 'Price',
-        status: 'Status',
-        type: 'Type',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New State',
-      },
-      view: {
-        title: 'View State',
-      },
-      importer: {
-        title: 'Import States',
-        fileName: 'state_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    attributeOptions: {
-      name: 'attributeOptions',
-      label: 'AttributeOptions',
-      menu: 'AttributeOptions',
-      exporterFileName: 'attributeOptions_export',
-      list: {
-        menu: 'AttributeOptions',
-        title: 'AttributeOptions',
-      },
-      create: {
-        success: 'AttributeOptions successfully saved',
-      },
-      update: {
-        success: 'AttributeOptions successfully saved',
-      },
-      destroy: {
-        success: 'AttributeOptions successfully deleted',
-      },
-      destroyAll: {
-        success: 'AttributeOptions(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit AttributeOptions',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Option Name	',
-        priceRange: 'Price',
-        price: 'Price',
-        keyword: 'Keyword',
-        stock: 'stock',
-        attributeId: 'Attribute',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New AttributeOptions',
-      },
-      view: {
-        title: 'View AttributeOptions',
-      },
-      importer: {
-        title: 'Import AttributeOptions',
-        fileName: 'attributeOptions_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    cart: {
-      name: 'cart',
-      label: 'Carts',
-      menu: 'Carts',
-      exporterFileName: 'cart_export',
-      list: {
-        menu: 'Carts',
-        title: 'Carts',
-      },
-      create: {
-        success: 'Cart successfully saved',
-      },
-      update: {
-        success: 'Cart successfully saved',
-      },
-      destroy: {
-        success: 'Cart successfully deleted',
-      },
-      destroyAll: {
-        success: 'Cart(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Cart',
-      },
-      fields: {
-        id: 'Id',
-        optionsId: 'OptionsId',
-        attribute: 'Attribute',
-        name: 'Name',
-        slug: 'Slug',
-        qtyRange: 'Qty',
-        qty: 'Qty',
-        priceRange: 'Price',
-        price: 'Price',
-        mainPriceRange: 'MainPrice',
-        mainPrice: 'MainPrice',
-        photo: 'Photo',
-        itemType: 'Item Type',
-        itemLN: 'ItemLN',
-        itemLK: 'ItemLK',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Cart',
-      },
-      view: {
-        title: 'View Cart',
-      },
-      importer: {
-        title: 'Import Carts',
-        fileName: 'cart_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    paymentsettings: {
-      name: 'paymentsettings',
-      label: 'Paymentsettings',
-      menu: 'Paymentsettings',
-      exporterFileName: 'paymentsettings_export',
-      list: {
-        menu: 'Paymentsettings',
-        title: 'Paymentsettings',
-      },
-      create: {
-        success: 'Paymentsettings successfully saved',
-      },
-      update: {
-        success: 'Paymentsettings successfully saved',
-      },
-      destroy: {
-        success: 'Paymentsettings successfully deleted',
-      },
-      destroyAll: {
-        success: 'Paymentsettings(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Paymentsettings',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Sandbox URL',
-        information: 'vendor',
-        uniqueKeywords: 'Token',
-        photo: 'Photo',
-        text: 'Live URL',
-        status: 'Statut',
-        type: 'Type',
-        createdAt: 'Créé à',
-        updatedAt: 'Mis à jour à',
-        createdAtRange: 'Créé à',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Paymentsettings',
-      },
-      view: {
-        title: 'View Paymentsettings',
-      },
-      importer: {
-        title: 'Import Paymentsettings',
-        fileName: 'paymentsettings_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-
-    review: {
-      name: 'review',
-      label: 'Reviews',
-      menu: 'Reviews',
-      exporterFileName: 'review_export',
-      list: {
-        menu: 'Reviews',
-        title: 'Reviews',
-      },
-      create: {
-        success: 'Review successfully saved',
-      },
-      update: {
-        success: 'Review successfully saved',
-      },
-      destroy: {
-        success: 'Review successfully deleted',
-      },
-      destroyAll: {
-        success: 'Review(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Review',
-      },
-      fields: {
-        id: 'Id',
-        review: 'Review',
-        ratingRange: 'Rating',
-        rating: 'Rating',
-        status: 'Status',
-        subject: 'Subject',
-        item: 'Item',
-        user: 'User',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {
-        status: {
-          enable: 'Enable',
-          disable: 'Disable',
-        },
-      },
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Review',
-      },
-      view: {
-        title: 'View Review',
-      },
-      importer: {
-        title: 'Import Reviews',
-        fileName: 'review_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
-      },
-    },
-    attributes: {
-      name: 'attributes',
-      label: 'Attributes',
-      menu: 'Attributes',
-      exporterFileName: 'attributes_export',
-      list: {
-        menu: 'Attributes',
-        title: 'Attributes',
-      },
-      create: {
-        success: 'Attributes successfully saved',
-      },
-      update: {
-        success: 'Attributes successfully saved',
-      },
-      destroy: {
-        success: 'Attributes successfully deleted',
-      },
-      destroyAll: {
-        success: 'Attributes(s) successfully deleted',
-      },
-      edit: {
-        title: 'Edit Attributes',
-      },
-      fields: {
-        id: 'Id',
-        name: 'Name',
-        itemId: 'ItemId',
-        createdAt: 'Created at',
-        updatedAt: 'Updated at',
-        createdAtRange: 'Created at',
-      },
-      enumerators: {},
-      placeholders: {},
-      hints: {},
-      new: {
-        title: 'New Attributes',
-      },
-      view: {
-        title: 'View Attributes',
-      },
-      importer: {
-        title: 'Import Attributes',
-        fileName: 'attributes_import_template',
-        hint: 'Files/Images columns must be the URLs of the files separated by space.',
+        title: "Importer des commandes",
+        fileName: "modèle_import_commande",
+        hint: "Les colonnes Fichiers/Images doivent être les URL des fichiers séparés par un espace.",
       },
     },
   },
 
-  auth: {
-    tenants: 'Workspaces',
-    singindesc:"Enter your email and password to sign in",
-    signupdesc :"Enter your email and password to sign up",
-    profile: {
-      title: 'Profile',
-      success: 'Profile successfully updated',
-      vip:"Congratulations on subscribing",
-    },
-    createAnAccount: 'Create an account',
-    rememberMe: 'Remember me',
-    forgotPassword: 'Forgot password',
-    signin: 'Sign in',
-    signup: 'Sign up',
-    signout: 'Sign out',
-    alreadyHaveAnAccount:
-      'Already have an account? Sign in.',
-    social: {
-      errors: {
-        'auth-invalid-provider':
-          'This email is already registered to another provider.',
-        'auth-no-email': `The email associated with this account is private or inexistent.`,
-      },
-    },
-    signinWithAnotherAccount:
-      'Sign in with another account',
-    emailUnverified: {
-      message: `Please confirm your email at <strong>{0}</strong> to continue.`,
-      submit: `Resend email verification`,
-    },
-    emptyPermissions: {
-      message: `You have no permissions yet. Wait for the admin to grant you privileges.`,
-    },
-    passwordResetEmail: {
-      message: 'Send password reset email',
-      error: `Email not recognized`,
-    },
-    passwordReset: {
-      message: 'Reset password',
-    },
-    passwordChange: {
-      title: 'Change Password',
-      success: 'Password successfully changed',
-      mustMatch: 'Passwords must match',
-    },
-    emailAddressVerificationEmail: {
-      error: `Email not recognized`,
-    },
-    verificationEmailSuccess: `Verification email successfully sent`,
-    passwordResetEmailSuccess: `Password reset email successfully sent`,
-    passwordResetSuccess: `Password successfully changed`,
-    verifyEmail: {
-      success: 'Email successfully verified.',
-      message:
-        'Just a moment, your email is being verified...',
-    },
-  },
-
-  roles: {
-    admin: {
-      label: 'Admin',
-      description: 'Full access to all resources',
-    },
-    adherent: {
-      label: 'adherent Role',
-      description: 'adherent role access',
-    },
-    member: {
-      label: 'Member',
-      description: 'Member role access',
-    },
-  },
 
   user: {
     fields: {
-      id: 'Id',
-      avatars: 'Avatar',
-      invitationcode:"Invitation Code",
-      email: 'Email',
-      emails: 'Email(s)',
-      erc20 :"ERC20 wallet address ", 
-      trc20:"TRC20 wallet address",
-      fullName: 'Name',
-      balance:"Balance",
-      firstName: 'First Name',
-      lastName: 'Last Name',
-      status: 'Status',
-      phoneNumber: 'Phone Number',
-      sector: 'Sector',
-      employer: 'Employer',
-      profession: 'Profession',
-      address: 'Address',
-      birthDate: 'Birth Date',
-      maritalStatus: 'Marital Status',
-      facebookLink: 'Facebook Link',
-      sponsor: 'Sponsor',
-      role: 'Role',
-      createdAt: 'Created at',
-      updatedAt: 'Updated at',
-      roleUser: 'Role/User',
-      roles: 'Roles',
-      createdAtRange: 'Created at',
-      password: 'Password',
-      oldPassword: 'Old Password',
-      newPassword: 'New Password',
-      newPasswordConfirmation: 'New Password Confirmation',
-      rememberMe: 'Remember me',
+      genre: "Genre",
+      username: "Nom d'utilisateur",
+      walletName: "Nom du portefeuille",
+      id: "Id",
+      confirmPassword: "Confirmer le mot de passe",
+      avatars: "Avatar",
+      invitationcode: "Code d'invitation",
+      email: "E-mail",
+      emails: "E-mail(s)",
+      erc20: "Adresse du portefeuille ERC20",
+      trc20: "Adresse du portefeuille TRC20",
+      fullName: "Nom",
+      balance: "Solde",
+      firstName: "Prénom",
+      lastName: "Nom de famille",
+      status: "Statut",
+      phoneNumber: "Numéro de téléphone",
+      withdrawPassword: "Mot de passe de retrait",
+      sector: "Secteur",
+      employer: "Employeur",
+      profession: "Profession",
+      address: "Adresse",
+      birthDate: "Date de naissance",
+      maritalStatus: "Statut matrimonial",
+      facebookLink: "Lien Facebook",
+      sponsor: "Sponsor",
+      role: "Rôle",
+      createdAt: "Créé le",
+      updatedAt: "Mis à jour le",
+      roleUser: "Rôle/Utilisateur",
+      roles: "Rôles",
+      createdAtRange: "Créé le",
+      password: "Mot de passe",
+      oldPassword: "Ancien mot de passe",
+      newPassword: "Nouveau mot de passe",
+      newPasswordConfirmation: "Confirmation du nouveau mot de passe",
+      rememberMe: "Se souvenir de moi",
     },
     sector: {
-      AGRO_ALIMENTAIRE: 'Food industry',
-      ASSURANCES: 'Assurance',
-      AUDIOVISUEL: 'Audio-visual',
-      BANCAIRE: 'Banking',
-      CHIMIE: 'Chemistry',
-      COMPOSANTS_AUTOMOBILES: 'Automotive components',
-      DISTRIBUTION: 'Distribution',
-      DISTRIBUTION_AUTOMOBILE: 'Automotive Distribution',
-      DIVERS: 'Various',
-      FINANCIER: 'Financial',
-      HOLDING: 'Holding',
-      IMMOBILIER: 'Real estate',
-      INDUSTRIEL: 'Industrial',
-      LEASING: 'Leasing',
-      LOGISTIQUE_TRANSPORT: 'Logistics and transport',
-      PHARMACEUTIQUE: 'Pharmaceutical',
-      SANTÉ: 'Health',
-      TOURSIME: 'Tourism',
-      INFORMATION_TECHNOLOGY: 'Information Technology',
+      AGRO_ALIMENTAIRE: "Industrie alimentaire",
+      ASSURANCES: "Assurance",
+      AUDIOVISUEL: "Audiovisuel",
+      BANCAIRE: "Bancaire",
+      CHIMIE: "Chimie",
+      COMPOSANTS_AUTOMOBILES: "Composants automobiles",
+      DISTRIBUTION: "Distribution",
+      DISTRIBUTION_AUTOMOBILE: "Distribution automobile",
+      DIVERS: "Divers",
+      FINANCIER: "Financier",
+      HOLDING: "Holding",
+      IMMOBILIER: "Immobilier",
+      INDUSTRIEL: "Industriel",
+      LEASING: "Leasing",
+      LOGISTIQUE_TRANSPORT: "Logistique et transport",
+      PHARMACEUTIQUE: "Pharmaceutique",
+      SANTÉ: "Santé",
+      TOURSIME: "Tourisme",
+      INFORMATION_TECHNOLOGY: "Technologie de l'information",
     },
     maritalStatus: {
-      célébataire: 'Single',
-      marié: 'Married',
+      célébataire: "Célibataire",
+      marié: "Marié",
     },
     status: {
-      active: 'Active',
-      invited: 'Invited',
-      'empty-permissions': 'Waiting for Permissions',
-      inactive: 'Inactive',
+      active: "Actif",
+      invited: "Invité",
+      "empty-permissions": "En attente des autorisations",
+      inactive: "Inactif",
     },
-    invite: 'Invite',
+
+    enumerators: {
+      status: {
+        USDT: "USDT",
+        ETH: "ETH",
+        BTC: "BTC",
+      },
+      gender: {
+        male: "masculin",
+        female: "féminin",
+      }
+    },
+    invite: "Inviter",
     validations: {
       // eslint-disable-next-line
-      email: 'Email ${value} is invalid',
+      email: "L'e-mail ${value} est invalide",
     },
-    title: 'Users',
-    menu: 'Users',
-    doAddSuccess: 'User(s) successfully saved',
-    doUpdateSuccess: 'User successfully saved',
-    exporterFileName: 'users_export',
-    doDestroySuccess: 'User successfully deleted',
-    doDestroyAllSelectedSuccess:
-      'Users successfully deleted',
+    title: "Utilisateurs",
+    menu: "Utilisateurs",
+    doAddSuccess: "Utilisateur(s) enregistré(s) avec succès",
+    doUpdateSuccess: "Utilisateur enregistré avec succès",
+    exporterFileName: "utilisateurs_export",
+    doDestroySuccess: "Utilisateur supprimé avec succès",
+    doDestroyAllSelectedSuccess: "Utilisateurs supprimés avec succès",
     edit: {
-      title: 'Edit User',
+      title: "Modifier l'utilisateur",
     },
     new: {
-      title: 'Invite User(s)',
-      titleModal: 'Invite User',
+      title: "Inviter un ou des utilisateur(s)",
+      titleModal: "Inviter un utilisateur",
       emailsHint:
-        'Separate multiple email addresses using the comma character.',
+        "Séparez les adresses e-mail multiples par une virgule.",
     },
     view: {
-      title: 'View User',
-      activity: 'Activity',
+      title: "Voir l'utilisateur",
+      activity: "Activité",
     },
     importer: {
-      title: 'Import Users',
-      fileName: 'users_import_template',
-      hint: 'Files/Images columns must be the URLs of the files separated by space. Relationships must be the ID of the referenced records separated by space. Roles must be the role ids separated by space.',
+      title: "Importer des utilisateurs",
+      fileName: "modèle_import_utilisateurs",
+      hint: "Les colonnes Fichiers/Images doivent être les URL des fichiers séparées par un espace. Les relations doivent être l'ID des enregistrements référencés séparés par un espace. Les rôles doivent être les identifiants de rôles séparés par un espace.",
     },
     errors: {
-      userAlreadyExists:
-        'User with this email already exists',
-      userNotFound: 'User not found',
-      revokingOwnPermission: `You can't revoke your own admin permission`,
+      userAlreadyExists: "Un utilisateur avec cet e-mail existe déjà",
+      userNotFound: "Utilisateur non trouvé",
+      revokingOwnPermission: `Vous ne pouvez pas révoquer votre propre permission d'administrateur`,
     },
   },
 
-  tenant: {
-    name: 'tenant',
-    label: 'Workspaces',
-    menu: 'Workspaces',
-    list: {
-      menu: 'Workspaces',
-      title: 'Workspaces',
-    },
-    create: {
-      button: 'Create Workspace',
-      success: 'Workspace successfully saved',
-    },
-    update: {
-      success: 'Workspace successfully saved',
-    },
-    destroy: {
-      success: 'Workspace successfully deleted',
-    },
-    destroyAll: {
-      success: 'Workspace(s) successfully deleted',
-    },
-    edit: {
-      title: 'Edit Workspace',
-    },
-    fields: {
-      id: 'Id',
-      name: 'Name',
-      url: 'URL',
-      tenantName: 'Workspace Name',
-      tenantId: 'Workspace',
-      tenantUrl: 'Workspace URL',
-      plan: 'Plan',
-    },
-    enumerators: {},
-    new: {
-      title: 'New Workspace',
-    },
-    invitation: {
-      view: 'View Invitations',
-      invited: 'Invited',
-      accept: 'Accept Invitation',
-      decline: 'Decline Invitation',
-      declined: 'Invitation successfully declined',
-      acceptWrongEmail: 'Accept Invitation With This Email',
-    },
-    select: 'Select Workspace',
-    validation: {
-      url: 'Your workspace URL can only contain lowercase letters, numbers and dashes (and must start with a letter or number).',
-    },
-  },
-
-  plan: {
-    menu: 'Plans',
-    title: 'Plans',
-
-    free: {
-      label: 'Free',
-      price: '$0',
-    },
-    growth: {
-      label: 'Growth',
-      price: '$10',
-    },
-    enterprise: {
-      label: 'Enterprise',
-      price: '$50',
-    },
-
-    pricingPeriod: '/month',
-    current: 'Current Plan',
-    subscribe: 'Subscribe',
-    manage: 'Manage Subscription',
-    cancelAtPeriodEnd:
-      'This plan will be canceled at the end of the period.',
-    somethingWrong:
-      'There is something wrong with your subscription. Please go to manage subscription for more details.',
-    notPlanUser: `You are not the manager of this subscription.`,
-  },
-
-  auditLog: {
-    menu: 'Audit Logs',
-    title: 'Audit Logs',
-    exporterFileName: 'audit_log_export',
-    entityNamesHint:
-      'Separate multiple entities using the comma character.',
-    fields: {
-      id: 'Id',
-      timestampRange: 'Period',
-      entityName: 'Entity',
-      entityNames: 'Entities',
-      entityId: 'Entity ID',
-      action: 'Action',
-      values: 'Values',
-      timestamp: 'Date',
-      createdByEmail: 'User Email',
-    },
-  },
-  settings: {
-    title: 'Settings',
-    menu: 'Settings',
-    save: {
-      success:
-        'Settings successfully saved. The page will reload in {0} seconds for changes to take effect.',
-    },
-    fields: {
-      theme: 'Theme',
-      logos: 'Logo',
-      backgroundImages: 'Background Image',
-    },
-    colors: {
-      default: 'Dark',
-      light: 'Light',
-      cyan: 'Cyan',
-      'geek-blue': 'Geek Blue',
-      gold: 'Gold',
-      lime: 'Lime',
-      magenta: 'Magenta',
-      orange: 'Orange',
-      'polar-green': 'Polar Green',
-      purple: 'Purple',
-      red: 'Red',
-      volcano: 'Volcano',
-      yellow: 'Yellow',
-    },
-  },
-  dashboard: {
-    menu: 'Dashboard',
-    valider: 'validate',
-    file: 'No file selected',
-    typecsv: 'Invalid file type. Please select a CSV file.',
-    reset: 'Reset',
-    phone: 'Uplaod Numbers',
-    check: 'Check Number',
-    labelphone: 'Write the Phone number',
-    add: 'Add Number',
-    download: 'Download the template',
-    added: 'Number Adedd',
-    duplicated: 'Number Duplicated',
-    Wrong: 'Number Wrong',
-    notFound:
-      'Sorry, We couldn’t find the items you are looking for.',
-    validation: 'Number added with Success',
-    Success: 'Number added With Success',
-    numberValidation: 'Write a valid number. Thank you.',
-    message: `This page uses fake data for demonstration purposes only. You can edit it at frontend/view/dashboard/DashboardPage.ts.`,
-    charts: {
-      day: 'Day',
-      red: 'Red',
-      green: 'Green',
-      yellow: 'Yellow',
-      grey: 'Grey',
-      blue: 'Blue',
-      orange: 'Orange',
-      months: {
-        1: 'January',
-        2: 'February',
-        3: 'March',
-        4: 'April',
-        5: 'May',
-        6: 'June',
-        7: 'July',
-        8: 'August',
-        9: 'September',
-        10: 'October',
-        11: 'Novembre',
-        12: 'December',
-      },
-      eating: 'Eating',
-      drinking: 'Drinking',
-      sleeping: 'Sleeping',
-      designing: 'Designing',
-      coding: 'Coding',
-      cycling: 'Cycling',
-      running: 'Running',
-      customer: 'Customer',
-      objectif: 'Objectives by status',
-      projectS: 'Projects by status',
-      projectT: 'Projects by type',
-      adherent: 'Number of members',
-      news: 'Number of news',
-      project: 'Number of projects',
-      partner: 'Number of partners',
-      nodata: 'no data to display',
-    },
-  },
   errors: {
-    backToHome: 'Back to home',
-    403: `Sorry, you don't have access to this page`,
-    404: 'Sorry, the page you visited does not exist',
-    500: 'Sorry, the server is reporting an error',
-    429: 'Too many requests. Please try again later.',
+    backToHome: "Retour à l'accueil",
+    403: `Désolé, vous n'avez pas accès à cette page`,
+    404: "Désolé, la page que vous avez visitée n'existe pas",
+    500: "Désolé, le serveur signale une erreur",
+    429: "Trop de requêtes. Veuillez réessayer plus tard.",
     forbidden: {
-      message: 'Forbidden',
+      message: "Interdit",
     },
     validation: {
-      message: 'An error occurred',
+      message: "Une erreur s'est produite",
     },
-    defaultErrorMessage: 'Ops, an error occurred',
+    defaultErrorMessage: "Oups, une erreur s'est produite",
   },
 
-  preview: {
-    error:
-      'Sorry, this operation is not allowed in preview mode.',
+  withdraw: {
+    withdrawamount: "Montant du retrait",
+    Withdrawpassword: "Mot de passe de retrait",
+    availablebalance: "Solde disponible",
+    rules: "Description des règles",
+    rule1: "Le retrait minimum est de 20 $",
+    rule2: "Le paiement sera effectué dans les 24 heures suivant la demande de retrait",
+    rule3: "L'absence de soumission des commandes quotidiennes entraîne l'impossibilité de retrait, tous les produits doivent être soumis pour retrait"
+  },
+  profile: {
+    profile: "Profil",
+    fullname: "Nom complet",
+    email: "Email",
+    phonenumber: "Numéro de téléphone",
+    country: "Pays",
+    Invitationcode: "Code d’invitation"
+  },
+  wallet: {
+    wallet: "Portefeuille",
+    info: "Informations sur la méthode de retrait",
+    username: "Nom d'utilisateur",
+    walletname: 'Nom du portefeuille',
+    walletaddress: 'Adresse du portefeuille',
+    note: "Remarque",
+    notedesctiption: "Veuillez remplir ces informations avec précaution."
   },
 
-  // See https://github.com/jquense/yup#using-a-adherent-locale-dictionary
-  /* eslint-disable */
+
+  cs: {
+    cs: "Service client",
+    note: "Si vous avez des questions ou rencontrez des problèmes, veuillez nous envoyer un email ou discuter avec notre équipe de support client en ligne.",
+    contactnow: "Contacter maintenant"
+  },
+  transaction: {
+    transaction: "Transaction",
+    all: "Tout",
+    withdraw: "Retrait",
+    dposit: "Dépôt",
+    notransaction: "Aucune transaction pour le moment !"
+  },
+  order: {
+    order: "Commande",
+    completed: "Complété",
+    pending: "En attente",
+    canceled: "Annulé",
+    ordertime: "Heure de la commande",
+    ordernumber: "Numéro de commande",
+    total: "Montant total de la commande",
+    commission: "Commission",
+    return: "Retour estimé"
+  },
+
+  security: {
+    changepassword: "Changer le mot de passe",
+    oldpassword: "Ancien mot de passe",
+    newpassword: "Nouveau mot de passe",
+    confirmpassword: "Confirmer le mot de passe",
+    note: "Remarque",
+    notedesc: "Veuillez remplir ces informations avec précaution"
+  },
+
+  auth: {
+    tenants: "Espaces de travail",
+    singindesc: "Entrez votre email et votre mot de passe pour vous connecter",
+    signupdesc: "Entrez votre email et votre mot de passe pour vous inscrire",
+    profile: {
+      title: "Profil",
+      success: "Profil mis à jour avec succès",
+      vip: "Félicitations pour votre abonnement",
+    },
+    createAnAccount: "Créer un compte",
+    rememberMe: "Se souvenir de moi",
+    forgotPassword: "Mot de passe oublié",
+    signin: "Se connecter",
+    signup: "S'inscrire",
+    signout: "Se déconnecter",
+    alreadyHaveAnAccount: "Vous avez déjà un compte ? Connectez-vous.",
+    social: {
+      errors: {
+        "auth-invalid-provider":
+          "Cet email est déjà enregistré avec un autre fournisseur.",
+        "auth-no-email": `L'email associé à ce compte est privé ou inexistant.`,
+      },
+    },
+    signinWithAnotherAccount: "Se connecter avec un autre compte",
+    emailUnverified: {
+      message: `Veuillez confirmer votre email à <strong>{0}</strong> pour continuer.`,
+      submit: `Renvoyer l'email de vérification`,
+    },
+    emptyPermissions: {
+      message: `Vous n'avez encore aucune permission. Attendez que l'administrateur vous accorde des privilèges.`,
+    },
+    passwordResetEmail: {
+      message: "Envoyer un email de réinitialisation du mot de passe",
+      error: `Email non reconnu`,
+    },
+    passwordReset: {
+      message: "Réinitialiser le mot de passe",
+    },
+    passwordChange: {
+      title: "Changer le mot de passe",
+      success: "Mot de passe changé avec succès",
+      mustMatch: "Les mots de passe doivent correspondre",
+    },
+    emailAddressVerificationEmail: {
+      error: `Email non reconnu`,
+    },
+    verificationEmailSuccess: `Email de vérification envoyé avec succès`,
+    passwordResetEmailSuccess: `Email de réinitialisation du mot de passe envoyé avec succès`,
+    passwordResetSuccess: `Mot de passe changé avec succès`,
+    verifyEmail: {
+      success: "Email vérifié avec succès.",
+      message: "Un instant, votre email est en cours de vérification...",
+    },
+  },
+
+  tabbarmenue: {
+    home: "Accueil",
+    rate: "Évaluer",
+    profile: "Profil"
+  },
+
+
   validation: {
     mixed: {
-      default: '${path} is invalid',
-      required: '${path} is required',
-      oneOf:
-        '${path} must be one of the following values: ${values}',
-      notOneOf:
-        '${path} must not be one of the following values: ${values}',
+      default: "${path} est invalide",
+      required: "${path} est requis",
+      oneOf: "${path} doit être l'une des valeurs suivantes : ${values}",
+      notOneOf: "${path} ne doit pas être l'une des valeurs suivantes : ${values}",
       notType: ({ path, type, value, originalValue }) => {
-        return `${path} must be a ${type}`;
+        return `${path} doit être un(e) ${type}`;
       },
     },
     string: {
-      length:
-        '${path} must be exactly ${length} characters',
-      min: '${path} must be at least ${min} characters',
-      max: '${path} must be at most ${max} characters',
-      matches:
-        '${path} must match the following: "${regex}"',
-      email: '${path} must be a valid email',
-      url: '${path} must be a valid URL',
-      trim: '${path} must be a trimmed string',
-      lowercase: '${path} must be a lowercase string',
-      uppercase: '${path} must be a upper case string',
-      selected: '${path} must be selected',
+      length: "${path} doit contenir exactement ${length} caractères",
+      min: "${path} doit contenir au moins ${min} caractères",
+      max: "${path} doit contenir au maximum ${max} caractères",
+      matches: '${path} doit correspondre au format suivant : "${regex}"',
+      email: "${path} doit être une adresse e-mail valide",
+      url: "${path} doit être une URL valide",
+      trim: "${path} doit être une chaîne sans espaces au début et à la fin",
+      lowercase: "${path} doit être en minuscules",
+      uppercase: "${path} doit être en majuscules",
+      selected: "${path} doit être sélectionné",
     },
     number: {
-      min: '${path} must be greater than or equal to ${min}',
-      max: '${path} must be less than or equal to ${max}',
-      lessThan: '${path} must be less than ${less}',
-      moreThan: '${path} must be greater than ${more}',
-      notEqual: '${path} must be not equal to ${notEqual}',
-      positive: '${path} must be a positive number',
-      negative: '${path} must be a negative number',
-      integer: '${path} must be an integer',
+      min: "${path} doit être supérieur ou égal à ${min}",
+      max: "${path} doit être inférieur ou égal à ${max}",
+      lessThan: "${path} doit être inférieur à ${less}",
+      moreThan: "${path} doit être supérieur à ${more}",
+      notEqual: "${path} ne doit pas être égal à ${notEqual}",
+      positive: "${path} doit être un nombre positif",
+      negative: "${path} doit être un nombre négatif",
+      integer: "${path} doit être un nombre entier",
     },
     date: {
-      min: '${path} field must be later than ${min}',
-      max: '${path} field must be at earlier than ${max}',
+      min: "${path} doit être postérieur à ${min}",
+      max: "${path} doit être antérieur à ${max}",
     },
     boolean: {},
     object: {
       noUnknown:
-        '${path} field cannot have keys not specified in the object shape',
+        "${path} ne doit pas contenir de clés non spécifiées dans l'objet",
     },
     array: {
       min: ({ min, path }) =>
         min === 1
-          ? `${path} is required`
-          : `${path} field must have at least ${min} items`,
-      max: '${path} field must have less than or equal to ${max} items',
+          ? `${path} est requis`
+          : `${path} doit contenir au moins ${min} éléments`,
+      max: "${path} doit contenir au maximum ${max} éléments",
     },
   },
   /* eslint-disable */
   fileUploader: {
-    upload: 'Upload',
-    image: 'You must upload an image',
-    size: 'File is too big. Max allowed size is {0}',
-    formats: `Invalid format. Must be one of: {0}.`,
-  },
-  importer: {
-    line: 'Line',
-    status: 'Status',
-    pending: 'Pending',
-    imported: 'Imported',
-    error: 'Error',
-    total: `{0} imported, {1} pending and {2} with error`,
-    importedMessage: `Processed {0} of {1}.`,
-    noNavigateAwayMessage:
-      'Do not navigate away from this page or import will be stopped.',
-    completed: {
-      success:
-        'Import completed. All rows were successfully imported.',
-      someErrors:
-        'Processing completed, but some rows were unable to be imported.',
-      allErrors: 'Import failed. There are no valid rows.',
-    },
-    form: {
-      downloadTemplate: 'Download the template',
-      hint: 'Click or drag the file to this area to continue',
-    },
-    list: {
-      discardConfirm:
-        'Are you sure? Non-imported data will be lost.',
-    },
-    errors: {
-      invalidFileEmpty: 'The file is empty',
-      invalidFileExcel:
-        'Only excel (.xlsx) files are allowed',
-      invalidFileUpload:
-        'Invalid file. Make sure you are using the last version of the template.',
-      importHashRequired: 'Import hash is required',
-      importHashExistent: 'Data has already been imported',
-    },
+    upload: "Téléverser",
+    image: "Vous devez téléverser une image",
+    size: "Le fichier est trop volumineux. La taille maximale autorisée est de {0}",
+    formats: `Format invalide. Doit être l'un des suivants : {0}.`,
   },
 
-  autocomplete: {
-    loading: 'Loading...',
-    noOptions: 'No data found',
-  },
 
-  imagesViewer: {
-    noImage: 'No image',
-  },
-
-  table: {
-    noData: 'No records found',
-    loading: 'Loading...',
-  },
-
-  pagination: {
-    items_per_page: '/ page',
-    jump_to: 'Goto',
-    jump_to_confirm: 'confirm',
-    page: '',
-
-    prev_page: 'Previous Page',
-    next_page: 'Next Page',
-    prev_5: 'Previous 5 Pages',
-    next_5: 'Next 5 Pages',
-    prev_3: 'Previous 3 Pages',
-    next_3: 'Next 3 Pages',
-  },
 };
 
 export default fr;

@@ -10,10 +10,11 @@ import { useDispatch, useSelector } from "react-redux";
 import InputFormItem from "src/shared/form/InputFormItem";
 import actions from "src/modules/transaction/form/transactionFormActions";
 import authActions from "src/modules/auth/authActions";
+
 const schema = yup.object().shape({
   amount: yupFormSchemas.integer(i18n("entities.transaction.fields.amount"), {
     required: true,
-    min: 20,
+    min: 50,
   }),
   withdrawPassword: yupFormSchemas.string(
     i18n("user.fields.withdrawPassword"),
@@ -28,13 +29,7 @@ function Withdraw() {
   const dispatch = useDispatch();
 
   const refreshItems = useCallback(async () => {
-    try {
-      // Await the refresh action to ensure it completes
-      await dispatch(authActions.doRefreshCurrentUser());
-    } catch (error) {
-      console.error("Error during refreshing items:", error);
-      // Optionally handle error state or show an error message to the user
-    }
+    await dispatch(authActions.doRefreshCurrentUser());
   }, [dispatch]);
 
   const onSubmit = async ({ amount, withdrawPassword }) => {
@@ -50,7 +45,6 @@ function Withdraw() {
     await dispatch(actions.doCreate(values));
     await refreshItems();
   };
-  useEffect(() => {}, [currentUser, refreshItems]);
 
   const [initialValues] = useState({
     amount: "",
@@ -63,16 +57,16 @@ function Withdraw() {
 
   return (
     <div>
-      <SubHeader title="WithDraw" path="/" />
+      <SubHeader title={i18n('pages.withdraw.title')} path="/profile" />
       <div className="withdraw__page">
         <div className="withdraw__content">
           <div className="withdraw__header">
             <h3 className="hall" style={{ paddingTop: 0 }}>
-              Withdraw Amount:
+              {i18n('pages.withdraw.withdrawAmount')}:
             </h3>
 
             <span style={{ color: "black", fontSize: "14px" }}>
-              Availabe balance : {currentUser?.balance?.toFixed(2) || 0} Usdt
+              {i18n('pages.withdraw.availableBalance')} : {currentUser?.balance?.toFixed(2) || 0} USD
             </span>
           </div>
           <FormProvider {...form}>
@@ -86,7 +80,7 @@ function Withdraw() {
                 />
                 <div className="number__click">
                   <h3 className="hall" style={{ paddingTop: 0 }}>
-                    Withdraw Password:
+                    {i18n('pages.withdraw.withdrawPassword')}:
                   </h3>
                   <InputFormItem
                     type="text"
@@ -96,13 +90,26 @@ function Withdraw() {
                   />
                 </div>
 
+                <div className="advertise__speaker">
+                  <div>
+                    <i className="fa-solid fa-volume-high speaker" aria-hidden="true"></i>
+                  </div>
+                  <div className="announcement-container">
+                    <div className="announcement-text">
+                      <span>
+                        {i18n('pages.withdraw.announcement')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
                 {currentUser.withdraw ? (
                   <button className="confirm" type="submit">
-                    Confirm
+                    {i18n('pages.withdraw.confirm')}
                   </button>
                 ) : (
                   <button className="confirm" disabled={true}>
-                    Confirm
+                    {i18n('pages.withdraw.confirm')}
                   </button>
                 )}
               </div>
@@ -110,21 +117,19 @@ function Withdraw() {
           </FormProvider>
         </div>
 
-        <div className="withdraw__rules">
-          <div className="rules__title">Rules Description</div>
+        {/* <div className="withdraw__rules">
+          <div className="rules__title">{i18n('pages.withdraw.rulesDescription')}</div>
 
           <ul className="rules__list">
-            <li>(1) minimum withdraw is 20 USDT</li>
+            <li>{i18n('pages.withdraw.rules.minimum')}</li>
             <li>
-              (2) The payment shall be made with 48 hours after withdrawal
-              application is approved
+              {i18n('pages.withdraw.rules.paymentTime')}
             </li>
             <li>
-              (3) incomplete daily order submission is subjected to no
-              withdrawal, all products must be submitted for withdrawal
+              {i18n('pages.withdraw.rules.orderCompletion')}
             </li>
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );

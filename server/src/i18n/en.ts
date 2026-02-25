@@ -4,8 +4,24 @@
 
 const en = {
   app: {
-    title: 'Application',
+    title: 'Nowspeed',
   },
+
+  validation: {
+    inValidWithdrawPassword: 'Your withdraw Password is not correct please check again',
+    exceedsBalance: 'It looks like your withdrawal amount exceeds your balance',
+    missingWalletAddress: 'Please go to the "Wallet" section to bind your USDT (TRC20) or ERC20 address before submitting a withdrawal request.',
+    requiredAmount: 'Please write amount',
+    notFoundTransaction: 'Transaction not found',
+    permissoin: "Please try to contact the customer Support for help",
+    duplicateSubsctription: 'You have already subscribed to this plan',
+    InsufficientBalance: 'Insufficient balance',
+    requiredSubscription: 'Please select a subscription plan',
+    moretasks: 'This is your limit. Please contact customer support for more tasks',
+    deposit:"Insufficient balance please contact the customer support",
+    submitPendingProducts:"Please, submit the pending products "
+  },
+
 
   auth: {
     userNotFound: `Sorry, we don't recognize your credentials`,
@@ -88,107 +104,7 @@ const en = {
       'Sorry, this operation is not allowed in preview mode.',
   },
 
-  entities: {
-    association: {
-      errors: {
-        unique: {
 
-        }
-      }
-    },
-    mandat: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    categorieMouv: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    mouvements: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    campagne: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    detailsCampagne: {
-      errors: {
-        unique: {
-          adherent: 'Adherent must be unique',
-          adherentId: 'Adherent must be unique',
-        }
-      }
-    },
-    palier: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    historiquePoints: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    projet: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    votes: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    dons: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    produitCategorie: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    produit: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-    produitCommande: {
-      errors: {
-        unique: {
-
-        }
-      }
-    },
-  }
 };
 
 export default en;

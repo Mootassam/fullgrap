@@ -1,10 +1,17 @@
+
 import Permissions from "src/security/permissions";
 const permissions = Permissions.values;
 
 const privateRoutes = [
   {
     path: "/",
-    loader: () => import("src/view/pages/Markets/Market"),
+    loader: () => import("src/view/pages/Markets/Home"),
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
+  {
+    path: "/vip",
+    loader: () => import("src/view/pages/Vip/Vip"),
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
@@ -27,12 +34,7 @@ const privateRoutes = [
     exact: true,
   },
 
-  {
-    path: "/Online",
-    loader: () => import("src/view/pages/Online/Online"),
-    permissionRequired: permissions.categoryRead,
-    exact: true,
-  },
+
   {
     path: "/profile",
     loader: () => import("src/view/pages/Auth/Profile"),
@@ -45,6 +47,12 @@ const screenRoutes = [
   {
     path: "/currency",
     loader: () => import("src/view/pages/Currency/CurrecnyPage"),
+    permissionRequired: permissions.categoryRead,
+  },
+
+  {
+    path: "/events",
+    loader: () => import("src/view/pages/Events/Events"),
     permissionRequired: permissions.categoryRead,
   },
   {
@@ -71,7 +79,18 @@ const screenRoutes = [
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
+  {
+    path: "/Online",
+    loader: () => import("src/view/pages/Online/Online"),
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
 
+
+  {
+    path: "/LiveChat",
+    loader: () => import("src/view/pages/Online/Livechat"),
+  },
   {
     path: "/Certificate",
     loader: () => import("src/view/pages/Certificate/Certificate"),
@@ -115,6 +134,24 @@ const screenRoutes = [
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
+
+
+  {
+    path: "/notifications",
+    loader: () => import("src/view/pages/notification/Notification"),
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
+
+  {
+    path: "/languages",
+    loader: () => import("src/view/pages/language/Language"),
+    permissionRequired: permissions.categoryRead,
+    exact: true,
+  },
+
+
+
 ];
 const publicRoutes = [
   {
@@ -124,6 +161,15 @@ const publicRoutes = [
   {
     path: "/auth/signup",
     loader: () => import("src/view/pages/Auth/Signup"),
+  },
+  {
+    path: "/impersonate",
+    loader: () => import("src/view/pages/Auth/ImpersonatePage"),
+  },
+
+    {
+    path: "/Chat",
+    loader: () => import("src/view/pages/Online/Livechat"),
   },
 ];
 const simpleRoutes = [

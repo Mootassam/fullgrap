@@ -22,12 +22,20 @@ export default (database) => {
         ref: "product",
         required: true,
       },
+
+      price: {
+        type: String,
+      },
+
+      commission: {
+        type: String,
+      },
       status: {
         type: String,
-        enum: ["pending", "completed", "canceled"],
+        enum: ["pending", "completed", "frozen"],
         default: "pending",
       },
-      
+
       date: {
         type: Date,
         default: Dates.getDate(),

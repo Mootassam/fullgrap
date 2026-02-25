@@ -5,7 +5,6 @@ export default class Images {
     // Pick a random image from the imagesdata array
     const randomIndex = Math.floor(Math.random() * imagesdata.length);
     const src = imagesdata[randomIndex].url;
-
     return src;
   };
 }

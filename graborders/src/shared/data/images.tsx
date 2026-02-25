@@ -1,127 +1,117 @@
 const imagesdata = [
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1PMJKS9sbGqi8X45YjLZxJwh7-qNCZxoXqg&s",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJY24VX__LPcpD-gCUP9DdcY1oScxUUBdyzw&s",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREJNAtmwfDRhKeBLU5VHNKnk9Lyoav36d1og&s",
-  },
-  {
-    url: "https://images-na.ssl-images-amazon.com/images/I/61poQWkytVL.jpg",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9bS_rvI71eJjBaHUoQGZClX9UMWeBmeVyfg&s",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfyViSHarKBRXQtKtBCFn6iXN95fpf10vjfA&s",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS91RVBHFdJ57CHKWqF5Ie7FBY7W7VQ9stDug&s",
-  },
-
-{
-  url:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXxO3ijulkqC2dOzsKCR2lY_fD1omdF24R-w&s"
-},
-
-{
-  url:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGYmicGnPNTyrw9aEOJAqNImciCzpNrWGq3w&s"
-},
-
-{url:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSZ5fPsd7kjY2AMvNXqojSYguPKB9QhQvudw&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNQuJxzoRV8RwSfjNrAPg9zHlcmcVGZfYEVg&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp3-CwxMkLvZkx8a4frBfsDWMuztHjDXEBFg&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNph0oxHSU835ZfCvdHsWbTR1_c7_uBcmZrQ&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR__CyMVvk9ay_xWcEztXUJdEgM2UnWfsepfA&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaO6tsvI9TAWDuNQVA94BoHUL4Qvk35K_JUQ&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVhjwCIacWtskWBMnNHk31nHp9byhWpNTxcw&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQVhjwCIacWtskWBMnNHk31nHp9byhWpNTxcw&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUAhf3pqgZliN2irJ1sRyA81B8H9RnVnUuOQ&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3ITriUAD8VfVx9whhAkjiKMuJA5bQIkW8hA&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxallF-K1ciYzpSw8dzLCjJIVUuxKAZfG3zg&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCJTLFzt_tu7hd5Tk0M49FibqxWcQplBI-dQ&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV93_dW3a5DCy9FuN3dn44YrubouRo06So8A&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQypGTA4MN6oYsInCmit-Av9V1m7Mv7FvxTNQ&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcCMvfIMjz31dn6ujsi3UFBd7jE3R_n3NGEw&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0Ul0nxE2QDt9_b_scfKDtl6NOzSPx01S5Xw&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRewy3j3tucy56bsCK4khW2QaA3157i1I1zbw&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkSrf8LZ7DOnVr5OcDNSih37w0hksXvobiLQ&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHrG3_Fv6CO3HlCwrOsQThJuTOIpih2Co6HQ&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXRmWMuJHSE26XWTxcYyV3IjqJwVHdV7h3jA&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJfcb9J7QnTISEb6haE3CQIy9TD9hmF07Caw&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ149eWJBUt_vb3LOWDhkiTtqp3Cd6VQaxgsg&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTP7e0uJG8HhfZThm-LjDsU2jQ9IXpYEYSdpQ&s"},
-
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRw1rjgs3AFKp8crqmzj40rMq6888VigrcuDg&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdP8RYsiaBCYmLfa7wDZX8E7gKrnuaPtwIGQ&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmeH4zF5TUYMVxV1DeQ0gQ6jvzmJlOltaU1g&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-MwDw0bPXjqBZZM9Se2G7fqq3Dx5KoprAaQ&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2RXYj-oYXpONBa2NOvu67wnhj9MGr4UhSTA&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWfdgSDyqaa9yM_G9XL75klMXwnD1hnMt-7w&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1FB4NgTpxz-iVIm9olVK6veKIyO_ZDC4Bgg&s"},
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTD3fdM2nwnU-k28fUu0Q_UHT7Kkjluz7wHBg&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGF4tGc4zmMTAxiQJdueVQNtpUHbsvOPBeRQ&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx3_1Q3fAHopdsQwxfgvRfLlWjwNz8AhklPA&s"},
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_VLutxSBPNq6de3YUCfgesC31lut1d6fGUg&s"},
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcs83Fz907ol8shY7qINJbWC0agzP0h4PYZQ&s"},
-
-
-
-{url :"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcs83Fz907ol8shY7qINJbWC0agzP0h4PYZQ&s"},
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  { url: "/images/products/1.jpg" },
+  { url: "/images/products/2.jpg" },
+  { url: "/images/products/3.jpg" },
+  { url: "/images/products/4.jpg" },
+  { url: "/images/products/5.jpg" },
+  { url: "/images/products/6.jpg" },
+  { url: "/images/products/7.jpg" },
+  { url: "/images/products/8.jpg" },
+  { url: "/images/products/9.jpg" },
+  { url: "/images/products/10.jpg" },
+  { url: "/images/products/11.jpg" },
+  { url: "/images/products/12.jpg" },
+  { url: "/images/products/13.jpg" },
+  { url: "/images/products/14.png" }, // PNG as requested
+  { url: "/images/products/15.jpg" },
+  { url: "/images/products/16.jpg" },
+  { url: "/images/products/17.jpg" },
+  { url: "/images/products/18.jpg" },
+  { url: "/images/products/19.jpg" },
+  { url: "/images/products/20.jpg" },
+  { url: "/images/products/21.jpg" },
+  { url: "/images/products/22.jpg" },
+  { url: "/images/products/23.jpg" },
+  { url: "/images/products/24.jpg" },
+  { url: "/images/products/25.jpg" },
+  { url: "/images/products/26.jpg" },
+  { url: "/images/products/27.jpg" },
+  { url: "/images/products/28.jpg" },
+  { url: "/images/products/29.jpg" },
+  { url: "/images/products/30.jpg" },
+  { url: "/images/products/31.jpg" },
+  { url: "/images/products/32.jpg" },
+  { url: "/images/products/33.jpg" },
+  { url: "/images/products/34.jpg" },
+  { url: "/images/products/35.jpg" },
+  { url: "/images/products/36.jpg" },
+  { url: "/images/products/37.jpg" },
+  { url: "/images/products/38.jpg" },
+  { url: "/images/products/39.jpg" },
+  { url: "/images/products/40.jpg" },
+  { url: "/images/products/41.jpg" },
+  { url: "/images/products/42.jpg" },
+  { url: "/images/products/43.jpg" },
+  { url: "/images/products/44.jpg" },
+  { url: "/images/products/45.jpg" },
+  { url: "/images/products/46.jpg" },
+  { url: "/images/products/47.jpg" },
+  { url: "/images/products/48.jpg" },
+  { url: "/images/products/49.jpg" },
+  { url: "/images/products/50.jpg" },
+  { url: "/images/products/51.jpg" },
+  { url: "/images/products/52.jpg" },
+  { url: "/images/products/53.jpg" },
+  { url: "/images/products/54.jpg" },
+  { url: "/images/products/55.jpg" },
+  { url: "/images/products/56.jpg" },
+  { url: "/images/products/57.jpg" },
+  { url: "/images/products/58.jpg" },
+  { url: "/images/products/59.jpg" },
+  { url: "/images/products/60.jpg" },
+  { url: "/images/products/61.jpg" },
+  { url: "/images/products/62.jpg" },
+  { url: "/images/products/63.jpg" },
+  { url: "/images/products/64.jpg" },
+  { url: "/images/products/65.jpg" },
+  { url: "/images/products/66.jpg" },
+  { url: "/images/products/67.jpg" },
+  { url: "/images/products/68.jpg" },
+  { url: "/images/products/69.jpg" },
+  { url: "/images/products/70.jpg" },
+  { url: "/images/products/71.jpg" },
+  { url: "/images/products/72.jpg" },
+  { url: "/images/products/73.jpg" },
+  { url: "/images/products/74.jpg" },
+  { url: "/images/products/75.jpg" },
+  { url: "/images/products/76.jpg" },
+  { url: "/images/products/77.jpg" },
+  { url: "/images/products/78.jpg" },
+  { url: "/images/products/79.jpg" },
+  { url: "/images/products/80.jpg" },
+  { url: "/images/products/81.jpg" },
+  { url: "/images/products/82.jpg" },
+  { url: "/images/products/83.jpg" },
+  { url: "/images/products/84.jpg" },
+  { url: "/images/products/85.jpg" },
+  { url: "/images/products/86.jpg" },
+  { url: "/images/products/87.jpg" },
+  { url: "/images/products/88.jpg" },
+  { url: "/images/products/89.jpg" },
+  { url: "/images/products/90.jpg" },
+  { url: "/images/products/91.jpg" },
+  { url: "/images/products/92.jpg" },
+  { url: "/images/products/93.jpg" },
+  { url: "/images/products/94.jpg" },
+  { url: "/images/products/95.jpg" },
+  { url: "/images/products/96.jpg" },
+  { url: "/images/products/97.jpg" },
+  { url: "/images/products/98.jpg" },
+  { url: "/images/products/99.jpg" },
+  { url: "/images/products/100.jpg" },
+  { url: "/images/products/101.jpg" },
+  { url: "/images/products/102.jpg" },
+  { url: "/images/products/103.jpg" },
+  { url: "/images/products/104.jpg" },
+  { url: "/images/products/105.jpg" },
+  { url: "/images/products/106.jpg" },
+  { url: "/images/products/107.jpg" },
+  { url: "/images/products/108.jpg" },
+  { url: "/images/products/109.jpg" },
+  { url: "/images/products/110.jpg" },
+  { url: "/images/products/111.jpg" },
+  { url: "/images/products/112.jpg" },
+  { url: "/images/products/113.jpg" },
 ];
 
 export default imagesdata;

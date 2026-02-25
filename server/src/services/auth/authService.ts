@@ -23,9 +23,10 @@ class AuthService {
     invitationcode,
     invitationToken,
     tenantId,
-    options: any = {}
+    gender,
+    options: any = {},
+    req
   ) {
-    // console.log("APPLY NOW PLease",withdrawPassword, invitationcode, phoneNumber, password, email);
 
     const session = await MongooseRepository.createSession(options.database);
 
@@ -40,16 +41,16 @@ class AuthService {
 
       // const countUser = await UserRepository.CountUser(options);
 
-  
-        const checkrefCode = await UserRepository.checkRefcode(
-          invitationcode,
-          options
-        );
 
-        if (!checkrefCode) {
-          throw new Error400(options.language, "auth.invitationCode");
-        }
- 
+      const checkrefCode = await UserRepository.checkRefcode(
+        invitationcode,
+        options
+      );
+
+      if (!checkrefCode) {
+        throw new Error400(options.language, "auth.invitationCode");
+      }
+
 
       // The user may already exist on the database in case it was invided.
       if (existingUser) {
@@ -133,6 +134,8 @@ class AuthService {
           phoneNumber: phoneNumber,
           withdrawPassword: withdrawPassword,
           invitationcode: invitationcode,
+          gender: gender,
+          req
         },
         {
           ...options,
@@ -200,11 +203,12 @@ class AuthService {
     phoneNumber,
     withdrawPassword,
     invitationcode,
+    gender,
     invitationToken,
     tenantId,
-    options: any = {}
+    options: any = {},
+    req
   ) {
-    // console.log("APPLY NOW PLease",withdrawPassword, invitationcode, phoneNumber, password, email);
 
     const session = await MongooseRepository.createSession(options.database);
 
@@ -219,16 +223,16 @@ class AuthService {
 
       // const countUser = await UserRepository.CountUser(options);
 
-  
-        // const checkrefCode = await UserRepository.checkRefcode(
-        //   invitationcode,
-        //   options
-        // );
 
-        // if (!checkrefCode) {
-        //   throw new Error400(options.language, "auth.invitationCode");
-        // }
- 
+      // const checkrefCode = await UserRepository.checkRefcode(
+      //   invitationcode,
+      //   options
+      // );
+
+      // if (!checkrefCode) {
+      //   throw new Error400(options.language, "auth.invitationCode");
+      // }
+
 
       // The user may already exist on the database in case it was invided.
       if (existingUser) {
@@ -312,6 +316,7 @@ class AuthService {
           username: username,
           phoneNumber: phoneNumber,
           withdrawPassword: withdrawPassword,
+          req
         },
         {
           ...options,
@@ -431,9 +436,23 @@ class AuthService {
     }
   }
 
+
+  static async resetPassword(userId, newPassword, options) {
+    const newHashedPassword = await bcrypt.hash(
+      newPassword,
+      BCRYPT_SALT_ROUNDS
+    );
+
+    return UserRepository.updatePassword(
+      userId,
+      newHashedPassword,
+      true,
+      options
+    );
+  }
   static async handleOnboardMobile(currentUser, invitationToken, tenantId, options) {
 
-    
+
     if (invitationToken) {
       try {
         await TenantUserRepository.acceptInvitation(invitationToken, {

@@ -54,7 +54,7 @@ function Invitation() {
 
   return (
     <div className="app__invitation">
-      <SubHeader title="Invitation" path="/" />
+      <SubHeader title="Events" path="/" />
 
       <div className="invitation__absolute"></div>
       <div className="invitation__content">
