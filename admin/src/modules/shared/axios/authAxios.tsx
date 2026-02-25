@@ -8,7 +8,7 @@ import moment from 'moment';
 
 const authAxios = Axios.create({
   //Randthis
-  baseURL: "http://162.0.228.113:8080/api", 
+  baseURL: "http://159.198.47.173:8080/api", 
 
 
   // demo
