@@ -16,9 +16,9 @@ function Header() {
   return (
     <div className="market__header">
       <img
-        src="/images/home/logo.webp"
+        src="/images/home/logo.png"
         alt=""
-        style={{ width: 150 }}
+
       />
 
       <div className="header-icons">

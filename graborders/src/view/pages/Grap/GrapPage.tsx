@@ -169,7 +169,7 @@ const Grappage = () => {
             </div>
           </div>
           <div className="stat-amount">
-            <div className="amount-value">{currentUser.balance.toFixed(2)}</div>
+            <div className="amount-value">{currentUser.balance?.toFixed(2) || 0}</div>
             <div className="amount-currency">{i18n('pages.grab.currency')}</div>
           </div>
         </div>

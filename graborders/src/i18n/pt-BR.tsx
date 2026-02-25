@@ -2,7 +2,7 @@
 
 const ptBR = {
   app: {
-    title: "Nowspeed"
+    title: "E-CLICKS DIGITAL"
   },
   inputs: {
     username: "Nome de Usuário",
@@ -23,7 +23,7 @@ const ptBR = {
       levels: "Níveis VIP",
       chooseLevel: "Escolha seu nível para maximizar seus ganhos",
       welcome: "Bem-vindo",
-      announcement: "Caros usuários, a plataforma Nowspeed está de volta ao melhor e normal, continuem a ganhar o máximo possível da plataforma",
+      announcement: "Caros usuários, a plataforma E-CLICKS DIGITAL está de volta ao melhor e normal, continuem a ganhar o máximo possível da plataforma",
 
       // Action Buttons
       services: "Serviços",

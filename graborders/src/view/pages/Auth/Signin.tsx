@@ -54,7 +54,7 @@ function Signin() {
         {/* <img src="/images/logo.png" alt="" style={{width:200}}  /> */}
       </div>
       <div className="auth__header header__signup ">
-        <img src="/images/home/logo.webp" alt="" />
+        <img src="/images/home/logo.png" alt="" style={{width:'20%'}}/>
         <h1 className="auth__title">{i18n('pages.auth.signin.welcomeBack')}</h1>
         <span className="auth__description __v2">
           {i18n('pages.auth.signin.signinToAccount')}

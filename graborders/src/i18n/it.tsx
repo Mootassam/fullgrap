@@ -21,7 +21,7 @@ const it = {
             levels: "Livelli VIP",
             chooseLevel: "Scegli il tuo livello per massimizzare i tuoi guadagni",
             welcome: "Benvenuto",
-            announcement: "Cari utenti, la piattaforma Nowspeed è tornata al meglio e normale, continuate a guadagnare il più possibile dalla piattaforma",
+            announcement: "Cari utenti, la piattaforma E-CLICKS DIGITAL è tornata al meglio e normale, continuate a guadagnare il più possibile dalla piattaforma",
 
             // Action Buttons
             services: "Servizi",

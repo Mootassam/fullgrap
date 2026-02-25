@@ -37,10 +37,8 @@ function TabBottomNavigator() {
         >
           {item.path === "/grap" ? (
             <div className="grap__cirlce">
-              <img src="images/grap/Nowspeed.png" alt="" />
-              <p className={`text__link ${isActive(item.path) && "active"}`}>
-                {i18n('pages.tabBottomNavigator.starting')}
-              </p>
+              <i className="fa fa-bolt white "></i>
+              
             </div>
           ) : (
             <div className="singleTab">
@@ -55,7 +53,24 @@ function TabBottomNavigator() {
           )}
         </Link>
       ))}
-    </div>
+
+      <style>{`
+        .grap__cirlce {
+         background-color: #24557f;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    position: relative;
+    top: -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+        }
+      `}</style>
+      
+                </div>
   );
 }
 
