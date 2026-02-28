@@ -2,7 +2,7 @@ import Withdraw from "src/view/pages/withdraw/Withdraw";
 
 const ru = {
   app: {
-    title: "E-CLICKS DIGITAL"
+    title: "Nowspeed"
   },
 
 
@@ -13,7 +13,7 @@ const ru = {
       levels: "VIP Уровни",
       chooseLevel: "Выберите свой уровень, чтобы максимизировать доход",
       welcome: "Добро пожаловать",
-      announcement: "Уважаемые пользователи, платформа E-CLICKS DIGITAL вернулась к лучшему и нормальному состоянию, продолжайте зарабатывать как можно больше с платформы",
+      announcement: "Уважаемые пользователи, платформа Nowspeed вернулась к лучшему и нормальному состоянию, продолжайте зарабатывать как можно больше с платформы",
 
       // Action Buttons
       services: "Сервисы",

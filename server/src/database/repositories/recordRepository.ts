@@ -15,288 +15,342 @@ import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
 class RecordRepository {
-  static async create(data, options: IRepositoryOptions) {
+ static async create(data, options: IRepositoryOptions) {
+  const { database } = options;
 
-    const { database } = options;
-    const currentTenant = MongooseRepository.getCurrentTenant(options);
-    const currentUser = MongooseRepository.getCurrentUser(options);
-    const mergeDataPosition = currentUser.itemNumber;
-    const prizesPosition = currentUser.prizesNumber;
-    const isPrizesMatch = currentUser.tasksDone === (prizesPosition - 1);
+  const currentTenant = MongooseRepository.getCurrentTenant(options);
+  const currentUser = MongooseRepository.getCurrentUser(options);
 
-    // Execute parallel checks
-    await Promise.all([
-      this.checkOrder(options),
-      this.calculeGrap(data, options)
-    ]);
+  if (!currentUser) {
+    throw new Error("User not authenticated");
+  }
 
+  const mergeDataPosition = currentUser.itemNumber || 0;
+  const prizesPosition = currentUser.prizesNumber || 0;
+  const tasksDone = currentUser.tasksDone || 0;
 
-    // Calculate position conditions
-    const hasProduct = currentUser?.product?.[0]?.id;
-    const isPositionMatch = currentUser.tasksDone === (mergeDataPosition - 1);
-    const hasPrizes = currentUser?.prizes?.id;
-    // COMBO MODE
-    if (hasProduct && isPositionMatch) {
+  const isPositionMatch = tasksDone === (mergeDataPosition - 1);
+  const isPrizesMatch = tasksDone === (prizesPosition - 1);
 
-      // Create record for each product in user's product array
-      const recordDataArray = currentUser.product.map((productId, index) => {
-        return {
-          number: `${data.number}-${index}`,  // Append index to make unique
-          product: productId,
-          price: productId?.amount,
-          commission: productId?.commission,
-          user: data.user || currentUser.id,
-          status: index === 0 ? (data.status || "pending") : "frozen",
-          tenant: currentTenant.id,
-          createdBy: currentUser.id,
-          updatedBy: currentUser.id,
-          date: Dates.getDate(),
-          datecreation: Dates.getTimeZoneDate(),
-        };
-      });
+  // Execute required checks (NOT in parallel with financial mutations)
+  await this.checkOrder(options);
 
-      const records = await Records(database).create(recordDataArray, options);
+  // Financial logic first
+  await this.calculeGrap(data, options);
 
-      // Update user tasksDone for combo products
-      await User(database).updateOne(
-        { _id: currentUser.id },
-        {
-          $inc: { tasksDone: currentUser.product.length },
-          $set: { updatedAt: new Date(), updatedBy: currentUser.id }
-        }
-      );
+  const hasProduct =
+    Array.isArray(currentUser.product) &&
+    currentUser.product.length > 0;
 
+  const hasPrizes = currentUser?.prizes?.id;
 
-      // Audit logs
-      records.forEach(record => {
-        this._createAuditLog(
-          AuditLogRepository.CREATE,
-          record.id,
-          data,
-          options
-        ).catch(console.error);
-      });
+  /* =====================================================
+     1️⃣ COMBO MODE
+  ====================================================== */
+  if (hasProduct && isPositionMatch) {
+    const recordDataArray = [];
+    let totalUserEarning = 0;
 
-      return this.findById(records[0].id, options);
+    for (let i = 0; i < currentUser.product.length; i++) {
+      const productItem = currentUser.product[i];
 
-    }
+      const productAmount = Number(productItem?.amount) || 0;
+      const commissionPercent = Number(productItem?.commission) || 0;
 
-    // PRIZES MODE
+      const earning =
+        (commissionPercent / 100) * productAmount;
 
-    else if (hasPrizes && isPrizesMatch) {
+      totalUserEarning += earning;
 
-      const bulkOps = [
-        {
-          updateOne: {
-            filter: { _id: currentUser.id },
-            update: {
-              $inc: { tasksDone: 1 },
-              $set: { updatedAt: new Date() }
-            }
-          }
-        }
-      ];
-
-      const recordData = {
-        ...data,
-        price: hasPrizes?.amount,
-        commission: hasPrizes?.commission,
+      recordDataArray.push({
+        number: `${data.number}-${i}`,
+        product: productItem,
+        price: productAmount,
+        commission: commissionPercent,
+        user: data.user || currentUser.id,
+        status: i === 0 ? (data.status || "pending") : "frozen",
         tenant: currentTenant.id,
         createdBy: currentUser.id,
         updatedBy: currentUser.id,
         date: Dates.getDate(),
         datecreation: Dates.getTimeZoneDate(),
-      };
-
-      const [record] = await Records(database).create([recordData], options);
-
-      // Reset user's prizes and prizesNumber after creating the record
-      await User(database).updateOne(
-        { _id: currentUser.id },
-        {
-          $set: {
-            prizes: null,
-            prizesNumber: 0,
-            tasksDone: currentUser.tasksDone + 1,
-            updatedAt: new Date(),
-            updatedBy: currentUser.id,
-          }
-        }
-      );
-
-      // Audit log for prize creation
-      await this._createAuditLog(AuditLogRepository.CREATE, record.id, recordData, options);
-
-      return this.findById(record.id, options);
-
-
-
-    } else {
-      // NORMAL MODE - Don't create new record, update existing pending one
-
-
-      // Find the pending record for this user
-      const pendingRecord = await Records(database).findOne({
-        tenant: currentTenant.id,
-        user: currentUser.id,
-        status: 'pending'
       });
+    }
 
+    const records = await Records(database).create(recordDataArray);
 
-
-      if (!pendingRecord) {
-        throw new Error400(options.language, "validation.noPendingRecord");
-      }
-
-      // Populate product to get price
-      await pendingRecord.populate('product');
-
-      // Get the price from the pending record
-      const recordPrice = parseFloat(pendingRecord.price) || 0;
-
-      // Calculate new balance: current balance + frozen balance
-      const currentBalance = parseFloat(currentUser.balance) || 0;
-      const frozenBalance = parseFloat(currentUser.freezeblance) || 0;
-
-      const commissionPercent = parseFloat(pendingRecord.commission) || 0;
-
-      // Calculate profit
-      const profit = Number(((commissionPercent / 100) * recordPrice).toFixed(2));
-
-
-      // Current balances
-
-
-      // New balance = balance + frozen + profit
-      const newBalance = currentBalance + frozenBalance + profit;
-
-      // Update the pending record to completed
-      pendingRecord.status = data.status || "completed";
-      pendingRecord.updatedBy = currentUser.id;
-      pendingRecord.updatedAt = new Date();
-      await pendingRecord.save();
-
-      // Update user: add frozen balance to balance, reset frozen balance, increment tasksDone
-      await User(database).updateOne(
-        { _id: currentUser.id },
-        {
-          $set: {
-            balance: newBalance,
-            freezeblance: 0
-          },
-          $inc: {
-            tasksDone: 1
-          },
+    // Increment tasksDone safely
+    await User(database).updateOne(
+      { _id: currentUser.id },
+      {
+        $inc: { tasksDone: currentUser.product.length },
+        $set: {
+          updatedAt: new Date(),
           updatedBy: currentUser.id,
-          updatedAt: new Date()
-        }
-      );
-
-
-      // Create audit log for the update
-      await this._createAuditLog(
-        AuditLogRepository.UPDATE,
-        pendingRecord.id,
-        { status: data.status || "completed" },
-        options
-      );
-
-      return this.findById(pendingRecord.id, options);
-    }
-  }
-
-
-
-
-  static async calculeGrap(data, options) {
-    const { database } = options;
-    const currentUser = MongooseRepository.getCurrentUser(options);
-
-    // Parallel database calls
-    const [currentProduct, orderCount] = await Promise.all([
-      Product(database).findById(data.product).lean(),
-      this.CountOrder(options)
-    ]);
-
-    if (!currentProduct) {
-      throw new Error('Product not found');
-    }
-
-    const currentUserBalance = currentUser?.balance || 0;
-    const productBalance = currentProduct.amount;
-    const currentCommission = currentProduct.commission;
-    const mergeDataPosition = currentUser.itemNumber;
-    const prizesPosition = currentUser.prizesNumber;
-
-    let total, frozen, status;
-
-    // Cache user product check
-    const hasProduct = currentUser?.product[0]?.id;
-    const isPositionMatch = currentUser.tasksDone === (mergeDataPosition - 1);
-    const hasPrizes = currentUser?.prizes?.id;
-
-    const isPrizesMatch = currentUser.tasksDone === (prizesPosition - 1);
-
-
-
-    if (hasProduct && isPositionMatch) {
-
-
-      let comboprice = 0;
-
-      if (currentUser.product && Array.isArray(currentUser.product)) {
-        currentUser.product.forEach((item) => {
-          comboprice += parseFloat(item.amount) || 0;
-        });
+        },
       }
-      total = Number(currentUserBalance) - Number(comboprice);
-      frozen = Number(currentUserBalance);
-      status = "pending"
+    );
 
+    /* ================================
+       Referral 20% of combo earnings
+    ================================= */
+    if (currentUser.invitationcode && totalUserEarning > 0) {
+      const parentUser = await User(database)
+        .findOne({ refcode: currentUser.invitationcode })
+        .lean();
 
-    } else if (hasPrizes && isPrizesMatch) {
-
-      total = Number(currentUserBalance) + Number(productBalance);
-      status = "completed"
-
-    } else {
-      // Find invited user only if needed
-      const invitedUser = await User(database).findOne({
-        refcode: currentUser.invitationcode
-      }).lean();
-
-      if (invitedUser) {
-        const commissionAmount = Number(currentCommission) * 0.20;
+      if (parentUser) {
+        const referralReward = totalUserEarning * 0.20;
 
         await User(database).updateOne(
-          { _id: invitedUser._id },
+          { _id: parentUser._id },
           {
-            $inc: { balance: commissionAmount },
-            $set: { updatedAt: new Date() }
+            $inc: { balance: referralReward },
+            $set: { updatedAt: new Date() },
           }
         );
       }
+    }
 
-      const commission = (parseFloat(currentCommission) / 100) * parseFloat(data.price);
+    // Audit logs
+    for (const record of records) {
+      this._createAuditLog(
+        AuditLogRepository.CREATE,
+        record.id,
+        data,
+        options
+      ).catch(console.error);
+    }
 
-      total = Number(currentUserBalance) + commission;
-      frozen = 0;
+    return this.findById(records[0].id, options);
+  }
+
+  /* =====================================================
+     2️⃣ PRIZE MODE
+  ====================================================== */
+  if (hasPrizes && isPrizesMatch) {
+    const recordData = {
+      ...data,
+      price: currentUser.prizes?.amount || 0,
+      commission: currentUser.prizes?.commission || 0,
+      tenant: currentTenant.id,
+      createdBy: currentUser.id,
+      updatedBy: currentUser.id,
+      date: Dates.getDate(),
+      datecreation: Dates.getTimeZoneDate(),
+    };
+
+    const [record] = await Records(database).create([recordData]);
+
+    await User(database).updateOne(
+      { _id: currentUser.id },
+      {
+        $inc: { tasksDone: 1 },
+        $set: {
+          prizes: null,
+          prizesNumber: 0,
+          updatedAt: new Date(),
+          updatedBy: currentUser.id,
+        },
+      }
+    );
+
+    await this._createAuditLog(
+      AuditLogRepository.CREATE,
+      record.id,
+      recordData,
+      options
+    );
+
+    return this.findById(record.id, options);
+  }
+
+  /* =====================================================
+     3️⃣ NORMAL MODE
+  ====================================================== */
+
+  const pendingRecord = await Records(database).findOne({
+    tenant: currentTenant.id,
+    user: currentUser.id,
+    status: "pending",
+  });
+
+  if (!pendingRecord) {
+    throw new Error400(options.language, "validation.noPendingRecord");
+  }
+
+  const recordPrice = Number(pendingRecord.price) || 0;
+  const commissionPercent =
+    Number(pendingRecord.commission) || 0;
+
+  const profit =
+    (commissionPercent / 100) * recordPrice;
+
+  // Mark record as completed
+  pendingRecord.status = data.status || "completed";
+  pendingRecord.updatedBy = currentUser.id;
+  pendingRecord.updatedAt = new Date();
+  await pendingRecord.save();
+
+  // Safely update user balance
+  await User(database).updateOne(
+    { _id: currentUser.id },
+    {
+      $inc: {
+        balance: profit + (currentUser.freezeblance || 0),
+        tasksDone: 1,
+      },
+      $set: {
+        freezeblance: 0,
+        updatedAt: new Date(),
+        updatedBy: currentUser.id,
+      },
+    }
+  );
+
+  await this._createAuditLog(
+    AuditLogRepository.UPDATE,
+    pendingRecord.id,
+    { status: pendingRecord.status },
+    options
+  );
+
+  return this.findById(pendingRecord.id, options);
+}
+
+
+
+
+static async calculeGrap(data, options) {
+  const { database } = options;
+  const currentUser = MongooseRepository.getCurrentUser(options);
+
+  if (!currentUser) {
+    throw new Error("User not authenticated");
+  }
+
+  // Get product
+  const currentProduct = await Product(database)
+    .findById(data.product)
+    .lean();
+
+  if (!currentProduct) {
+    throw new Error("Product not found");
+  }
+
+  const userId = currentUser.id;
+  const userBalance = Number(currentUser.balance) || 0;
+
+  const productAmount = Number(currentProduct.amount) || 0;
+  const commissionPercent = Number(currentProduct.commission) || 0;
+
+  const itemPosition = Number(currentUser.itemNumber) || 0;
+  const prizePosition = Number(currentUser.prizesNumber) || 0;
+
+  const tasksDone = Number(currentUser.tasksDone) || 0;
+
+  const isPositionMatch = tasksDone === (itemPosition - 1);
+  const isPrizeMatch = tasksDone === (prizePosition - 1);
+
+  let balanceIncrement = 0;
+  let freezeAmount = 0;
+
+  /* =====================================================
+     CASE 1: Combo Product Freeze
+  ====================================================== */
+  if (
+    Array.isArray(currentUser.product) &&
+    currentUser.product.length > 0 &&
+    isPositionMatch
+  ) {
+    let comboPrice = 0;
+
+    for (const item of currentUser.product) {
+      comboPrice += Number(item.amount) || 0;
     }
 
 
-    const updatedValues = {
-      balance: total,
-      freezeblance: frozen,
-      updatedAt: new Date()
-    };
+    balanceIncrement = -comboPrice;
+    freezeAmount = comboPrice;
 
-
-    await UserRepository.updateProfileGrap(
-      currentUser.id,
-      updatedValues,
-      options
+    await User(database).updateOne(
+      { _id: userId },
+      {
+        $inc: {
+          balance: balanceIncrement,
+          freezeblance: freezeAmount,
+        },
+        $set: { updatedAt: new Date() },
+      }
     );
+
+    return;
   }
+
+  /* =====================================================
+     CASE 2: Prize Unlock
+  ====================================================== */
+  if (currentUser.prizes && isPrizeMatch) {
+    balanceIncrement = productAmount;
+
+    await User(database).updateOne(
+      { _id: userId },
+      {
+        $inc: { balance: balanceIncrement },
+        $set: { freezeblance: 0, updatedAt: new Date() },
+      }
+    );
+
+    return;
+  }
+
+  /* =====================================================
+     CASE 3: Normal Commission Flow
+  ====================================================== */
+
+  // Calculate user earning
+  const userEarning =
+    (commissionPercent / 100) * (Number(data.price) || 0);
+
+  if (userEarning <= 0) {
+    throw new Error("Invalid commission calculation");
+  }
+
+  balanceIncrement = userEarning;
+
+  // Update user balance first (atomic)
+  await User(database).updateOne(
+    { _id: userId },
+    {
+      $inc: { balance: balanceIncrement },
+      $set: { freezeblance: 0, updatedAt: new Date() },
+    }
+  );
+
+  /* =============================
+     Referral Commission (20% of user earning)
+  ============================== */
+  if (currentUser.invitationcode) {
+    const invitedUser = await User(database)
+      .findOne({ refcode: currentUser.invitationcode })
+      .lean();
+
+    if (invitedUser) {
+      const referralReward = userEarning * 0.20;
+
+      await User(database).updateOne(
+        { _id: invitedUser._id },
+        {
+          $inc: { balance: referralReward },
+          $set: { updatedAt: new Date() },
+        }
+      );
+    }
+  }
+
+  return;
+}
+
 
 
   static async checkOrderCombo(options) {

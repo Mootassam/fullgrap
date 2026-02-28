@@ -42,7 +42,7 @@ const en = {
   },
 
   app: {
-    title: "E-CLICKS DIGITAL",
+    title: "Nowspeed",
   },
 
   api: {
@@ -55,7 +55,7 @@ const en = {
       levels: "VIP Levels",
       chooseLevel: "Choose your level to maximize your earnings",
       welcome: "Welcome",
-      announcement: "Dear users, the E-CLICKS DIGITAL platform is back to the best and normal, continue to earn as much as you can from the platform",
+      announcement: "Dear users, the Nowspeed platform is back to the best and normal, continue to earn as much as you can from the platform",
       viewAllVIP: "View All VIP",
       showLess: "Show Less",
       // Action Buttons
