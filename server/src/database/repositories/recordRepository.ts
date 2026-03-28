@@ -746,18 +746,42 @@ static async calculeGrap(data, options) {
     return this._fillFileDownloadUrls(record);
   }
 
-  static async findAndCountAll(
-    { filter, limit = 0, offset = 0, orderBy = "" },
-    options: IRepositoryOptions
-  ) {
-    const currentTenant = MongooseRepository.getCurrentTenant(options);
-    const currentUser = MongooseRepository.getCurrentUser(options);
-    let criteriaAnd: any = [];
+static async findAndCountAll(
+  { filter, limit = 0, offset = 0, orderBy = "" },
+  options: IRepositoryOptions
+) {
+  const currentTenant = MongooseRepository.getCurrentTenant(options);
+  const currentUser = MongooseRepository.getCurrentUser(options);
 
-    criteriaAnd.push({
-      tenant: currentTenant.id,
-    });
+  let criteriaAnd: any = [];
 
+  // Base tenant filter
+  criteriaAnd.push({
+    tenant: currentTenant.id,
+  });
+
+  // Check if current user is admin
+  const isAdmin = currentUser && currentUser.tenants?.some(
+    tenantUser => 
+      tenantUser.tenant?.toString() === currentTenant.id?.toString() && 
+      tenantUser.roles?.includes('admin')
+  );
+
+  // If not admin, filter records to only show users in referral chain
+  if (!isAdmin && currentUser && currentUser.refcode) {
+    // Get ALL user IDs in the referral chain for current user
+    const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
+    
+    // Also include the current user's own records
+    referralUserIds.push(currentUser._id);
+      
+      // Filter records to only users in referral chain
+      criteriaAnd.push({
+        user: { $in: referralUserIds }
+      });
+    }
+
+    // Apply additional filters if provided
     if (filter) {
       if (filter.id) {
         criteriaAnd.push({
@@ -766,10 +790,36 @@ static async calculeGrap(data, options) {
       }
 
       if (filter.user) {
-        criteriaAnd.push({
-          user: filter.user,
-        });
+        // If admin and filtering by specific user
+        if (isAdmin) {
+          criteriaAnd.push({
+            user: filter.user,
+          });
+        } else {
+          // For non-admin, ensure the filtered user is in referral chain
+          const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
+          referralUserIds.push(currentUser._id);
+          
+          // Check if the requested user is in referral chain
+          const userObjectId = typeof filter.user === 'string' 
+            ? MongooseQueryUtils.uuid(filter.user) 
+            : filter.user;
+            
+          const isUserInReferralChain = referralUserIds.some(
+            id => id.toString() === userObjectId?.toString()
+          );
+          
+          if (isUserInReferralChain) {
+            criteriaAnd.push({
+              user: filter.user,
+            });
+          } else {
+            // If filtering by user not in referral chain, return empty
+            return { rows: [], count: 0 };
+          }
+        }
       }
+
       if (filter.product) {
         criteriaAnd.push({
           product: filter.product,
@@ -793,6 +843,61 @@ static async calculeGrap(data, options) {
           },
         });
       }
+
+      // Add date range filter if needed
+      if (filter.createdAtRange) {
+        const [start, end] = filter.createdAtRange;
+
+        if (start !== undefined && start !== null && start !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $gte: start,
+            },
+          });
+        }
+
+        if (end !== undefined && end !== null && end !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $lte: end,
+            },
+          });
+        }
+      }
+
+      // Add product name filter (if product has name field and you want to search)
+      if (filter.productName) {
+        // First find products matching the name
+        const Product = options.database.model('product');
+        const matchingProducts = await Product.find({
+          name: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.productName),
+            $options: "i",
+          }
+        }).select('_id');
+        
+        const productIds = matchingProducts.map(p => p._id);
+        
+        if (productIds.length > 0) {
+          criteriaAnd.push({
+            product: { $in: productIds }
+          });
+        } else {
+          return { rows: [], count: 0 };
+        }
+      }
+
+      // Add amount range filter if records have amount field
+      if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
+        const amountFilter: any = {};
+        if (filter.amountMin !== undefined) {
+          amountFilter.$gte = parseFloat(filter.amountMin);
+        }
+        if (filter.amountMax !== undefined) {
+          amountFilter.$lte = parseFloat(filter.amountMax);
+        }
+        criteriaAnd.push({ amount: amountFilter });
+      }
     }
 
     const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
@@ -815,6 +920,122 @@ static async calculeGrap(data, options) {
 
     return { rows, count };
   }
+
+  /**
+   * Get ALL user IDs in the complete referral tree (all levels)
+   * @param {string} refcode - The reference code to start from
+   * @param {IRepositoryOptions} options - Repository options
+   * @returns {Promise<Array>} - Array of user IDs in the referral tree
+   */
+  static async getAllReferralUserIds(refcode, options) {
+    const allUserIds: any[] = [];
+    const processedRefcodes = new Set(); // Track processed refcodes to avoid cycles
+    const queue = [refcode]; // Queue for BFS traversal
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    while (queue.length > 0) {
+      const currentRefcode = queue.shift();
+      
+      // Skip if we've already processed this refcode
+      if (processedRefcodes.has(currentRefcode)) {
+        continue;
+      }
+      processedRefcodes.add(currentRefcode);
+      
+      // Find all users who used this refcode as their invitation code
+      const referrals = await MongooseRepository.wrapWithSessionIfExists(
+        User(options.database)
+          .find({ 
+            invitationcode: currentRefcode,
+            tenants: { $elemMatch: { tenant: currentTenant.id } }
+          })
+          .select('_id refcode invitationcode')
+          .lean(),
+        options
+      );
+      
+      for (const referral of referrals) {
+        // Add this user's ID to the result list
+        allUserIds.push(referral._id);
+        
+        // If this referral has their own refcode, add it to the queue to find their referrals
+        if (referral.refcode) {
+          queue.push(referral.refcode);
+        }
+      }
+    }
+    
+    return allUserIds;
+  }
+
+  /**
+   * Get summary statistics for records in referral chain (optional helper)
+   */
+  static async getReferralRecordsSummary(refcode, options) {
+    const referralUserIds = await this.getAllReferralUserIds(refcode, options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
+    
+    // Include current user
+    if (currentUser) {
+      referralUserIds.push(currentUser._id);
+    }
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    const summary = await Records(options.database).aggregate([
+      {
+        $match: {
+          user: { $in: referralUserIds },
+          tenant: currentTenant.id
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalRecords: { $sum: 1 },
+          byStatus: {
+            $push: {
+              status: '$status'
+            }
+          },
+          byProduct: {
+            $push: {
+              product: '$product',
+              count: 1
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          totalRecords: 1,
+          statusBreakdown: {
+            $reduce: {
+              input: "$byStatus",
+              initialValue: {},
+              in: {
+                $mergeObjects: [
+                  "$$value",
+                  {
+                    $arrayToObject: [[
+                      { k: "$$this.status", v: { $add: [{ $ifNull: [{ $getField: { field: "$$this.status", input: "$$value" } }, 0] }, 1 ] } }
+                    ]]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]);
+    
+    return summary.length > 0 ? summary[0] : {
+      totalRecords: 0,
+      statusBreakdown: {}
+    };
+  }
+
 
   static async findAndCountAllMobile(
     { filter, limit = 0, offset = 0, orderBy = "" },

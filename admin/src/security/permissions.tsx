@@ -47,7 +47,7 @@ class Permissions {
       },
       userEdit: {
         id: 'userEdit',
-        allowedRoles: [roles.admin],
+        allowedRoles: [roles.admin] ,
         allowedPlans: [
           plans.free,
           plans.growth,
@@ -1014,7 +1014,7 @@ class Permissions {
       },
       orderRead: {
         id: 'orderRead',
-        allowedRoles: [roles.admin, roles.agent],
+        allowedRoles: [ roles.agent],
         allowedPlans: [
           plans.free,
           plans.growth,

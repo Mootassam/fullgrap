@@ -8,6 +8,7 @@ import Transaction from "../models/transaction";
 import Error400 from "../../errors/Error400";
 import UserRepository from "./userRepository";
 import Error405 from "../../errors/Error405";
+import User from "../models/user";
 
 class TransactionRepository {
   static async create(data, options: IRepositoryOptions) {
@@ -109,28 +110,69 @@ class TransactionRepository {
     return this._fillFileDownloadUrls(record);
   }
 
-  static async findAndCountAll(
+static async findAndCountAll(
     { filter, limit = 0, offset = 0, orderBy = "" },
     options: IRepositoryOptions
   ) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
 
     let criteriaAnd: any = [];
 
+    // Base tenant filter
     criteriaAnd.push({
       tenant: currentTenant.id,
     });
 
+    // Check if current user is admin
+    const isAdmin = currentUser && currentUser.tenants?.some(
+      tenantUser => 
+        tenantUser.tenant?.toString() === currentTenant.id?.toString() && 
+        tenantUser.roles?.includes('admin')
+    );
+
+    // If not admin, filter transactions to only show users in referral chain
+    if (!isAdmin && currentUser && currentUser.refcode) {
+      // Get ALL user IDs in the referral chain for current user
+      const referralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
+      
+      // Also include the current user's own transactions
+      referralUserIds.push(currentUser._id);
+      
+      // Filter transactions to only users in referral chain
+      criteriaAnd.push({
+        user: { $in: referralUserIds }
+      });
+    }
+
+    // Apply additional filters if provided
     if (filter) {
       if (filter.id) {
         criteriaAnd.push({
           ["_id"]: MongooseQueryUtils.uuid(filter.id),
         });
       }
+      
       if (filter.user) {
-        criteriaAnd.push({
-          user: filter.user,
-        });
+        // If admin and filtering by specific user
+        if (isAdmin) {
+          criteriaAnd.push({
+            user: filter.user,
+          });
+        } else {
+          // For non-admin, ensure the filtered user is in referral chain
+          const referralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
+          referralUserIds.push(currentUser._id);
+          
+          if (referralUserIds.includes(filter.user)) {
+            criteriaAnd.push({
+              user: filter.user,
+            });
+          } else {
+            // If filtering by user not in referral chain, return empty
+            return { rows: [], count: 0 };
+          }
+        }
       }
 
       if (filter.amount) {
@@ -179,6 +221,18 @@ class TransactionRepository {
           });
         }
       }
+
+      // Add amount range filter
+      if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
+        const amountFilter: any = {};
+        if (filter.amountMin !== undefined) {
+          amountFilter.$gte = parseFloat(filter.amountMin);
+        }
+        if (filter.amountMax !== undefined) {
+          amountFilter.$lte = parseFloat(filter.amountMax);
+        }
+        criteriaAnd.push({ amount: amountFilter });
+      }
     }
 
     const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
@@ -200,6 +254,163 @@ class TransactionRepository {
 
     return { rows, count };
   }
+
+  /**
+   * Get ALL user IDs in the complete referral tree (all levels)
+   * @param {string} refcode - The reference code to start from
+   * @param {IRepositoryOptions} options - Repository options
+   * @returns {Promise<Array>} - Array of user IDs in the referral tree
+   */
+  static async getAllReferralUserIds(refcode, options) {
+    const allUserIds: any[] = [];
+    const processedRefcodes = new Set<string>(); // Track processed refcodes to avoid cycles
+    const queue: string[] = [refcode]; // Queue for BFS traversal
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    while (queue.length > 0) {
+      const currentRefcode = queue.shift();
+      
+      // Skip if we've already processed this refcode
+      if (!currentRefcode || processedRefcodes.has(currentRefcode)) {
+        continue;
+      }
+      processedRefcodes.add(currentRefcode);
+      
+      // Find all users who used this refcode as their invitation code
+      const referrals = await MongooseRepository.wrapWithSessionIfExists(
+        User(options.database)
+          .find({ 
+            invitationcode: currentRefcode,
+            tenants: { $elemMatch: { tenant: currentTenant.id } }
+          })
+          .select('_id refcode invitationcode')
+          .lean(),
+        options
+      );
+      
+      for (const referral of referrals) {
+        // Add this user's ID to the result list
+        allUserIds.push(referral._id);
+        
+        // If this referral has their own refcode, add it to the queue to find their referrals
+        if (referral.refcode) {
+          queue.push(referral.refcode);
+        }
+      }
+    }
+    
+    return allUserIds;
+  }
+
+  /**
+   * Alternative: Get all users in referral chain with their details
+   * Useful if you need user information for additional filtering
+   */
+  static async getAllReferralUsers(refcode, options) {
+    const allUsers: any[] = [];
+    const processedRefcodes = new Set<string>();
+    const queue: string[] = [refcode];
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    while (queue.length > 0) {
+      const currentRefcode = queue.shift();
+      
+      if (!currentRefcode || processedRefcodes.has(currentRefcode)) {
+        continue;
+      }
+      processedRefcodes.add(currentRefcode);
+      
+      const referrals = await MongooseRepository.wrapWithSessionIfExists(
+        User(options.database)
+          .find({ 
+            invitationcode: currentRefcode,
+            tenants: { $elemMatch: { tenant: currentTenant.id } }
+          })
+          .select('_id refcode invitationcode fullName email balance')
+          .lean(),
+        options
+      );
+      
+      for (const referral of referrals) {
+        allUsers.push(referral);
+        
+        if (referral.refcode) {
+          queue.push(referral.refcode);
+        }
+      }
+    }
+    
+    return allUsers;
+  }
+
+  /**
+   * Check if a user is an admin for the current tenant
+   */
+  static async isUserAdmin(userId, tenantId, options) {
+    const user = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database)
+        .findOne({
+          _id: userId,
+          tenants: {
+            $elemMatch: {
+              tenant: tenantId,
+              roles: 'admin',
+              status: 'active'
+            }
+          }
+        })
+        .select('_id'),
+      options
+    );
+    
+    return !!user;
+  }
+
+  /**
+   * Get transaction summary for referral chain (optional helper method)
+   */
+  static async getReferralTransactionSummary(refcode, options) {
+    const referralUserIds = await this.getAllReferralUserIds(refcode, options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
+    
+    // Include current user
+    if (currentUser) {
+      referralUserIds.push(currentUser._id);
+    }
+    
+    const summary = await Transaction(options.database).aggregate([
+      {
+        $match: {
+          user: { $in: referralUserIds },
+          tenant: MongooseRepository.getCurrentTenant(options).id
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalTransactions: { $sum: 1 },
+          totalAmount: { $sum: '$amount' },
+          avgAmount: { $avg: '$amount' },
+          byType: {
+            $push: {
+              type: '$type',
+              amount: '$amount'
+            }
+          }
+        }
+      }
+    ]);
+    
+    return summary.length > 0 ? summary[0] : {
+      totalTransactions: 0,
+      totalAmount: 0,
+      avgAmount: 0,
+      byType: []
+    };
+  }
+
 
   static async findAndCountByUser(
     { filter, limit = 0, offset = 0, orderBy = "" },

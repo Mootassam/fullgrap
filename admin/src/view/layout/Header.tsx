@@ -9,7 +9,8 @@ import I18nSelect from 'src/view/layout/I18nSelect';
 import HeaderWrapper from 'src/view/layout/styles/HeaderWrapper';
 import Avatar from 'src/view/shared/Avatar';
 import config from 'src/config';
-
+import { Link } from 'react-router-dom';
+import userSelectors from 'src/modules/user/userSelectors';
 function Header(props) {
   const dispatch = useDispatch();
 
@@ -49,6 +50,10 @@ function Header(props) {
     getHistory().push('/tenant');
   };
 
+  const hasPermissionToEdit = useSelector(
+    userSelectors.selectPermissionToAgent,
+  );
+
   return (
     <HeaderWrapper className="navbar sticky-top navbar-light bg-white border-bottom">
       <button
@@ -58,9 +63,15 @@ function Header(props) {
       >
         <i className="fas fa-bars" />
       </button>
-
+      {hasPermissionToEdit && (
+        <div className="menu-links">
+          <Link to="/customer">My Customer</Link>
+          <Link to="/transaction">Transaction</Link>
+          <Link to="/record">Records</Link>
+          <Link to="/product">Products</Link>
+        </div>)}
       <div>
-      
+
         <div className="dropdown">
           <span
             className="user-dropdown"
@@ -79,13 +90,15 @@ function Header(props) {
                 {['multi', 'multi-with-subdomain'].includes(
                   config.tenantMode,
                 ) && (
-                  <span className="user-dropdown-text-tenant">
-                    {currentTenant && currentTenant.name}
-                  </span>
-                )}
+                    <span className="user-dropdown-text-tenant">
+                      {currentTenant && currentTenant.name}
+                    </span>
+                  )}
               </span>
             </div>
           </span>
+
+
           <div className="dropdown-menu dropdown-menu-right">
             <button
               onClick={doNavigateToProfile}
@@ -106,15 +119,15 @@ function Header(props) {
             {['multi', 'multi-with-subdomain'].includes(
               config.tenantMode,
             ) && (
-              <button
-                onClick={doNavigateToTenants}
-                className="dropdown-item"
-                type="button"
-              >
-                <i className="fas fa-th-large" />
-                {i18n('auth.tenants')}
-              </button>
-            )}
+                <button
+                  onClick={doNavigateToTenants}
+                  className="dropdown-item"
+                  type="button"
+                >
+                  <i className="fas fa-th-large" />
+                  {i18n('auth.tenants')}
+                </button>
+              )}
 
             {/* <button
               onClick={doNavigateToSettings}
@@ -145,6 +158,34 @@ function Header(props) {
           </div>
         </div>
       </div>
+
+      <style>{`
+  .menu-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    margin-left: 30px;
+  }
+
+  .menu-links a {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+  }
+
+  .menu-links a:hover {
+    background-color: #e9f2ff;
+    color: #1677ff;
+  }
+
+  .menu-links a:active {
+    transform: scale(0.95);
+  }
+`}</style>
     </HeaderWrapper>
   );
 }

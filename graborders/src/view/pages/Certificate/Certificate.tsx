@@ -24,7 +24,7 @@ function Tc() {
     <div>
       <SubHeader title={i18n('pages.actions.certificate')} path="/" />
       <div className="detaill__company" style={{ whiteSpace: "pre-line" }}>
-        <img src="/images/Certificate.png" />
+        <img src="/images/Certificate.jpg" />
       </div>
     </div>
   );

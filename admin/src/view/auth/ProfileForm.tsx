@@ -58,6 +58,7 @@ function ProfileFormPage(props) {
       firstName: record.firstName,
       lastName: record.lastName,
       phoneNumber: record.phoneNumber,
+      refcode: record.refcode,
       avatars: record.avatars || [],
     };
   });
@@ -110,6 +111,17 @@ function ProfileFormPage(props) {
                 autoFocus
               />
             </div>
+
+            <div className="col-lg-7 col-md-8 col-12">
+              <InputFormItem
+                name="refcode"
+                label={i18n('user.fields.refcode')}
+                autoComplete="refcode"
+                autoFocus
+              />
+            </div>
+
+            
 
             <div className="col-lg-7 col-md-8 col-12">
               <InputFormItem

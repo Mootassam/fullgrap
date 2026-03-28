@@ -67,7 +67,7 @@ const VipLevelCard = memo(({
       <div className="vip-level-content">
         <div className="vip-level-image">
           <img
-            src={item?.photo?.[0]?.downloadUrl }
+            src={item?.photo?.[0]?.downloadUrl}
             alt={item?.title}
             className="level-image"
             loading="lazy"
@@ -324,55 +324,46 @@ function Home() {
               <div className="about-us-content">
                 <div className="about-us-text">
                   <p className="about-us-description">
-                Nowspeed is a digital marketing agency 
-providing innovative Digital Advertising, PPC 
-(Pay-per-click), SEO (Search Engine 
-Optimization), Social Media Marketing, 
-Email Marketing, Marketing Automation, and 
-Web Design solutions. From our offices in 
-the United States and Canada, we work 
-closely with our clients to provide solutions 
-specially designed for their unique online
-marketing objectives.
-                   
+                    E-clicks is a U.S.-based digital marketing agency providing innovative solutions in Digital Advertising, PPC (Pay-Per-Click), SEO (Search Engine Optimization), Social Media Marketing, Email Marketing, Marketing Automation, and Web Design. While headquartered in the United States, we have expanded our presence with branches across the globe, enabling us to serve clients worldwide. By combining creativity, technology, and data-driven insights, we partner closely with businesses to design strategies tailored to their unique online marketing objectives and deliver measurable growth.
+
                   </p>
-                  
-                
+
+
 
                 </div>
 
               </div>
 
-           
+
             </div>
           </div>
 
 
           {/* {SLIDER LIKE NEWS} */}
-<div className="slider-news">
-  <div className="slider-news-track">
-    {/* First set of logos */}
-    {logos.map((logo, index) => (
-      <div key={`first-${index}`} className="logo-item">
-        <img
-          src={logo.url}
-          alt={`logo-${index + 1}`}
-          className="logo-img"
-        />
-      </div>
-    ))}
-    {/* Duplicated set for seamless infinite effect */}
-    {logos.map((logo, index) => (
-      <div key={`second-${index}`} className="logo-item">
-        <img
-          src={logo.url}
-          alt={`logo-${index + 1}`}
-          className="logo-img"
-        />
-      </div>
-    ))}
-  </div>
-</div>
+          <div className="slider-news">
+            <div className="slider-news-track">
+              {/* First set of logos */}
+              {logos.map((logo, index) => (
+                <div key={`first-${index}`} className="logo-item">
+                  <img
+                    src={logo.url}
+                    alt={`logo-${index + 1}`}
+                    className="logo-img"
+                  />
+                </div>
+              ))}
+              {/* Duplicated set for seamless infinite effect */}
+              {logos.map((logo, index) => (
+                <div key={`second-${index}`} className="logo-item">
+                  <img
+                    src={logo.url}
+                    alt={`logo-${index + 1}`}
+                    className="logo-img"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
 
 
         </div>
@@ -392,7 +383,7 @@ marketing objectives.
                 <div className="level-preview">
                   <div className="preview-image">
                     <img
-                      src={selectedItem?.photo?.[0]?.downloadUrl }
+                      src={selectedItem?.photo?.[0]?.downloadUrl}
                       alt={selectedItem?.title}
                       loading="lazy"
                     />

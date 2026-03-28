@@ -4,7 +4,7 @@ import Withdraw from "src/view/pages/withdraw/Withdraw";
 
 const es = {
   app: {
-    title: "Nowspeed"
+    title: "E-clicks Digital"
   },
   inputs: {
     username: "Nombre de usuario",
@@ -21,7 +21,7 @@ const es = {
       levels: "Niveles VIP",
       chooseLevel: "Elige tu nivel para maximizar tus ganancias",
       welcome: "Bienvenido",
-      announcement: "Estimados usuarios, la plataforma Nowspeed ha vuelto a la normalidad y a su mejor estado, continúen ganando tanto como puedan desde la plataforma",
+      announcement: "Estimados usuarios, la plataforma E-clicks Digital ha vuelto a la normalidad y a su mejor estado, continúen ganando tanto como puedan desde la plataforma",
 
       // Action Buttons
       services: "Servicios",

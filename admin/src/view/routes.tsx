@@ -10,12 +10,42 @@ const privateRoutes = [
     permissionRequired: permissions.categoryRead,
     exact: true,
   },
+
+
   {
-    path: '/user',
-    loader: () => import('src/view/user/list/UserPage'),
+    path: '/customer',
+    loader: () => import('src/view/customer/list/UserPage'),
+    permissionRequired: permissions.categoryCreate,
+    exact: true,
+  },
+
+  {
+    path: '/customer/new',
+    loader: () => import('src/view/customer/new/UserNewPage'),
+    permissionRequired: permissions.userCreate,
+    exact: true,
+  },
+
+  {
+    path: '/customer/importer',
+    loader: () =>
+      import('src/view/customer/importer/UserImporterPage'),
+    permissionRequired: permissions.userImport,
+    exact: true,
+  },
+  {
+    path: '/customer/:id/edit',
+    loader: () => import('src/view/customer/edit/UserEditPage'),
+    permissionRequired: permissions.userEdit,
+    exact: true,
+  },
+  {
+    path: '/customer/:id',
+    loader: () => import('src/view/customer/view/UserDetails'),
     permissionRequired: permissions.userRead,
     exact: true,
   },
+
   {
     path: '/password-reset/:id',
     loader: () => import('src/view/auth/PasswordReset'),

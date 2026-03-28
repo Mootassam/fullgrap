@@ -25,6 +25,17 @@ const selectPermissionToEdit = createSelector(
     ),
 );
 
+const selectPermissionToAgent = createSelector(
+  [
+    authSelectors.selectCurrentTenant,
+    authSelectors.selectCurrentUser,
+  ],
+  (currentTenant, currentUser) =>
+    new PermissionChecker(currentTenant, currentUser).match(
+      Permissions.values.orderRead,
+    ),
+);
+
 const selectPermissionToDestroy = createSelector(
   [
     authSelectors.selectCurrentTenant,
@@ -64,6 +75,7 @@ const userSelectors = {
   selectPermissionToCreate,
   selectPermissionToImport,
   selectPermissionToDestroy,
+  selectPermissionToAgent
 };
 
 export default userSelectors;

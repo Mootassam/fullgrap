@@ -56,7 +56,7 @@ class Permissions {
       },
       userRead: {
         id: "userRead",
-        allowedRoles: [roles.admin, roles.member, roles.agent],
+        allowedRoles: [roles.admin, roles.agent],
         allowedPlans: [plans.free, plans.growth, plans.enterprise],
         allowedStorage: [storage.donsAttachements, storage.galleryPhotos],
       },

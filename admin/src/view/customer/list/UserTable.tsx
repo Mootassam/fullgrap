@@ -10,7 +10,7 @@ import Spinner from 'src/view/shared/Spinner';
 import TableColumnHeader from 'src/view/shared/table/TableColumnHeader';
 import ConfirmModal from 'src/view/shared/modals/ConfirmModal';
 import Roles from 'src/security/roles';
-import UserStatusView from 'src/view/user/view/UserStatusView';
+import UserStatusView from 'src/view/customer/view/UserStatusView';
 import Avatar from 'src/view/shared/Avatar';
 import TableWrapper from 'src/view/shared/styles/TableWrapper';
 import recordListActions from 'src/modules/record/list/recordListActions';
@@ -226,7 +226,7 @@ function UserTable() {
     </Link>
 
     {/* Edit */}
-
+    {hasPermissionToEdit && (
       <Link
         className="user-table-action-btn primary"
         to={`/user/${row.id}/edit`}
@@ -234,10 +234,10 @@ function UserTable() {
         <i className="fas fa-edit user-table-action-icon" />
         Edit
       </Link>
-   
+    )}
 
     {/* Freeze */}
-    
+    {hasPermissionToDestroy && (
       <button
         className="user-table-action-btn danger"
         onClick={() =>
@@ -247,7 +247,7 @@ function UserTable() {
         <i className="fas fa-lock user-table-action-icon" />
         Freeze
       </button>
-   
+    )}
 
   </div>
 </td>

@@ -696,6 +696,345 @@ export default class UserRepository {
     return { rows, count };
   }
 
+
+
+static async findReferralChain(
+    { filter, limit = 0, offset = 0, orderBy = "" },
+    options: IRepositoryOptions
+  ) {
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    const currentUser = MongooseRepository.getCurrentUser(options);
+
+    let criteriaAnd: any = [];
+
+    // Base tenant filter
+    criteriaAnd.push({
+      tenants: { $elemMatch: { tenant: currentTenant.id } },
+    });
+
+    // Add referral chain filter for current user
+    if (currentUser && currentUser.refcode) {
+      // Get ALL users in the complete referral tree (all levels)
+      const allReferralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
+      
+      if (allReferralUserIds.length > 0) {
+        criteriaAnd.push({
+          _id: { $in: allReferralUserIds }
+        });
+      } else {
+        // No referrals found, return empty result
+        return { rows: [], count: 0 };
+      }
+    }
+
+    // Apply additional filters if provided
+    if (filter) {
+      if (filter.id) {
+        criteriaAnd.push({
+          ["_id"]: MongooseQueryUtils.uuid(filter.id),
+        });
+      }
+
+      if (filter.fullName) {
+        criteriaAnd.push({
+          ["fullName"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.fullName),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.email) {
+        criteriaAnd.push({
+          ["email"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.email),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.role) {
+        criteriaAnd.push({
+          tenants: { $elemMatch: { roles: filter.role } },
+        });
+      }
+
+      if (filter.invitationcode) {
+        criteriaAnd.push({
+          ["invitationcode"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.invitationcode),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.couponcode) {
+        criteriaAnd.push({
+          ["couponcode"]: {
+            $regex: MongooseQueryUtils.escapeRegExp(filter.couponcode),
+            $options: "i",
+          },
+        });
+      }
+
+      if (filter.status) {
+        criteriaAnd.push({
+          tenants: {
+            $elemMatch: { status: filter.status },
+          },
+        });
+      }
+
+      if (filter.createdAtRange) {
+        const [start, end] = filter.createdAtRange;
+
+        if (start !== undefined && start !== null && start !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $gte: start,
+            },
+          });
+        }
+
+        if (end !== undefined && end !== null && end !== "") {
+          criteriaAnd.push({
+            ["createdAt"]: {
+              $lte: end,
+            },
+          });
+        }
+      }
+
+      // Add balance range filter
+      if (filter.balanceMin !== undefined || filter.balanceMax !== undefined) {
+        const balanceFilter: any = {};
+        if (filter.balanceMin !== undefined) {
+          balanceFilter.$gte = filter.balanceMin;
+        }
+        if (filter.balanceMax !== undefined) {
+          balanceFilter.$lte = filter.balanceMax;
+        }
+        criteriaAnd.push({ balance: balanceFilter });
+      }
+
+      // Add VIP level filter
+      if (filter.vipLevel) {
+        criteriaAnd.push({
+          vip: filter.vipLevel,
+        });
+      }
+    }
+
+    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+    const skip = Number(offset || 0) || undefined;
+    const limitEscaped = Number(limit || 0) || undefined;
+
+    const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
+
+    let rows = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database)
+        .find(criteria)
+        .skip(skip)
+        .limit(limitEscaped)
+        .sort(sort)
+        .populate("tenants.tenant")
+        .populate("vip")
+        .populate("product")
+        .populate("prizes"),
+      options
+    );
+
+    const count = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database).countDocuments(criteria),
+      options
+    );
+
+    rows = this._mapUserForTenantForRows(rows, currentTenant);
+    rows = await Promise.all(
+      rows.map((row) => this._fillRelationsAndFileDownloadUrls(row, options))
+    );
+
+    return { rows, count };
+  }
+
+  /**
+   * Get ALL user IDs in the complete referral tree (all levels)
+   * @param {string} refcode - The reference code to start from
+   * @param {IRepositoryOptions} options - Repository options
+   * @returns {Promise<Array>} - Array of user IDs in the referral tree
+   */
+  static async getAllReferralUserIds(refcode, options) {
+    const allUserIds: any[] = [];
+    const processedRefcodes = new Set(); // Track processed refcodes to avoid cycles
+    const queue = [refcode]; // Queue for BFS traversal
+    
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    while (queue.length > 0) {
+      const currentRefcode = queue.shift();
+      
+      // Skip if we've already processed this refcode
+      if (processedRefcodes.has(currentRefcode)) {
+        continue;
+      }
+      processedRefcodes.add(currentRefcode);
+      
+      // Find all users who used this refcode as their invitation code
+      const referrals = await MongooseRepository.wrapWithSessionIfExists(
+        User(options.database)
+          .find({ 
+            invitationcode: currentRefcode,
+            tenants: { $elemMatch: { tenant: currentTenant.id } }
+          })
+          .select('_id refcode invitationcode')
+          .lean(),
+        options
+      );
+      
+      for (const referral of referrals) {
+        // Add this user's ID to the result list
+        allUserIds.push(referral._id);
+        
+        // If this referral has their own refcode, add it to the queue to find their referrals
+        if (referral.refcode) {
+          queue.push(referral.refcode);
+        }
+      }
+    }
+    
+    return allUserIds;
+  }
+
+  /**
+   * Alternative method using aggregation pipeline for better performance with large datasets
+   * This method returns the complete user objects instead of just IDs
+   */
+  static async getAllReferralUsers(refcode, options) {
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    const allUsers = [];
+    const processedRefcodes = new Set();
+    const queue = [refcode];
+    
+    while (queue.length > 0) {
+      const currentRefcode = queue.shift();
+      
+      if (processedRefcodes.has(currentRefcode)) {
+        continue;
+      }
+      processedRefcodes.add(currentRefcode);
+      
+      // Find all users who used this refcode as their invitation code
+      const referrals = await MongooseRepository.wrapWithSessionIfExists(
+        User(options.database)
+          .find({ 
+            invitationcode: currentRefcode,
+            tenants: { $elemMatch: { tenant: currentTenant.id } }
+          })
+          .populate("tenants.tenant")
+          .populate("vip")
+          .populate("product")
+          .populate("prizes")
+          .lean(),
+        options
+      );
+      
+      for (const referral of referrals) {
+        allUsers.push(referral);
+        
+        if (referral.refcode) {
+          queue.push(referral.refcode);
+        }
+      }
+    }
+    
+    return allUsers;
+  }
+
+  /**
+   * Advanced: Using MongoDB aggregation with $graphLookup for better performance
+   * Use this method if you have a very large referral tree
+   */
+  static async getAllReferralUserIdsAggregation(refcode, options) {
+    const currentTenant = MongooseRepository.getCurrentTenant(options);
+    
+    const pipeline = [
+      // Start with the root user
+      {
+        $match: {
+          refcode: refcode,
+          tenants: { $elemMatch: { tenant: currentTenant.id } }
+        }
+      },
+      
+      // Use graphLookup to find all descendants
+      {
+        $graphLookup: {
+          from: "users",
+          startWith: "$refcode",
+          connectFromField: "refcode",
+          connectToField: "invitationcode",
+          as: "allDescendants",
+          maxDepth: 20, // Maximum depth to traverse
+          depthField: "level"
+        }
+      },
+      
+      // Unwind the descendants array
+      {
+        $unwind: {
+          path: "$allDescendants",
+          preserveNullAndEmptyArrays: false
+        }
+      },
+      
+      // Replace root with the descendant
+      {
+        $replaceRoot: {
+          newRoot: "$allDescendants"
+        }
+      },
+      
+      // Filter to ensure tenant isolation
+      {
+        $match: {
+          tenants: { $elemMatch: { tenant: currentTenant.id } }
+        }
+      },
+      
+      // Group by _id to remove duplicates
+      {
+        $group: {
+          _id: "$_id",
+          userId: { $first: "$_id" }
+        }
+      },
+      
+      // Replace root with just the user ID
+      {
+        $replaceRoot: {
+          newRoot: {
+            _id: "$userId"
+          }
+        }
+      }
+    ];
+    
+    const results = await MongooseRepository.wrapWithSessionIfExists(
+      User(options.database).aggregate(pipeline),
+      options
+    );
+    
+    // Extract just the user IDs
+    return results.map(result => result._id);
+  }
+
+
+
+
+
+
+  
+
   static async filterIdInTenant(id, options: IRepositoryOptions) {
     return lodash.get(await this.filterIdsInTenant([id], options), "[0]", null);
   }

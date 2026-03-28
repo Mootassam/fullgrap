@@ -23,7 +23,7 @@ export default [
     icon: 'fa-solid fa-building',
     label: i18n('dashboard.company'),
     className: 'menu-li side-menue',
-    permissionRequired: permissions.categoryRead,
+    permissionRequired: permissions.userRead,
   },
   {
     id: '0',
@@ -32,7 +32,7 @@ export default [
     icon: 'fab fa-whatsapp',
     label: i18n('dashboard.check'),
     className: 'menu-li side-menue',
-    permissionRequired: permissions.categoryRead,
+    permissionRequired: permissions.userRead,
   },
 
   {
@@ -42,7 +42,7 @@ export default [
     icon: 'fas fa-crown',
     label: i18n('dashboard.Level'),
     className: 'menu-li side-menue',
-    permissionRequired: permissions.categoryRead,
+    permissionRequired: permissions.userRead,
   },
   {
     id: '0',

@@ -70,6 +70,7 @@ function Signin() {
                 name="email"
                 placeholder={i18n("user.fields.username")}
                 className="auth__input"
+                
                 externalErrorMessage={externalErrorMessage}
               />
             </div>

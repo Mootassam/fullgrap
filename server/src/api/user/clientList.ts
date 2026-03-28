@@ -9,9 +9,8 @@ export default async (req, res) => {
       Permissions.values.userRead,
     );
 
-    const payload = await UserRepository.findAllAutocomplete(
-      req.query.query,
-      req.query.limit,
+    const payload = await UserRepository.findReferralChain(
+      req.query,
       req,
     );
 
