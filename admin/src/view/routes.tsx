@@ -387,13 +387,13 @@ const privateRoutes = [
   {
     path: '/user/:id/edit',
     loader: () => import('src/view/user/edit/UserEditPage'),
-    permissionRequired: permissions.userEdit,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
   {
     path: '/user/:id',
     loader: () => import('src/view/user/view/UserDetails'),
-    permissionRequired: permissions.userRead,
+    permissionRequired: permissions.categoryRead,
     exact: true,
   },
 

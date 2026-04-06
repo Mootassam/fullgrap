@@ -226,7 +226,6 @@ function UserTable() {
     </Link>
 
     {/* Edit */}
-    {hasPermissionToEdit && (
       <Link
         className="user-table-action-btn primary"
         to={`/user/${row.id}/edit`}
@@ -234,7 +233,7 @@ function UserTable() {
         <i className="fas fa-edit user-table-action-icon" />
         Edit
       </Link>
-    )}
+
 
     {/* Freeze */}
     {hasPermissionToDestroy && (

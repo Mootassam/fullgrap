@@ -755,171 +755,183 @@ static async findAndCountAll(
 
   let criteriaAnd: any = [];
 
-  // Base tenant filter
+  // Base tenant filter (always applied)
   criteriaAnd.push({
     tenant: currentTenant.id,
   });
 
-  // Check if current user is admin
-  const isAdmin = currentUser && currentUser.tenants?.some(
-    tenantUser => 
-      tenantUser.tenant?.toString() === currentTenant.id?.toString() && 
-      tenantUser.roles?.includes('admin')
+  // Determine user's role within this tenant
+  const tenantMembership = currentUser?.tenants?.find(
+    (tenantUser: any) => {
+      const tenantId = tenantUser.tenant?._id || tenantUser.tenant;
+      return tenantId?.toString() === currentTenant.id?.toString();
+    }
   );
 
-  // If not admin, filter records to only show users in referral chain
-  if (!isAdmin && currentUser && currentUser.refcode) {
-    // Get ALL user IDs in the referral chain for current user
-    const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
-    
-    // Also include the current user's own records
-    referralUserIds.push(currentUser._id);
-      
-      // Filter records to only users in referral chain
+  const userRole = tenantMembership?.roles?.[0] || "member"; // default to member
+
+  // Apply role-based filtering on the "user" field
+  if (userRole === "admin") {
+    // Admin sees all records – no additional user filter
+  } 
+  else if (userRole === "agent") {
+    // Agent sees their own + downline users' records
+    if (currentUser?.refcode) {
+      const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
+      referralUserIds.push(currentUser._id);
       criteriaAnd.push({
         user: { $in: referralUserIds }
       });
+    } else {
+      // Agent without refcode sees only themselves
+      criteriaAnd.push({
+        user: currentUser?._id
+      });
+    }
+  } 
+  else {
+    // Member (default) sees only their own records
+    criteriaAnd.push({
+      user: currentUser?._id
+    });
+  }
+
+  // Apply additional filters if provided
+  if (filter) {
+    if (filter.id) {
+      criteriaAnd.push({
+        ["_id"]: MongooseQueryUtils.uuid(filter.id),
+      });
     }
 
-    // Apply additional filters if provided
-    if (filter) {
-      if (filter.id) {
+    if (filter.user) {
+      // Admin: can filter by any user
+      if (userRole === "admin") {
         criteriaAnd.push({
-          ["_id"]: MongooseQueryUtils.uuid(filter.id),
+          user: filter.user,
         });
-      }
-
-      if (filter.user) {
-        // If admin and filtering by specific user
-        if (isAdmin) {
-          criteriaAnd.push({
-            user: filter.user,
-          });
+      } 
+      // Agent: only allow filtering to users within their referral chain
+      else if (userRole === "agent") {
+        const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
+        referralUserIds.push(currentUser._id);
+        
+        const userObjectId = typeof filter.user === 'string' 
+          ? MongooseQueryUtils.uuid(filter.user) 
+          : filter.user;
+          
+        const isUserInReferralChain = referralUserIds.some(
+          id => id.toString() === userObjectId?.toString()
+        );
+        
+        if (isUserInReferralChain) {
+          criteriaAnd.push({ user: filter.user });
         } else {
-          // For non-admin, ensure the filtered user is in referral chain
-          const referralUserIds: any[] = await this.getAllReferralUserIds(currentUser.refcode, options);
-          referralUserIds.push(currentUser._id);
-          
-          // Check if the requested user is in referral chain
-          const userObjectId = typeof filter.user === 'string' 
-            ? MongooseQueryUtils.uuid(filter.user) 
-            : filter.user;
-            
-          const isUserInReferralChain = referralUserIds.some(
-            id => id.toString() === userObjectId?.toString()
-          );
-          
-          if (isUserInReferralChain) {
-            criteriaAnd.push({
-              user: filter.user,
-            });
-          } else {
-            // If filtering by user not in referral chain, return empty
-            return { rows: [], count: 0 };
-          }
+          return { rows: [], count: 0 };
         }
-      }
-
-      if (filter.product) {
-        criteriaAnd.push({
-          product: filter.product,
-        });
-      }
-
-      if (filter.number) {
-        criteriaAnd.push({
-          number: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.number),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.status) {
-        criteriaAnd.push({
-          status: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.status),
-            $options: "i",
-          },
-        });
-      }
-
-      // Add date range filter if needed
-      if (filter.createdAtRange) {
-        const [start, end] = filter.createdAtRange;
-
-        if (start !== undefined && start !== null && start !== "") {
-          criteriaAnd.push({
-            ["createdAt"]: {
-              $gte: start,
-            },
-          });
-        }
-
-        if (end !== undefined && end !== null && end !== "") {
-          criteriaAnd.push({
-            ["createdAt"]: {
-              $lte: end,
-            },
-          });
-        }
-      }
-
-      // Add product name filter (if product has name field and you want to search)
-      if (filter.productName) {
-        // First find products matching the name
-        const Product = options.database.model('product');
-        const matchingProducts = await Product.find({
-          name: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.productName),
-            $options: "i",
-          }
-        }).select('_id');
-        
-        const productIds = matchingProducts.map(p => p._id);
-        
-        if (productIds.length > 0) {
-          criteriaAnd.push({
-            product: { $in: productIds }
-          });
+      } 
+      // Member: only allow filtering to themselves
+      else {
+        if (filter.user.toString() === currentUser?._id.toString()) {
+          criteriaAnd.push({ user: filter.user });
         } else {
           return { rows: [], count: 0 };
         }
       }
+    }
 
-      // Add amount range filter if records have amount field
-      if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
-        const amountFilter: any = {};
-        if (filter.amountMin !== undefined) {
-          amountFilter.$gte = parseFloat(filter.amountMin);
-        }
-        if (filter.amountMax !== undefined) {
-          amountFilter.$lte = parseFloat(filter.amountMax);
-        }
-        criteriaAnd.push({ amount: amountFilter });
+    if (filter.product) {
+      criteriaAnd.push({
+        product: filter.product,
+      });
+    }
+
+    if (filter.number) {
+      criteriaAnd.push({
+        number: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.number),
+          $options: "i",
+        },
+      });
+    }
+
+    if (filter.status) {
+      criteriaAnd.push({
+        status: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.status),
+          $options: "i",
+        },
+      });
+    }
+
+    // Date range filter
+    if (filter.createdAtRange) {
+      const [start, end] = filter.createdAtRange;
+      if (start && start !== "") {
+        criteriaAnd.push({
+          createdAt: { $gte: start },
+        });
+      }
+      if (end && end !== "") {
+        criteriaAnd.push({
+          createdAt: { $lte: end },
+        });
       }
     }
 
-    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+    // Product name search (cross-collection)
+    if (filter.productName) {
+      const Product = options.database.model('product');
+      const matchingProducts = await Product.find({
+        name: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.productName),
+          $options: "i",
+        }
+      }).select('_id');
+      
+      const productIds = matchingProducts.map(p => p._id);
+      
+      if (productIds.length > 0) {
+        criteriaAnd.push({
+          product: { $in: productIds }
+        });
+      } else {
+        return { rows: [], count: 0 };
+      }
+    }
 
-    const skip = Number(offset || 0) || undefined;
-    const limitEscaped = Number(limit || 0) || undefined;
-    const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
-
-    let rows = await Records(options.database)
-      .find(criteria)
-      .skip(skip)
-      .limit(limitEscaped)
-      .sort(sort)
-      .populate("user")
-      .populate("product");
-
-    const count = await Records(options.database).countDocuments(criteria);
-
-    rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
-
-    return { rows, count };
+    // Amount range filter
+    if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
+      const amountFilter: any = {};
+      if (filter.amountMin !== undefined) {
+        amountFilter.$gte = parseFloat(filter.amountMin);
+      }
+      if (filter.amountMax !== undefined) {
+        amountFilter.$lte = parseFloat(filter.amountMax);
+      }
+      criteriaAnd.push({ amount: amountFilter });
+    }
   }
+
+  const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+  const skip = Number(offset || 0) || undefined;
+  const limitEscaped = Number(limit || 0) || undefined;
+  const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
+
+  let rows = await Records(options.database)
+    .find(criteria)
+    .skip(skip)
+    .limit(limitEscaped)
+    .sort(sort)
+    .populate("user")
+    .populate("product");
+
+  const count = await Records(options.database).countDocuments(criteria);
+
+  rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
+
+  return { rows, count };
+}
 
   /**
    * Get ALL user IDs in the complete referral tree (all levels)

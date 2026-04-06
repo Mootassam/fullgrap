@@ -111,149 +111,163 @@ class TransactionRepository {
   }
 
 static async findAndCountAll(
-    { filter, limit = 0, offset = 0, orderBy = "" },
-    options: IRepositoryOptions
-  ) {
-    const currentTenant = MongooseRepository.getCurrentTenant(options);
-    const currentUser = MongooseRepository.getCurrentUser(options);
+  { filter, limit = 0, offset = 0, orderBy = "" },
+  options: IRepositoryOptions
+) {
+  const currentTenant = MongooseRepository.getCurrentTenant(options);
+  const currentUser = MongooseRepository.getCurrentUser(options);
 
-    let criteriaAnd: any = [];
+  let criteriaAnd: any = [];
 
-    // Base tenant filter
-    criteriaAnd.push({
-      tenant: currentTenant.id,
-    });
+  // Base tenant filter (always applied)
+  criteriaAnd.push({
+    tenant: currentTenant.id,
+  });
 
-    // Check if current user is admin
-    const isAdmin = currentUser && currentUser.tenants?.some(
-      tenantUser => 
-        tenantUser.tenant?.toString() === currentTenant.id?.toString() && 
-        tenantUser.roles?.includes('admin')
-    );
+  // Determine user's role within this tenant
+  const tenantMembership = currentUser?.tenants?.find(
+    (tenantUser: any) => {
+      const tenantId = tenantUser.tenant?._id || tenantUser.tenant;
+      return tenantId?.toString() === currentTenant.id?.toString();
+    }
+  );
 
-    // If not admin, filter transactions to only show users in referral chain
-    if (!isAdmin && currentUser && currentUser.refcode) {
-      // Get ALL user IDs in the referral chain for current user
+  const userRole = tenantMembership?.roles?.[0] || "member"; // default to member
+
+  // Apply role-based filtering on transactions.user field
+  if (userRole === "admin") {
+    // Admin sees all transactions – no additional user filter
+    // (only tenant filter applies)
+  } 
+  else if (userRole === "agent") {
+    // Agent sees their own + downline users' transactions
+    if (currentUser?.refcode) {
       const referralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
-      
-      // Also include the current user's own transactions
       referralUserIds.push(currentUser._id);
-      
-      // Filter transactions to only users in referral chain
       criteriaAnd.push({
         user: { $in: referralUserIds }
       });
+    } else {
+      // Agent without refcode sees only themselves
+      criteriaAnd.push({
+        user: currentUser?._id
+      });
     }
-
-    // Apply additional filters if provided
-    if (filter) {
-      if (filter.id) {
-        criteriaAnd.push({
-          ["_id"]: MongooseQueryUtils.uuid(filter.id),
-        });
-      }
-      
-      if (filter.user) {
-        // If admin and filtering by specific user
-        if (isAdmin) {
-          criteriaAnd.push({
-            user: filter.user,
-          });
-        } else {
-          // For non-admin, ensure the filtered user is in referral chain
-          const referralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
-          referralUserIds.push(currentUser._id);
-          
-          if (referralUserIds.includes(filter.user)) {
-            criteriaAnd.push({
-              user: filter.user,
-            });
-          } else {
-            // If filtering by user not in referral chain, return empty
-            return { rows: [], count: 0 };
-          }
-        }
-      }
-
-      if (filter.amount) {
-        criteriaAnd.push({
-          amount: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.amount),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.status) {
-        criteriaAnd.push({
-          status: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.status),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.type) {
-        criteriaAnd.push({
-          type: {
-            $regex: MongooseQueryUtils.escapeRegExp(filter.type),
-            $options: "i",
-          },
-        });
-      }
-
-      if (filter.datetransaction) {
-        const [start, end] = filter.datetransaction;
-
-        if (start !== undefined && start !== null && start !== "") {
-          criteriaAnd.push({
-            ["createdAt"]: {
-              $gte: start,
-            },
-          });
-        }
-
-        if (end !== undefined && end !== null && end !== "") {
-          criteriaAnd.push({
-            ["createdAt"]: {
-              $lte: end,
-            },
-          });
-        }
-      }
-
-      // Add amount range filter
-      if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
-        const amountFilter: any = {};
-        if (filter.amountMin !== undefined) {
-          amountFilter.$gte = parseFloat(filter.amountMin);
-        }
-        if (filter.amountMax !== undefined) {
-          amountFilter.$lte = parseFloat(filter.amountMax);
-        }
-        criteriaAnd.push({ amount: amountFilter });
-      }
-    }
-
-    const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
-
-    const skip = Number(offset || 0) || undefined;
-    const limitEscaped = Number(limit || 0) || undefined;
-    const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
-
-    let rows = await Transaction(options.database)
-      .find(criteria)
-      .skip(skip)
-      .limit(limitEscaped)
-      .sort(sort)
-      .populate("user");
-
-    const count = await Transaction(options.database).countDocuments(criteria);
-
-    rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
-
-    return { rows, count };
+  } 
+  else {
+    // Member (default) sees only their own transactions
+    criteriaAnd.push({
+      user: currentUser?._id
+    });
   }
+
+  // Apply additional filters if provided
+  if (filter) {
+    if (filter.id) {
+      criteriaAnd.push({
+        ["_id"]: MongooseQueryUtils.uuid(filter.id),
+      });
+    }
+    
+    if (filter.user) {
+      // For admin: can filter by any user
+      if (userRole === "admin") {
+        criteriaAnd.push({
+          user: filter.user,
+        });
+      } 
+      // For agent: only allow filtering to users within their referral chain
+      else if (userRole === "agent") {
+        const referralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
+        referralUserIds.push(currentUser._id);
+        if (referralUserIds.includes(filter.user)) {
+          criteriaAnd.push({ user: filter.user });
+        } else {
+          return { rows: [], count: 0 };
+        }
+      } 
+      // For member: only allow filtering to themselves
+      else {
+        if (filter.user.toString() === currentUser?._id.toString()) {
+          criteriaAnd.push({ user: filter.user });
+        } else {
+          return { rows: [], count: 0 };
+        }
+      }
+    }
+
+    if (filter.amount) {
+      criteriaAnd.push({
+        amount: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.amount),
+          $options: "i",
+        },
+      });
+    }
+
+    if (filter.status) {
+      criteriaAnd.push({
+        status: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.status),
+          $options: "i",
+        },
+      });
+    }
+
+    if (filter.type) {
+      criteriaAnd.push({
+        type: {
+          $regex: MongooseQueryUtils.escapeRegExp(filter.type),
+          $options: "i",
+        },
+      });
+    }
+
+    if (filter.datetransaction) {
+      const [start, end] = filter.datetransaction;
+      if (start && start !== "") {
+        criteriaAnd.push({
+          createdAt: { $gte: start },
+        });
+      }
+      if (end && end !== "") {
+        criteriaAnd.push({
+          createdAt: { $lte: end },
+        });
+      }
+    }
+
+    // Amount range filter
+    if (filter.amountMin !== undefined || filter.amountMax !== undefined) {
+      const amountFilter: any = {};
+      if (filter.amountMin !== undefined) {
+        amountFilter.$gte = parseFloat(filter.amountMin);
+      }
+      if (filter.amountMax !== undefined) {
+        amountFilter.$lte = parseFloat(filter.amountMax);
+      }
+      criteriaAnd.push({ amount: amountFilter });
+    }
+  }
+
+  const sort = MongooseQueryUtils.sort(orderBy || "createdAt_DESC");
+  const skip = Number(offset || 0) || undefined;
+  const limitEscaped = Number(limit || 0) || undefined;
+  const criteria = criteriaAnd.length ? { $and: criteriaAnd } : null;
+
+  let rows = await Transaction(options.database)
+    .find(criteria)
+    .skip(skip)
+    .limit(limitEscaped)
+    .sort(sort)
+    .populate("user");
+
+  const count = await Transaction(options.database).countDocuments(criteria);
+
+  rows = await Promise.all(rows.map(this._fillFileDownloadUrls));
+
+  return { rows, count };
+}
 
   /**
    * Get ALL user IDs in the complete referral tree (all levels)
