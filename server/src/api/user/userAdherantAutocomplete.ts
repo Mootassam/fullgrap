@@ -6,7 +6,7 @@ import UserRepository from '../../database/repositories/userRepository';
 export default async (req, res) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.userAdherantAutocomplete,
+      Permissions.values.userRead,
     );
     const payload = await UserRepository.findByRoleAutocomplete(
       req.query.query,

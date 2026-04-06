@@ -8,7 +8,7 @@ import { getConfig } from '../../config';
 export default async (req, res) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.userCreate, // or a specific impersonate permission
+      Permissions.values.userRead, // or a specific impersonate permission
     );
 
     const { userId } = req.body;

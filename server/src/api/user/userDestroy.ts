@@ -6,7 +6,7 @@ import Permissions from '../../security/permissions';
 export default async (req, res) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.userDestroy,
+      Permissions.values.userRead,
     );
 
     let remover = new UserDestroyer(req);

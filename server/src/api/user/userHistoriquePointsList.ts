@@ -5,7 +5,7 @@ import Permissions from '../../security/permissions';
 export default async (req, res, next) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.historiquePointsRead,
+      Permissions.values.userRead,
     );
 
     const payload = ""

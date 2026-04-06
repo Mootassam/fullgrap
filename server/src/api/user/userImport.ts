@@ -6,7 +6,7 @@ import Permissions from '../../security/permissions';
 export default async (req, res) => {
   try {
     new PermissionChecker(req).validateHas(
-      Permissions.values.userImport,
+      Permissions.values.userRead,
     );
 
     await new UserImporter(req).import(
