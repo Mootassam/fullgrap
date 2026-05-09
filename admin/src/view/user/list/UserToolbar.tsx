@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
@@ -9,8 +9,11 @@ import selectors from 'src/modules/user/list/userListSelectors';
 import userSelectors from 'src/modules/user/userSelectors';
 import ButtonIcon from 'src/view/shared/ButtonIcon';
 import Toolbar from 'src/view/shared/styles/Toolbar';
+import UserCreateDirectModal from 'src/view/user/new/UserCreateDirectModal';
 
 function UserToolbar(props) {
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+
   const dispatch = useDispatch();
 
   const hasPermissionToAuditLogs = useSelector(
@@ -111,15 +114,18 @@ function UserToolbar(props) {
 
   return (
     <Toolbar>
-      {/* {hasPermissionToCreate && (
-        <Link to="/user/new">
-          <button className="btn btn-primary" type="button">
-            <ButtonIcon iconClass="fas fa-user-plus" />
-          </button>
-        </Link>
+      {hasPermissionToCreate && (
+        <button
+          className="btn btn-primary"
+          type="button"
+          onClick={() => setCreateModalVisible(true)}
+        >
+          <ButtonIcon iconClass="fas fa-user-plus" />
+          {i18n('user.createDirect.title')}
+        </button>
       )}
 
-      {hasPermissionToImport && (
+      {/* {hasPermissionToImport && (
         <Link to="/user/importer">
           <span
             data-tip={i18n('common.import')}
@@ -146,9 +152,20 @@ function UserToolbar(props) {
         </Link>
       )} */}
 
-      {/* {renderExportButton()} */}
+      {renderExportButton()}
+
+      {createModalVisible && (
+        <UserCreateDirectModal
+          onClose={() => setCreateModalVisible(false)}
+          onSuccess={() => {
+            setCreateModalVisible(false);
+            dispatch(actions.doFetchCurrentFilter());
+          }}
+        />
+      )}
     </Toolbar>
   );
 }
 
 export default UserToolbar;
+

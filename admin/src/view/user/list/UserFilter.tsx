@@ -82,10 +82,10 @@ const previewRenders = {
 };
 
 function UserFilter(props) {
-  const rawFilter = useSelector(selectors.selectRawFilter);
-  const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
 
+  const rawFilter = useSelector(selectors.selectRawFilter);
+  const dispatch = useDispatch();
   const [initialValues] = useState(() => {
     return {
       ...emptyValues,

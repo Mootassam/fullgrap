@@ -1209,8 +1209,9 @@ const ptBR = {
       firstName: 'Nome',
       lastName: 'Sobrenome',
       status: 'Estado',
-      phoneNumber: 'Telefone',
+       phoneNumber: 'Telefone',
       role: 'Perfil',
+      vip: 'VIP',
       createdAt: 'Criado em',
       updatedAt: 'Atualizado em',
       roleUser: 'Perfil/Usuário',
@@ -1243,11 +1244,24 @@ const ptBR = {
     edit: {
       title: 'Editar usuário',
     },
-    new: {
+     new: {
       title: 'Novo(s) Usuário(s)',
       titleModal: 'Novo Usuário',
       emailsHint:
-        'Separe múltiplos endereços de e-mail usando a vírgula.',
+        'Separe vários endereços de email usando o caractere vírgula.',
+    },
+     createDirect: {
+      title: 'Criar Usuário',
+      titleModal: 'Criar Usuário Diretamente',
+      error: 'Erro ao criar usuário',
+    },
+    doDestroyAllFullSuccess: 'Usuário e todos os dados relacionados deletados com sucesso',
+    doDestroyAllFullConfirm: 'Isso vai deletar permanentemente o usuário e todos os dados relacionados (registros, transações, notificações, etc). Esta ação não pode ser desfeita. Continuar?',
+    doCreateDirectSuccess: 'Usuário criado com sucesso',
+    errors: {
+      userAlreadyExists: 'Usuário com este email já existe',
+      userNotFound: 'Usuário não encontrado',
+      revokingOwnPermission: `Você não pode revogar sua própria permissão de administrador`,
     },
     view: {
       title: 'Visualizar Usuário',
@@ -1257,11 +1271,6 @@ const ptBR = {
       title: 'Importar Usuários',
       fileName: 'usuarios_template_importacao',
       hint: 'Arquivos/Imagens devem ser as URLs dos arquivos, separados por espaço. Relacionamentos devem ser os IDs separados por espaço.',
-    },
-    errors: {
-      userAlreadyExists: 'Usuário com este email já existe',
-      userNotFound: 'Usuário não encontrado',
-      revokingOwnPermission: `Você não pode revogar sua própria permissão de proprietário`,
     },
   },
 

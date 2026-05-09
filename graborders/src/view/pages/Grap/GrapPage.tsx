@@ -1,135 +1,126 @@
-import React, { useState, useEffect } from "react";
-import "../styles/styles.css";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
 import authSelectors from "src/modules/auth/authSelectors";
 import actions from "src/modules/product/list/productListActions";
 import selector from "src/modules/product/list/productListSelectors";
-import LoadingModal from "src/shared/LoadingModal";
-import Dates from "src/view/shared/utils/Dates";
-import recordActions from "src/modules/record/form/recordFormActions";
 import recordListAction from "src/modules/record/list/recordListActions";
 import recordSelector from "src/modules/record/list/recordListSelectors";
+import recordActions from "src/modules/record/form/recordFormActions";
+
+import LoadingModal from "src/shared/LoadingModal";
+import Dates from "src/view/shared/utils/Dates";
 import Image from "src/shared/Images";
 import GrapModal from "./GrapModal";
-import productListActions from "src/modules/product/list/productListActions";
 import PrizeModal from "./PrizeModal";
 import { i18n } from "../../../i18n";
 import Message from "src/view/shared/message";
 
 const Grappage = () => {
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   const dispatch = useDispatch();
-  const record = useSelector(authSelectors.selectCurrentUser);
+
+  const currentUser = useSelector(authSelectors.selectCurrentUser);
   const items = useSelector(selector.selectRows);
   const loading = useSelector(selector.selectLoading);
-  const Modal = useSelector(selector.showModal);
-
-  const [number] = useState(Dates.Number());
-  const currentUser = useSelector(authSelectors.selectCurrentUser);
+  const showModal = useSelector(selector.showModal);
   const totalperday = useSelector(recordSelector.selectTotalPerday);
 
-  // Initialize images
+  const [number] = useState(Dates.Number());
+
+  // Initialize random images
   const initializeImages = async () => {
     try {
       const initialImages = await Promise.all(
-        Array(9).fill(0).map(() => Image.randomImages())
+        Array(12).fill(0).map(() => Image.randomImages())
       );
       setImages(initialImages);
       setIsInitialized(true);
     } catch (error) {
       console.error("Error loading images:", error);
-      const defaultImages = Array(9).fill("https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?q=80&w=878&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-      setImages(defaultImages);
+      const fallback = "https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?q=80&w=878&auto=format&fit=crop";
+      setImages(Array(12).fill(fallback));
       setIsInitialized(true);
     }
   };
 
-  // Get visible images
-  const getVisibleImages = () => {
-    if (images.length < 3) {
-      return Array(3).fill("https://plus.unsplash.com/premium_photo-1664392147011-2a720f214e01?q=80&w=878&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
-    }
+  // Get visible images (Left, Center, Right)
+  const getVisibleImages = useCallback(() => {
+    if (images.length === 0) return [];
+    return [
+      images[(currentIndex - 1 + images.length) % images.length],
+      images[currentIndex % images.length],
+      images[(currentIndex + 1) % images.length],
+    ];
+  }, [images, currentIndex]);
 
-    const visible = [];
-    for (let i = 0; i < 3; i++) {
-      const index = (currentIndex + i) % images.length;
-      visible.push({
-        src: images[index],
-        id: `${index}-${Date.now()}-${Math.random()}`,
-        position: i
-      });
-    }
-    return visible;
-  };
+  const visibleImages = getVisibleImages();
 
-  // Handle slide to next
-  const slideToNext = () => {
-    if (isAnimating || !isInitialized) return;
+  // Smooth next slide
+  const slideToNext = useCallback(() => {
+    if (isAnimating || !isInitialized || images.length === 0) return;
 
     setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentIndex(prev => (prev + 1) % images.length);
-      setTimeout(() => setIsAnimating(false), 50);
-    }, 600);
-  };
 
-  // Initialize and start slider
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setTimeout(() => setIsAnimating(false), 700);
+    }, 30);
+  }, [isAnimating, isInitialized, images.length]);
+
+  // Initialize data
   useEffect(() => {
     dispatch(recordListAction.doCount());
     dispatch(recordListAction.doCountDay());
     initializeImages();
   }, [dispatch]);
 
-  // Start automatic sliding
+  // Auto-play slider
   useEffect(() => {
     if (!isInitialized) return;
-    const interval = setInterval(slideToNext, 3000);
+    const interval = setInterval(slideToNext, 3200);
     return () => clearInterval(interval);
-  }, [isInitialized, isAnimating]);
+  }, [isInitialized, slideToNext]);
 
-  // Check user conditions - Show messages on mount when conditions are met
+  // Balance and task warnings
   useEffect(() => {
-    if (currentUser.balance <= 0) {
-      Message.error('Insufficient balance. Please top up your account to continue.');
+    if (currentUser?.balance <= 0) {
+      Message.error("Insufficient balance. Please top up your account to continue.");
     }
-
-    if (currentUser.tasksDone >= currentUser.vip.dailyorder) {
-      Message.success('You have completed all available tasks. Please contact customer support to reset your account.');
+    if (currentUser?.tasksDone >= currentUser?.vip?.dailyorder) {
+      Message.success("You have completed all available tasks. Please contact support to reset your account.");
     }
-  }, [currentUser.balance, currentUser.tasksDone, currentUser.vip.dailyorder]);
+  }, [currentUser]);
 
-  const rollAll = async () => {
-    if (currentUser.balance <= 0) {
-      Message.error('Insufficient balance. Please top up your account to continue.');
-      return; // Don't proceed to rollAll
-    }
+   const rollAll = async () => {
+     if (currentUser?.balance <= 0) {
+       Message.error("Insufficient balance. Please top up your account to continue.");
+       return;
+     }
+     if (currentUser?.tasksDone >= currentUser?.vip?.dailyorder) {
+       Message.success("You have completed all available tasks. Please contact support to reset your account.");
+       return;
+     }
 
-    if (currentUser.tasksDone >= currentUser.vip.dailyorder) {
-      Message.success('You have completed all available tasks. Please contact customer support to reset your account.');
-      return; // Don't proceed to rollAll
-    }
-
-    // If all conditions pass, execute rollAll
-    await dispatch(actions.doFetch());
-  };
+     // The server's grapOrders() endpoint already inspects productItemMappings
+     // and returns the correct product for the current task position.
+     // We just trigger the fetch — no extra filter needed from the client side.
+     await dispatch(actions.doFetch());
+   };
 
   const hideModal = () => {
-    dispatch(productListActions.doCloseModal());
+    dispatch(actions.doCloseModal());
   };
 
-
   const submit = async () => {
-
-    const total = (parseFloat(items?.commission) / 100) * parseFloat(items?.amount);
-    
     const values = {
-      number: number,
+      number,
       product: items?.id,
-      price : items.amount,
+      price: items?.amount,
       commission: items?.commission,
       status: items?.type === "combo" ? "pending" : "completed",
       user: currentUser.id,
@@ -137,26 +128,22 @@ const Grappage = () => {
     await dispatch(recordActions.doCreate(values));
   };
 
-  const visibleImages = getVisibleImages();
-
   return (
     <div className="grappage-container">
-      {/* Header Section */}
+      {/* Header */}
       <div className="grappage-header">
         <div className="user-greeting">
           <div className="greeting-content">
             <img src="/images/user.png" alt="User" className="user-avatar" />
             <span className="greeting-text">
-              {i18n('pages.grab.greeting', currentUser.fullName)}
+              {i18n("pages.grab.greeting", currentUser.fullName)}
             </span>
           </div>
-          <div className="vip-badge">
-            <b>{currentUser.vip.title}</b>
-          </div>
+          <div className="vip-badge">{currentUser.vip?.title}</div>
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-content">
@@ -164,13 +151,13 @@ const Grappage = () => {
               <img src="/images/wallet.png" alt="Wallet" />
             </div>
             <div className="stat-info">
-              <div className="stat-title">{i18n('pages.grab.totalAmount')}</div>
-              <div className="stat-subtitle">{i18n('pages.grab.profitsAdded')}</div>
+              <div className="stat-title">{i18n("pages.grab.totalAmount")}</div>
+              <div className="stat-subtitle">{i18n("pages.grab.profitsAdded")}</div>
             </div>
           </div>
           <div className="stat-amount">
-            <div className="amount-value">{currentUser.balance?.toFixed(2) || 0}</div>
-            <div className="amount-currency">{i18n('pages.grab.currency')}</div>
+            <div className="amount-value">{currentUser.balance?.toFixed(2) || "0.00"}</div>
+            <div className="amount-currency">{i18n("pages.grab.currency")}</div>
           </div>
         </div>
 
@@ -180,55 +167,55 @@ const Grappage = () => {
               <img src="/images/T.png" alt="Commission" />
             </div>
             <div className="stat-info">
-              <div className="stat-title">{i18n('pages.grab.todaysCommission')}</div>
-              <div className="stat-subtitle">{i18n('pages.grab.commissionEarned')}</div>
+              <div className="stat-title">{i18n("pages.grab.todaysCommission")}</div>
+              <div className="stat-subtitle">{i18n("pages.grab.commissionEarned")}</div>
             </div>
           </div>
           <div className="stat-amount">
-            <div className="amount-value">{totalperday}</div>
-            <div className="amount-currency">{i18n('pages.grab.currency')}</div>
+            <div className="amount-value">{totalperday || "0.00"}</div>
+            <div className="amount-currency">{i18n("pages.grab.currency")}</div>
           </div>
         </div>
       </div>
 
-      {/* Optimization Section */}
+      {/* Optimization Header */}
       <div className="optimization-section">
         <div className="optimization-header">
-          <span>{i18n('pages.grab.startOptimization')}</span>
+          <span>{i18n("pages.grab.startOptimization")}</span>
           <span className="progress-count">
-            {i18n('pages.grab.progressCount', currentUser?.tasksDone, currentUser?.vip?.dailyorder)}
+            {i18n("pages.grab.progressCount", currentUser?.tasksDone || 0, currentUser?.vip?.dailyorder || 0)}
           </span>
         </div>
       </div>
 
-      {/* Main Game Area */}
+      {/* Main Game Section */}
       <div className="game-grid-section">
         <div className="game-header">
           <div className="vip-info">
-            <div className="vip-title">{record?.vip?.title}</div>
+            <div className="vip-title">{currentUser?.vip?.title}</div>
             <div className="commission-rate">
-              <span className="rate-label">{i18n('pages.grab.commissionRate')}: </span>
-              <span className="rate-value">{record?.vip?.comisionrate}%</span>
+              <span className="rate-label">{i18n("pages.grab.commissionRate")}: </span>
+              <span className="rate-value">{currentUser?.vip?.comisionrate}%</span>
             </div>
           </div>
           <div className="channel-info">
-            <span>{i18n('pages.grab.exclusiveChannel')}</span>
+            <span>{i18n("pages.grab.exclusiveChannel")}</span>
           </div>
         </div>
 
-        {/* Slider Container */}
+        {/* Enhanced Slider */}
         <div className="slider-container">
           <div className="slider-wrapper">
-            <div className={`slider-viewport ${isAnimating ? 'sliding' : ''}`}>
-              {visibleImages.map((item, index) => (
+            <div className={`slider-track ${isAnimating ? "sliding" : ""}`}>
+              {visibleImages.map((src, index) => (
                 <div
-                  key={item.id}
-                  className={`slider-item ${index === 1 ? 'active' : ''}`}
+                  key={`slide-${currentIndex}-${index}`}
+                  className={`slider-item ${index === 1 ? "active" : ""}`}
                   data-position={index}
                 >
                   <div className="image-container">
                     <img
-                      src={item.src}
+                      src={src}
                       alt={`Product ${index + 1}`}
                       className="slider-image"
                     />
@@ -238,636 +225,318 @@ const Grappage = () => {
             </div>
           </div>
 
-          {/* Start Button - Always clickable */}
+          {/* Start Button */}
           <div className="game-grid">
             <button
               className={`start-button ${loading ? "loading" : ""}`}
               onClick={rollAll}
-              disabled={loading} // Only disable when loading
+              disabled={loading}
             >
               <span className="button-text">
-                {loading ? i18n('pages.grab.processing') : i18n('pages.grab.startButton')}
+                {loading ? i18n("pages.grab.processing") : i18n("pages.grab.startButton")}
               </span>
             </button>
           </div>
         </div>
 
         <div className="channel-footer">
-          <span>{i18n('pages.grab.exclusiveChannel')}</span>
+          <span>{i18n("pages.grab.exclusiveChannel")}</span>
         </div>
       </div>
 
-      {/* Notice Section */}
+      {/* Notice */}
       <div className="notice-section">
         <div className="notice-header">
-          <b>{i18n('pages.grab.notice')}:</b>
+          <b>{i18n("pages.grab.notice")}:</b>
         </div>
         <ul className="notice-list">
-          <li>{i18n('pages.grab.supportHours')}</li>
-          <li>{i18n('pages.grab.contactSupport')}</li>
+          <li>{i18n("pages.grab.supportHours")}</li>
+          <li>{i18n("pages.grab.contactSupport")}</li>
         </ul>
       </div>
 
-      {/* Loading and Modals */}
+      {/* Modals */}
       {loading && <LoadingModal />}
-      {items && items?.type === "prizes" && Modal && !loading && (
-        <PrizeModal
-          items={items}
-          number={number}
-          hideModal={hideModal}
-          submit={submit}
-        />
+      {items && items.type === "prizes" && showModal && !loading && (
+        <PrizeModal items={items} number={number} hideModal={hideModal} submit={submit} />
       )}
-      {Modal && !loading && (
-        <GrapModal
-          items={items}
-          number={number}
-          hideModal={hideModal}
-          submit={submit}
-        />
+      {items && items.type !== "prizes" && showModal && !loading && (
+        <GrapModal items={items} number={number} hideModal={hideModal} submit={submit} />
       )}
 
+      {/* Professional CSS */}
       <style>{`
         .grappage-container {
           margin: 0 auto;
           padding: 20px;
-          background: linear-gradient(135deg, #EDF1F7 0%, #F7FAFC 100%);
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
           min-height: 100vh;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
-        /* Header Styles */
-        .grappage-header {
-          margin-bottom: 20px;
-        }
-
+        .grappage-header { margin-bottom: 24px; }
         .user-greeting {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background: #FFFFFF;
-          padding: 16px 20px;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          border: 1px solid #E2E8F0;
+          background: white;
+          padding: 18px 24px;
+          border-radius: 20px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+          border: 1px solid #e2e8f0;
         }
-
         .greeting-content {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 14px;
         }
-
         .user-avatar {
-          width: 40px;
-          height: 40px;
+          width: 48px;
+          height: 48px;
           border-radius: 50%;
-          border: 2px solid #E2E8F0;
+          border: 3px solid #e2e8f0;
         }
-
         .greeting-text {
-          font-size: 16px;
-          color: #2D3748;
-          font-weight: 500;
-        }
-
-        .vip-badge {
-          background: linear-gradient(135deg, #4299E1 0%, #3182CE 100%);
-          color: white;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 14px;
+          font-size: 17px;
           font-weight: 600;
+          color: #1e2937;
+        }
+        .vip-badge {
+          background: linear-gradient(135deg, #3b82f6, #2563eb);
+          color: white;
+          padding: 8px 20px;
+          border-radius: 30px;
+          font-weight: 700;
+          font-size: 15px;
         }
 
-        /* Stats Grid */
         .stats-grid {
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 12px;
-          margin-bottom: 20px;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+          margin-bottom: 24px;
         }
-
         .stat-card {
-          background: #FFFFFF;
-          padding: 20px;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          border: 1px solid #E2E8F0;
+          background: white;
+          padding: 22px;
+          border-radius: 20px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+          border: 1px solid #e2e8f0;
           display: flex;
           justify-content: space-between;
           align-items: center;
         }
-
-        .stat-content {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
-
+        .stat-content { display: flex; align-items: center; gap: 16px; }
         .stat-icon {
-          width: 48px;
-          height: 48px;
-          background: #F7FAFC;
-          border-radius: 12px;
+          width: 56px;
+          height: 56px;
+          background: #f8fafc;
+          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 1px solid #E2E8F0;
+          border: 1px solid #e2e8f0;
         }
-
-        .stat-icon img {
-          width: 24px;
-          height: 24px;
-        }
-
-        .stat-info {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .stat-title {
-          font-size: 14px;
-          font-weight: 600;
-          color: #1A202C;
-        }
-
-        .stat-subtitle {
-          font-size: 12px;
-          color: #718096;
-        }
-
-        .stat-amount {
-          text-align: right;
-        }
-
+        .stat-icon img { width: 28px; height: 28px; }
+        .stat-title { font-weight: 700; color: #1e2937; font-size: 15px; }
+        .stat-subtitle { font-size: 13px; color: #64748b; }
         .amount-value {
-          font-size: 18px;
-          font-weight: 700;
-          color: #4299E1;
+          font-size: 22px;
+          font-weight: 800;
+          color: #3b82f6;
         }
+        .amount-currency { font-size: 13px; color: #64748b; font-weight: 500; }
 
-        .amount-currency {
-          font-size: 12px;
-          color: #718096;
-          font-weight: 500;
-        }
-
-        /* Optimization Section */
         .optimization-section {
-          background: #FFFFFF;
-          padding: 16px 20px;
-          border-radius: 16px;
-          margin-bottom: 20px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          border: 1px solid #E2E8F0;
+          background: white;
+          padding: 18px 24px;
+          border-radius: 20px;
+          margin-bottom: 28px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.07);
+          border: 1px solid #e2e8f0;
         }
-
         .optimization-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 16px;
-          font-weight: 600;
-          color: #1A202C;
+          font-size: 17px;
+          font-weight: 700;
+          color: #1e2937;
         }
-
         .progress-count {
-          background: #48BB78;
+          background: #22c55e;
           color: white;
-          padding: 6px 12px;
-          border-radius: 12px;
+          padding: 8px 16px;
+          border-radius: 30px;
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 700;
         }
 
-        /* Game Grid Section */
         .game-grid-section {
-          background: #FFFFFF;
-          padding: 20px;
-          border-radius: 20px;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-          border: 1px solid #E2E8F0;
-          margin-bottom: 20px;
+          background: white;
+          padding: 28px 24px;
+          border-radius: 24px;
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+          border: 1px solid #e2e8f0;
+          margin-bottom: 30px;
         }
 
         .game-header {
-          margin-bottom: 20px;
-        }
-
-        .vip-info {
+          margin-bottom: 24px;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 8px;
+          flex-wrap: wrap;
+          gap: 12px;
         }
+        .vip-title { font-size: 20px; font-weight: 800; color: #1e2937; }
+        .rate-value { color: #3b82f6; font-weight: 700; }
 
-        .vip-title {
-          font-size: 18px;
-          font-weight: 700;
-          color: #1A202C;
-        }
-
-        .commission-rate {
-          font-size: 14px;
-        }
-
-        .rate-label {
-          color: #718096;
-        }
-
-        .rate-value {
-          color: #4299E1;
-          font-weight: 600;
-        }
-
-        .channel-info {
-          text-align: center;
-          color: #718096;
-          font-size: 12px;
-        }
-
-        /* Slider Container */
+        /* =============== PROFESSIONAL SLIDER =============== */
         .slider-container {
-          margin: 20px 0;
-          position: relative;
+          margin: 20px 0 30px;
         }
-
         .slider-wrapper {
           position: relative;
-          width: 100%;
-          height: 250px;
+          height: 280px;
           overflow: hidden;
+          border-radius: 24px;
         }
-
-        .slider-viewport {
+        .slider-track {
           display: flex;
-          align-items: center;
-          justify-content: center;
           height: 100%;
-          position: relative;
-          width: 100%;
+          transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
+          will-change: transform;
         }
-
-        .slider-viewport.sliding {
-          animation: slideViewport 0.6s ease-in-out;
-        }
-
-        @keyframes slideViewport {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-33.33%);
-          }
+        .slider-track.sliding {
+          transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .slider-item {
-          position: absolute;
-          transition: all 0.6s ease;
-          border-radius: 16px;
-          overflow: hidden;
+          flex: 0 0 33.333%;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 0 12px;
+          transition: all 0.5s ease;
         }
 
-        .slider-item[data-position="0"] {
-          width: 180px;
-          height: 180px;
-          left: 10%;
-          opacity: 0.7;
-          transform: translateX(0) scale(0.85);
-          z-index: 1;
+        .slider-item[data-position="0"],
+        .slider-item[data-position="2"] {
+          transform: scale(0.78);
+          opacity: 0.72;
+          filter: brightness(0.95);
         }
 
         .slider-item[data-position="1"] {
-          width: 250px;
-          height: 250px;
-          left: 50%;
-          transform: translateX(-50%) scale(1);
+          transform: scale(1.02);
           opacity: 1;
-          z-index: 3;
-          box-shadow: 0 10px 40px rgba(66, 153, 225, 0.4);
-        }
-
-        .slider-item[data-position="2"] {
-          width: 180px;
-          height: 180px;
-          left: 90%;
-          transform: translateX(-100%) scale(0.85);
-          opacity: 0.7;
-          z-index: 1;
+          z-index: 10;
         }
 
         .slider-item.active .image-container {
-          border: 3px solid #4299E1;
+          border: 5px solid #3b82f6;
+          box-shadow: 0 20px 50px rgba(59, 130, 246, 0.35);
         }
 
         .image-container {
           width: 100%;
-          height: 100%;
-          border-radius: 16px;
+          max-width: 260px;
+          height: 260px;
+          border-radius: 22px;
           overflow: hidden;
-          border: 2px solid #E2E8F0;
-          background: #F7FAFC;
+          border: 4px solid #e2e8f0;
+          background: #f8fafc;
+          transition: all 0.4s ease;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .slider-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          transition: transform 0.6s ease;
         }
 
         .slider-item.active .slider-image:hover {
-          transform: scale(1.05);
+          transform: scale(1.08);
         }
 
-        /* Game Grid for Start Button */
         .game-grid {
-          margin: 20px 0;
           display: flex;
           justify-content: center;
+          margin-top: 30px;
         }
 
-        /* Start Button - Always enabled */
         .start-button {
-          width: 280px;
-          height: 60px;
-          background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
+          width: 300px;
+          height: 68px;
+          background: linear-gradient(135deg, #22c55e, #16a34a);
           border: none;
-          border-radius: 16px;
+          border-radius: 20px;
           color: white;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           cursor: pointer;
+          box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35);
           transition: all 0.3s ease;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
           position: relative;
           overflow: hidden;
         }
 
         .start-button:hover:not(.loading) {
-          transform: translateY(-3px);
-          box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
-          background: linear-gradient(135deg, #38A169 0%, #2F855A 100%);
-        }
-
-        .start-button:active:not(.loading) {
-          transform: translateY(0);
-          box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+          transform: translateY(-4px);
+          box-shadow: 0 15px 40px rgba(34, 197, 94, 0.45);
         }
 
         .start-button.loading {
-          background: linear-gradient(135deg, #A0AEC0 0%, #718096 100%);
+          background: linear-gradient(135deg, #94a3b8, #64748b);
           cursor: not-allowed;
         }
 
         .start-button.loading::after {
           content: '';
           position: absolute;
-          width: 20px;
-          height: 20px;
-          border: 2px solid rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          border: 3px solid rgba(255,255,255,0.4);
           border-top-color: white;
+          border-radius: 50%;
           animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        .button-text {
-          font-size: 18px;
-          font-weight: 700;
-          text-align: center;
-        }
-
-        .start-button.loading .button-text {
-          margin-right: 10px;
+          to { transform: rotate(360deg); }
         }
 
         .channel-footer {
           text-align: center;
-          color: #718096;
-          font-size: 12px;
-          padding-top: 20px;
-          border-top: 1px solid #E2E8F0;
-          margin-top: 10px;
-        }
-
-        /* Notice Section */
-        .notice-section {
-          background: #FFF5F5;
-          padding: 16px 20px;
-          border-radius: 12px;
-          border: 1px solid #FED7D7;
-          margin-bottom: 80px;
-        }
-
-        .notice-header {
-          color: #C53030;
+          color: #64748b;
           font-size: 14px;
-          margin-bottom: 8px;
+          margin-top: 20px;
         }
 
-        .notice-list {
-          color: #718096;
-          font-size: 13px;
-          line-height: 1.5;
-          margin: 0;
+        .notice-section {
+          background: #fef2f2;
+          padding: 20px 24px;
+          border-radius: 16px;
+          border: 1px solid #fecaca;
         }
+        .notice-header { color: #ef4444; margin-bottom: 10px; }
+        .notice-list { color: #64748b; line-height: 1.7; }
 
-        .notice-list li {
-          margin-bottom: 4px;
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-          .slider-wrapper {
-            height: 220px;
-          }
-          
-          .slider-item[data-position="0"],
-          .slider-item[data-position="2"] {
-            width: 150px;
-            height: 150px;
-          }
-          
-          .slider-item[data-position="1"] {
-            width: 220px;
-            height: 220px;
-          }
-          
-          .slider-item[data-position="0"] {
-            left: 5%;
-          }
-          
-          .slider-item[data-position="2"] {
-            left: 95%;
-          }
-          
-          .start-button {
-            width: 240px;
-            height: 56px;
-          }
-          
-          .button-text {
-            font-size: 16px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .slider-wrapper {
-            height: 200px;
-          }
-          
-          .slider-item[data-position="0"],
-          .slider-item[data-position="2"] {
-            width: 120px;
-            height: 120px;
-            left: 0%;
-          }
-          
-          .slider-item[data-position="1"] {
-            width: 180px;
-            height: 180px;
-          }
-          
-          .slider-item[data-position="2"] {
-            left: 100%;
-            transform: translateX(-120%) scale(0.85);
-          }
-          
-          .start-button {
-            width: 200px;
-            height: 52px;
-          }
-          
-          .button-text {
-            font-size: 14px;
-          }
+          .stats-grid { grid-template-columns: 1fr; }
+          .slider-wrapper { height: 240px; }
+          .image-container { max-width: 220px; height: 220px; }
+          .start-button { width: 260px; height: 62px; font-size: 17px; }
         }
 
         @media (max-width: 480px) {
-          .grappage-container {
-            padding: 16px;
-          }
-          
-          .user-greeting {
-            padding: 14px 16px;
-            gap: 12px;
-            align-items: flex-start;
-          }
-          
-          .vip-badge {
-            align-self: flex-end;
-          }
-          
-          .stat-card {
-            padding: 16px;
-
-            // flex-direction: column;
-            gap: 15px;
-            text-align: center;
-          }
-          
-          .stat-content {
-            // flex-direction: column;
-            text-align: left;
-          }
-          
-          .stat-amount {
-            text-align: center;
-          }
-          
-          .game-grid-section {
-            padding: 16px;
-          }
-          
-          .slider-wrapper {
-            height: 180px;
-          }
-          
-          .slider-item[data-position="0"],
-          .slider-item[data-position="2"] {
-            width: 100px;
-            height: 100px;
-          }
-          
-          .slider-item[data-position="1"] {
-            width: 160px;
-            height: 160px;
-          }
-          
-          .start-button {
-            width: 180px;
-            height: 48px;
-          }
-          
-          .button-text {
-            font-size: 14px;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .slider-wrapper {
-            height: 160px;
-          }
-          
-          .slider-item[data-position="0"],
-          .slider-item[data-position="2"] {
-            width: 80px;
-            height: 80px;
-          }
-          
-          .slider-item[data-position="1"] {
-            width: 140px;
-            height: 140px;
-          }
-          
-          .start-button {
-            width: 160px;
-            height: 44px;
-          }
-          
-          .button-text {
-            font-size: 13px;
-          }
-        }
-
-        @media (max-width: 320px) {
-          .slider-wrapper {
-            height: 140px;
-          }
-          
-          .slider-item[data-position="0"],
-          .slider-item[data-position="2"] {
-            width: 70px;
-            height: 70px;
-          }
-          
-          .slider-item[data-position="1"] {
-            width: 120px;
-            height: 120px;
-          }
-          
-          .start-button {
-            width: 140px;
-            height: 40px;
-          }
-          
-          .button-text {
-            font-size: 12px;
-          }
+          .slider-wrapper { height: 210px; }
+          .image-container { max-width: 180px; height: 180px; }
+          .start-button { width: 240px; height: 58px; }
         }
       `}</style>
     </div>

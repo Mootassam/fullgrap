@@ -10,6 +10,11 @@ const models = [
   require('./product').default,
   require('./records').default,
   require("./company").default,
+  require('./notification').default,
+  require('./mouvements').default,
+  require('./dons').default,
+  require('./historiquePoints').default,
+  require('./votes').default,
 ];
 
 export default function init(database) {

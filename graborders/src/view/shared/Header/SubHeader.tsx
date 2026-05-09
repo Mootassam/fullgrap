@@ -46,7 +46,7 @@ function SubHeader(props) {
         .subheader-container {
           background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
           border-bottom: 1px solid #374151;
-          padding: 15px 20px;
+          padding: 7px 20px;
           position: sticky;
           top: 0;
           z-index: 100;

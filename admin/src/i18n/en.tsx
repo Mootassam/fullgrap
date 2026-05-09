@@ -1,8 +1,11 @@
+import { add } from "lodash";
+
 
 const en = {
   common: {
     actions:"actions",
     or: 'Or',
+    add: 'Add Combo',
     cancel: 'Cancel',
     reset: 'Reset',
     save: 'Save',
@@ -2658,6 +2661,9 @@ const en = {
     },
 
     fields: {
+      notification: 'Notification',
+      photoProfile: 'Photo Profile',
+      notificationPlaceholder: 'Add a notification',
       currentrecord: 'Tasks Done',
       freezeblance: 'Freeze Balance',
       couponcode: 'couponcode',

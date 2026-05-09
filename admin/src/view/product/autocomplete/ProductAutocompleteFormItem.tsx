@@ -47,38 +47,22 @@ function ProductAutocompleteFormItem(props) {
   };
 
   const mapper = {
-    toAutocomplete(originalValue) {
-      if (!originalValue) {
-        return null;
-      }
-
-      const value = originalValue.id;
-      let label = originalValue.label;
-
-      if (originalValue.id) {
-        label = originalValue.label;
-      }
-
-      return {
-        key: value,
-        value,
-        label,
-      };
-    },
-
-    toValue(originalValue) {
-      if (!originalValue) {
-        return null;
-      }
-
-
-      return {
-        id: originalValue.value,
-        label: originalValue.label,
-      };
-    },
-  };
-
+  toAutocomplete(originalValue) {
+    if (!originalValue) return null;
+    return {
+      key: originalValue.id || originalValue._id?.toString(),
+      value: originalValue.id || originalValue._id?.toString(),
+      label: originalValue.label || originalValue.title,   // fallback to title
+    };
+  },
+  toValue(originalValue) {
+    if (!originalValue) return null;
+    return {
+      id: originalValue.value || originalValue.id,
+      label: originalValue.label,   // keep label as stored
+    };
+  },
+};
   return (
     <>
       <AutocompleteInMemoryFormItem

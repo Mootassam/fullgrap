@@ -1,0 +1,55 @@
+## Summary
+
+I've successfully implemented all requested features with the bugs fixed:
+
+### ✅ Issues Fixed:
+
+1. **Missing model schema registration** - Added missing models to `server/src/database/models/index.ts`
+2. **Form not submitting** - Fixed `UserCreateDirectForm.tsx` to properly submit via `type="submit"`
+3. **Duplicate field in i18n** - Removed duplicate `password` entry
+4. **TypeScript errors** - Fixed yup schema and type assertions
+
+### ✅ Features Implemented:
+
+#### 1. Total Delete (UserListTable - per row action)
+- **Backend**: New `destroyWithAllRelations()` method cascades deletion across:
+  - User records, transactions, notifications, mouvements, dons, historiquePoints, votes
+  - Company, products, categories owned by user
+- **Frontend**: "Total Delete" button (dark trash icon) in table actions
+- **UI**: Confirmation modal with warning about permanent deletion
+- **Permissions**: Requires `userDestroy` permission
+
+#### 2. Direct User Creation (UserFilter - create button)
+- **Backend**: New `userCreateDirect` endpoint using `createFromAuthMobile` logic
+- **Frontend**: "Create User Directly" button in filter header
+- **Form fields**: Email, Password, Full Name, Phone, VIP, Balance, Invitation Code, Status
+- **Auto-activation**: User is immediately active (no permission waiting)
+- **Auto-codes**: Generates unique refcode and invitationcode
+- **Permissions**: Requires `userCreate` permission
+
+### ✅ Files Modified:
+
+**Backend**:
+- `server/src/database/models/index.ts`
+- `server/src/database/repositories/userRepository.ts`
+- `server/src/api/user/userDestroyAll.ts` (new)
+- `server/src/api/user/userCreateDirect.ts` (new)
+- `server/src/api/user/index.ts`
+
+**Frontend**:
+- `admin/src/modules/user/userService.tsx`
+- `admin/src/modules/user/list/userListActions.tsx`
+- `admin/src/modules/user/list/userListReducers.tsx`
+- `admin/src/view/user/list/UserTable.tsx`
+- `admin/src/view/user/list/UserFilter.tsx`
+- `admin/src/view/user/new/UserCreateDirectModal.tsx` (new)
+- `admin/src/view/user/new/UserCreateDirectForm.tsx` (new)
+- `admin/src/i18n/en.tsx`
+- `admin/src/i18n/pt-BR.tsx`
+
+### ✅ Build Status:
+- ✅ Admin frontend compiles successfully
+- ✅ All TypeScript checks pass
+- ✅ No syntax errors
+
+Both features are now ready to use!

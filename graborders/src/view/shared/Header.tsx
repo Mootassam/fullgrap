@@ -19,7 +19,12 @@ function Header() {
         src="/images/home/logo.png"
         alt=""
 
+        style={{height:32}}
+
       />
+
+
+      <p style={{color:"white"}}>Text </p>
 
       <div className="header-icons">
         {/* <Link to="/notifications">

@@ -61,7 +61,17 @@ export default class UserEditor {
     );
   }
   async _updateUserAtDatabase() {
+    // Autocomplete components return { id, label } objects — extract the raw ID
+    // before persisting so Mongoose can cast them to ObjectId correctly.
+    const vipId = this.data.vip?.id || this.data.vip || null;
+    const prizesId = this.data.prizes?.id || this.data.prizes || null;
 
+    const productItemMappings = (this.data.productItemMappings || [])
+      .filter((m) => m && (m.productId?.id || m.productId))
+      .map((m) => ({
+        productId: m.productId?.id || m.productId,
+        itemNumber: Number(m.itemNumber) || 0,
+      }));
 
     await UserRepository.updateUser(
       this.options.currentTenant.id,
@@ -73,21 +83,24 @@ export default class UserEditor {
       this.data.country,
       this.data.passportPhoto,
       this.data.balance,
-          this.data.minbalance,
-      this.data.vip.id,
+      this.data.minbalance,
+      vipId,
       this.options,
       this.data.status,
       this.data.product,
       this.data.itemNumber,
-      this.data?.prizes?.id,
+      prizesId,
       this.data?.prizesNumber,
       this.data.withdrawPassword,
       this.data.score,
       this.data.grab,
       this.data.withdraw,
       this.data.freezeblance,
+      this.data.preferredcoin,
+      productItemMappings,
       this.data.tasksDone,
-      this.data.preferredcoin
+      this.data.photoProfile,
+      this.data.notification,
     );
   }
   /**

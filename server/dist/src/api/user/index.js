@@ -1,0 +1,22 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = (app) => {
+    app.post(`/tenant/:tenantId/user`, require('./userCreate').default);
+    app.post(`/tenant/:tenantId/user/create-direct`, require('./userCreateDirect').default);
+    app.put(`/tenant/:tenantId/user`, require('./userEdit').default);
+    app.post(`/tenant/:tenantId/user/import`, require('./userImport').default);
+    app.delete(`/tenant/:tenantId/user`, require('./userDestroy').default);
+    app.delete(`/tenant/:tenantId/user/:id/destroy-all`, require('./userDestroyAll').default);
+    app.post(`/tenant/:tenantId/oneclickLogin`, require("./OneClickLogin").default);
+    app.get(`/tenant/:tenantId/user`, require('./userList').default);
+    app.get(`/tenant/:tenantId/clients`, require('./clientList').default);
+    app.get(`/tenant/:tenantId/user/autocomplete`, require('./userAutocomplete').default);
+    app.get(`/tenant/:tenantId/user/:id`, require('./userFind').default);
+    app.get(`/tenant/:tenantId/user/:id/destroy-all`, require('./userDestroyAll').default);
+    app.get(`/tenant/:tenantId/userAdherantAutocomplete`, require('./userAdherantAutocomplete').default);
+    app.get(`/tenant/:tenantId/userAdhesionList`, require('./userAdhesionList').default);
+    app.get(`/tenant/:tenantId/userDonsList`, require('./userDonsList').default);
+    app.get(`/tenant/:tenantId/userVotesList`, require('./userVotesList').default);
+    app.get(`/tenant/:tenantId/userHistoriquesPointsList`, require('./userHistoriquePointsList').default);
+};
+//# sourceMappingURL=index.js.map

@@ -177,5 +177,48 @@ export default (state = initialData, { type, payload }) => {
     };
   }
 
+  if (type === actions.DESTROY_ALL_FULL_STARTED) {
+    return {
+      ...state,
+      loading: true,
+    };
+  }
+
+  if (type === actions.DESTROY_ALL_FULL_ERROR) {
+    return {
+      ...state,
+      loading: false,
+    };
+  }
+
+  if (type === actions.DESTROY_ALL_FULL_SUCCESS) {
+    return {
+      ...state,
+      loading: false,
+      selectedKeys: [],
+    };
+  }
+
+  if (type === actions.CREATE_DIRECT_STARTED) {
+    return {
+      ...state,
+      loading: true,
+    };
+  }
+
+  if (type === actions.CREATE_DIRECT_ERROR) {
+    return {
+      ...state,
+      loading: false,
+    };
+  }
+
+  if (type === actions.CREATE_DIRECT_SUCCESS) {
+    return {
+      ...state,
+      loading: false,
+    };
+  }
+
   return state;
 };

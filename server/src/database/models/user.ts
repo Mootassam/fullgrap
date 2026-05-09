@@ -114,12 +114,17 @@ export default (database) => {
         ref: "product",
       },
 
-      prizesNumber: {
-        type: Number,
-      },
+       prizesNumber: {
+         type: Number,
+       },
+
+       productItemMappings: [{
+         productId: { type: Schema.Types.ObjectId, ref: "product" },
+         itemNumber: { type: Number }
+       }],
 
 
-      giftPosition: {
+       giftPosition: {
         type: Number,
       },
       email: {
@@ -127,37 +132,39 @@ export default (database) => {
         maxlength: 255,
         index: { unique: true },
       },
-      password: {
-        type: String,
-        maxlength: 255,
-        select: false,
-      },
-      emailVerified: { type: Boolean, default: false },
-      emailVerificationToken: {
-        type: String,
-        maxlength: 255,
-        select: false,
-      },
-      emailVerificationTokenExpiresAt: { type: Date },
-      passwordResetToken: {
-        type: String,
-        maxlength: 255,
-        select: false,
-      },
-      passwordResetTokenExpiresAt: { type: Date },
-      avatars: [FileSchema],
-      tenants: [TenantUserSchema],
-      jwtTokenInvalidBefore: { type: Date },
-      createdBy: {
-        type: Schema.Types.ObjectId,
-        ref: "user",
-      },
-      updatedBy: {
-        type: Schema.Types.ObjectId,
-        ref: "user",
-      },
-      importHash: { type: String, maxlength: 255 },
-    },
+       password: {
+         type: String,
+         maxlength: 255,
+         select: false,
+       },
+       emailVerified: { type: Boolean, default: false },
+       emailVerificationToken: {
+         type: String,
+         maxlength: 255,
+         select: false,
+       },
+       emailVerificationTokenExpiresAt: { type: Date },
+       passwordResetToken: {
+         type: String,
+         maxlength: 255,
+         select: false,
+       },
+       passwordResetTokenExpiresAt: { type: Date },
+       avatars: [FileSchema],
+       photoProfile: [FileSchema],
+       notification: { type: String },
+       tenants: [TenantUserSchema],
+       jwtTokenInvalidBefore: { type: Date },
+       createdBy: {
+         type: Schema.Types.ObjectId,
+         ref: "user",
+       },
+       updatedBy: {
+         type: Schema.Types.ObjectId,
+         ref: "user",
+       },
+       importHash: { type: String, maxlength: 255 },
+     },
     {
       timestamps: true,
     }

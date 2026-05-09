@@ -28,6 +28,7 @@ export default class UserService {
     const appUrl = `http://159.198.77.158:3018/impersonate?token=${token}`;
     window.open(appUrl, '_blank');
   }
+
   static async destroy(ids) {
     const params = {
       ids,
@@ -55,6 +56,27 @@ export default class UserService {
     const response = await authAxios.post(
       `/tenant/${tenantId}/user`,
       body,
+    );
+
+    return response.data;
+  }
+
+  static async createDirect(data) {
+    const tenantId = AuthCurrentTenant.get();
+
+    const response = await authAxios.post(
+      `/tenant/${tenantId}/user/create-direct`,
+      data,
+    );
+
+    return response.data;
+  }
+
+  static async destroyAll(id) {
+    const tenantId = AuthCurrentTenant.get();
+
+    const response = await authAxios.delete(
+      `/tenant/${tenantId}/user/${id}/destroy-all`,
     );
 
     return response.data;
@@ -142,8 +164,7 @@ export default class UserService {
     return response.data;
   }
 
-
-    static async fetchUsers(filter, orderBy, limit, offset) {
+  static async fetchUsers(filter, orderBy, limit, offset) {
     const params = {
       filter,
       orderBy,
@@ -163,9 +184,6 @@ export default class UserService {
     return response.data;
   }
 
-  
-
-
   static async fetchUserAutocomplete(query, limit) {
     const params = {
       query,
@@ -183,3 +201,4 @@ export default class UserService {
     return response.data;
   }
 }
+

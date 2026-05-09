@@ -22,6 +22,7 @@ class RecordRepository {
   const currentUser = MongooseRepository.getCurrentUser(options);
 
   if (!currentUser) {
+    console.error("User not authenticated");
     throw new Error("User not authenticated");
   }
 
@@ -32,17 +33,30 @@ class RecordRepository {
   const isPositionMatch = tasksDone === (mergeDataPosition - 1);
   const isPrizesMatch = tasksDone === (prizesPosition - 1);
 
-  // Execute required checks (NOT in parallel with financial mutations)
-  await this.checkOrder(options);
-
-  // Financial logic first
-  await this.calculeGrap(data, options);
-
   const hasProduct =
     Array.isArray(currentUser.product) &&
     currentUser.product.length > 0;
 
-  const hasPrizes = currentUser?.prizes?.id;
+  const hasPrizes = Boolean(currentUser?.prizes?.id || currentUser?.prizes);
+
+  await this.checkOrder(options);
+
+  // calculeGrap handles financial mutations for COMBO and PRIZE modes.
+  // For the NORMAL flow, grapOrders() already created the pending record and
+  // deducted the balance — calling calculeGrap here would double-count.
+  // We detect the mode by checking for a pre-existing pending record.
+  const preExistingPending = await Records(database).findOne({
+    tenant: currentTenant.id,
+    user: currentUser.id,
+    status: "pending",
+  }).lean();
+
+  const isNormalFlow = Boolean(preExistingPending);
+
+  if (!isNormalFlow) {
+    // COMBO or PRIZE mode — no pending record exists yet; let calculeGrap run.
+    await this.calculeGrap(data, options);
+  }
 
   /* =====================================================
      1️⃣ COMBO MODE
@@ -78,6 +92,7 @@ class RecordRepository {
     }
 
     const records = await Records(database).create(recordDataArray);
+    console.log("🚀 ~ RecordRepository ~ create ~ records:", records)
 
     // Increment tasksDone safely
     await User(database).updateOne(
@@ -92,7 +107,7 @@ class RecordRepository {
     );
 
     /* ================================
-       Referral 20% of combo earnings
+       Referral 20% of earnings
     ================================= */
     if (currentUser.invitationcode && totalUserEarning > 0) {
       const parentUser = await User(database)
@@ -169,11 +184,10 @@ class RecordRepository {
      3️⃣ NORMAL MODE
   ====================================================== */
 
-  const pendingRecord = await Records(database).findOne({
-    tenant: currentTenant.id,
-    user: currentUser.id,
-    status: "pending",
-  });
+  // Re-fetch the pending record as a full document so we can call .save() on it.
+  const pendingRecord = preExistingPending
+    ? await Records(database).findById(preExistingPending._id)
+    : null;
 
   if (!pendingRecord) {
     throw new Error400(options.language, "validation.noPendingRecord");

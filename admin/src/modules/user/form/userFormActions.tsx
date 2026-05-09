@@ -95,7 +95,6 @@ const userFormActions = {
 
       Message.success(i18n('user.doUpdateSuccess'));
 
-      getHistory().push('/user');
     } catch (error) {
       Errors.handle(error);
 

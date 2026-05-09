@@ -28,7 +28,7 @@ const productListActions = {
           dispatch({
             type: productListActions.FETCH_STARTED,
             payload: { filter, rawFilter, keepPagination },
-            modal: true,
+            modal: false,
           });
           const response = await ProductService.list();
 

@@ -33,6 +33,14 @@ const userListActions = {
   DESTROY_SUCCESS: `${prefix}_DESTROY_SUCCESS`,
   DESTROY_ERROR: `${prefix}_DESTROY_ERROR`,
 
+  DESTROY_ALL_FULL_STARTED: `${prefix}_DESTROY_ALL_FULL_STARTED`,
+  DESTROY_ALL_FULL_SUCCESS: `${prefix}_DESTROY_ALL_FULL_SUCCESS`,
+  DESTROY_ALL_FULL_ERROR: `${prefix}_DESTROY_ALL_FULL_ERROR`,
+
+  CREATE_DIRECT_STARTED: `${prefix}_CREATE_DIRECT_STARTED`,
+  CREATE_DIRECT_SUCCESS: `${prefix}_CREATE_DIRECT_SUCCESS`,
+  CREATE_DIRECT_ERROR: `${prefix}_CREATE_DIRECT_ERROR`,
+
   doClearAllSelected() {
     return {
       type: userListActions.CLEAR_ALL_SELECTED,
@@ -251,6 +259,59 @@ const userListActions = {
       });
 
       dispatch(userListActions.doFetchCurrentFilter());
+    }
+  },
+
+  doDestroyAllFull: (id) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: userListActions.DESTROY_ALL_FULL_STARTED,
+      });
+
+      await UserService.destroyAll(id);
+
+      dispatch({
+        type: userListActions.DESTROY_ALL_FULL_SUCCESS,
+      });
+
+      Message.success(i18n('user.doDestroyAllFullSuccess'));
+
+      dispatch(userListActions.doFetchCurrentFilter());
+    } catch (error) {
+      Errors.handle(error);
+
+      dispatch({
+        type: userListActions.DESTROY_ALL_FULL_ERROR,
+      });
+
+      dispatch(userListActions.doFetchCurrentFilter());
+    }
+  },
+
+  doCreateDirect: (data) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: userListActions.CREATE_DIRECT_STARTED,
+      });
+
+      const response = await UserService.createDirect(data);
+
+      dispatch({
+        type: userListActions.CREATE_DIRECT_SUCCESS,
+      });
+
+      Message.success(i18n('user.doCreateDirectSuccess'));
+
+      dispatch(userListActions.doFetchCurrentFilter());
+      return response;
+    } catch (error) {
+      Errors.handle(error);
+
+      dispatch({
+        type: userListActions.CREATE_DIRECT_ERROR,
+      });
+
+      throw error;
     }
   },
 };

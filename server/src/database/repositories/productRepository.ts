@@ -444,146 +444,190 @@ class ProductRepository {
     return output;
   }
 
-static async grapOrders(options: IRepositoryOptions) {
-  const currentUser = MongooseRepository.getCurrentUser(options);
-  const currentVip = currentUser.vip.id;
-  const mergeDataPosition = currentUser.itemNumber;
-  const giftPosition = currentUser.prizesNumber;
+   static async grapOrders(options: IRepositoryOptions) {
+   const currentUser = MongooseRepository.getCurrentUser(options);
+   const currentVip = currentUser.vip.id;
+   
+   // Handle productItemMappings if available
+   let mergeDataPosition = currentUser.itemNumber; // fallback to legacy
+   let giftPosition = currentUser.prizesNumber; // fallback to legacy
+   
+   // Check if we have productItemMappings and use them
+   if (currentUser.productItemMappings && Array.isArray(currentUser.productItemMappings) && currentUser.productItemMappings.length > 0) {
+     // For now, we'll still use the legacy system for determining which product to show
+     // but we'll modify the logic to check mappings
+     const taskNumber = currentUser.tasksDone + 1; // Next task number
+     const mapping = currentUser.productItemMappings.find(m => m.itemNumber === taskNumber);
+     if (mapping) {
+       // If we have a mapping for this task, we'll use the mapped product
+       // For backward compatibility, we'll still set mergeDataPosition to taskNumber
+       mergeDataPosition = taskNumber;
+     }
+   }
+   
+   if (!currentUser?.vip) {
+         console.log("1 ") ;
 
-  if (!currentUser?.vip) {
-    throw new Error400(options.language, "validation.requiredSubscription");
-  }
+     throw new Error400(options.language, "validation.requiredSubscription");
+   }
 
-  // Check for pending orders
-  const pendingRecords = await Records(options.database).find({
-    user: currentUser.id,
-    status: 'pending'
-  });
+   // Check for pending orders
+   const pendingRecords = await Records(options.database).find({
+     user: currentUser.id,
+     status: 'pending'
+   });
 
-  if (pendingRecords.length > 0) {
-    throw new Error400(options.language, "validation.submitPendingProducts");
-  }
+   if (pendingRecords.length > 0) {
+         console.log("2") ;
 
-  // Check daily order limit
-  const dailyOrder = currentUser.vip.dailyorder;
-  if (currentUser.tasksDone >= dailyOrder) {
-    throw new Error400(options.language, "validation.moretasks");
-  }
+     throw new Error400(options.language, "validation.submitPendingProducts");
+   }
 
-  // Check balance
-  if (currentUser.balance <= 0 || currentUser.balance < currentUser.minbalance) {
-    throw new Error400(options.language, "validation.deposit");
-  }
+   // Check daily order limit
+   const dailyOrder = currentUser.vip.dailyorder;
+   if (currentUser.tasksDone >= dailyOrder) {
+         console.log("3") ;
 
-  // Special VIP products
-  if (currentUser?.product?.length > 0 && currentUser.tasksDone === (mergeDataPosition - 1)) {
-    let product = currentUser.product[0];
-    product.photo = await FileRepository.fillDownloadUrl(product?.photo);
-    return product;
-  } else if (currentUser?.prizes && currentUser.tasksDone === (giftPosition - 1)) {
-    let product = currentUser.prizes;
-    product.photo = await FileRepository.fillDownloadUrl(product?.photo);
-    return product;
-  }
+     throw new Error400(options.language, "validation.moretasks");
+   }
 
-  // -------------------------
-  // Normal product selection
-  // -------------------------
+   // Check balance
+   if (currentUser.balance <= 0 || currentUser.balance < currentUser.minbalance) {
+         console.log("4") ;
 
-  let finalPrice: number;
+     throw new Error400(options.language, "validation.deposit");
+   }
 
-  if (currentUser.vip.isFixedAmount) {
-    // Use min/max as fixed price
-    const vipMinPrice = parseFloat(currentUser.vip.min) || 20;
-    const vipMaxPrice = parseFloat(currentUser.vip.max) || 50;
-    const minPrice = Math.min(vipMinPrice, vipMaxPrice);
-    const maxPrice = Math.max(vipMinPrice, vipMaxPrice);
-    finalPrice = Math.random() * (maxPrice - minPrice) + minPrice;
-  } else {
-    // Use min/max as percentage of balance (existing logic)
-    const vipMinPercentage = parseFloat(currentUser.vip.min) || 20;
-    const vipMaxPercentage = parseFloat(currentUser.vip.max) || 50;
-    const minPercent = Math.min(vipMinPercentage, vipMaxPercentage);
-    const maxPercent = Math.max(vipMaxPercentage, vipMaxPercentage);
-    const randomPercentage = Math.random() * (maxPercent - minPercent) + minPercent;
-    finalPrice = (currentUser.balance * randomPercentage) / 100;
-  }
+   // Special VIP products - check if we have a mapping for current task
+   const taskNumber = currentUser.tasksDone + 1;
+   const mapping = currentUser.productItemMappings?.find(m => m.itemNumber === taskNumber);
+   
+   if (mapping && mapping.productId) {
+     // Check if we're at the right task for this mapped product
+     if (currentUser.tasksDone === (taskNumber - 1)) {
+         console.log("5 - Using mapped product");
 
-  finalPrice = Math.round(finalPrice * 100) / 100;
+       // Find the mapped product
+       const mappedProduct = await Product(options.database).findById(mapping.productId);
+       if (mappedProduct) {
+         // Populate VIP info if needed
+         const populatedProduct = await mappedProduct.populate("vip");
+         populatedProduct.photo = await FileRepository.fillDownloadUrl(populatedProduct?.photo);
+         return populatedProduct;
+       }
+     }
+   } else if (currentUser?.product?.length > 0 && currentUser.tasksDone === (mergeDataPosition - 1)) {
+         console.log("5") ;
 
-  if (finalPrice > currentUser.balance) {
-    throw new Error400(options.language, "validation.insufficientBalance");
-  }
+     let product = currentUser.product[0];
+     product.photo = await FileRepository.fillDownloadUrl(product?.photo);
+     return product;
+   } else if (currentUser?.prizes && currentUser.tasksDone === (giftPosition - 1)) {
+         console.log("6") ;
 
-  // Get random normal product
-  let products = await Product(options.database)
-    .find({ vip: currentVip, type: 'normal' })
-    .populate("vip");
+     let product = currentUser.prizes;
+     product.photo = await FileRepository.fillDownloadUrl(product?.photo);
+     return product;
+   }
 
-  if (products.length === 0) {
-    throw new Error400(options.language, "validation.noProductsAvailable");
-  }
+   // -------------------------
+   // Normal product selection
+   // -------------------------
 
-  const randomIndex = Math.floor(Math.random() * products.length);
-  const selectedProduct = products[randomIndex];
+   let finalPrice: number;
 
-  // Generate unique record number
-  const today = new Date();
-  const datePart = today.getFullYear().toString() +
-    (today.getMonth() + 1).toString().padStart(2, '0') +
-    today.getDate().toString().padStart(2, '0');
-  const randomPart = Math.random().toString(36).substr(2, 8);
-  const recordNumber = datePart + randomPart;
+   if (currentUser.vip.isFixedAmount) {
+     // Use min/max as fixed price
+     const vipMinPrice = parseFloat(currentUser.vip.min) || 20;
+     const vipMaxPrice = parseFloat(currentUser.vip.max) || 50;
+     const minPrice = Math.min(vipMinPrice, vipMaxPrice);
+     const maxPrice = Math.max(vipMinPrice, vipMaxPrice);
+     finalPrice = Math.random() * (maxPrice - minPrice) + minPrice;
+   } else {
+     // Use min/max as percentage of balance (existing logic)
+     const vipMinPercentage = parseFloat(currentUser.vip.min) || 20;
+     const vipMaxPercentage = parseFloat(currentUser.vip.max) || 50;
+     const minPercent = Math.min(vipMinPercentage, vipMaxPercentage);
+     const maxPercent = Math.max(vipMaxPercentage, vipMaxPercentage);
+     const randomPercentage = Math.random() * (maxPercent - minPercent) + minPercent;
+     finalPrice = (currentUser.balance * randomPercentage) / 100;
+   }
 
-  const currentTenant = MongooseRepository.getCurrentTenant(options);
+   finalPrice = Math.round(finalPrice * 100) / 100;
 
-  const recordData = {
-    number: recordNumber,
-    product: selectedProduct.id,
-    price: finalPrice.toString(),
-    commission: selectedProduct?.commission,
-    status: 'pending',
-    user: currentUser.id,
-    tenant: currentTenant.id,
-    createdBy: currentUser.id,
-    updatedBy: currentUser.id,
-    date: Dates.getDate(),
-    datecreation: Dates.getTimeZoneDate(),
-  };
+   if (finalPrice > currentUser.balance) {
+     throw new Error400(options.language, "validation.insufficientBalance");
+   }
 
-  // Save record
-  let createdRecord;
-  try {
-    const [record] = await Records(options.database).create([recordData], options);
-    createdRecord = record;
-  } catch (error) {
-    const RecordModel = options.database.model('records');
-    createdRecord = await RecordModel.create(recordData);
-  }
+   // Get random normal product
+   let products = await Product(options.database)
+     .find({ vip: currentVip, type: 'normal' })
+     .populate("vip");
 
-  // Update user balance and freeze balance
-  try {
-    const UserModel = options.database.model('user');
-    await UserModel.findByIdAndUpdate(
-      currentUser.id,
-      {
-        $inc: {
-          balance: -finalPrice,
-          freezeblance: finalPrice,
-        },
-      },
-      { new: true }
-    );
-  } catch (balanceUpdateError) {
-    throw new Error400(options.language, "validation.balanceUpdateFailed");
-  }
+   if (products.length === 0) {
+     throw new Error400(options.language, "validation.noProductsAvailable");
+   }
 
-  // Update product for return
-  selectedProduct.amount = finalPrice.toString();
-  selectedProduct.photo = await FileRepository.fillDownloadUrl(selectedProduct?.photo);
+   const randomIndex = Math.floor(Math.random() * products.length);
+   const selectedProduct = products[randomIndex];
 
-  return selectedProduct;
-}
+   // Generate unique record number
+   const today = new Date();
+   const datePart = today.getFullYear().toString() +
+     (today.getMonth() + 1).toString().padStart(2, '0') +
+     today.getDate().toString().padStart(2, '0');
+   const randomPart = Math.random().toString(36).substr(2, 8);
+   const recordNumber = datePart + randomPart;
+
+   const currentTenant = MongooseRepository.getCurrentTenant(options);
+
+   const recordData = {
+     number: recordNumber,
+     product: selectedProduct.id,
+     price: finalPrice.toString(),
+     commission: selectedProduct?.commission,
+     status: 'pending',
+     user: currentUser.id,
+     tenant: currentTenant.id,
+     createdBy: currentUser.id,
+     updatedBy: currentUser.id,
+     date: Dates.getDate(),
+     datecreation: Dates.getTimeZoneDate(),
+   };
+
+   // Save record
+   let createdRecord;
+   try {
+     const [record] = await Records(options.database).create([recordData], options);
+     createdRecord = record;
+   } catch (error) {
+     const RecordModel = options.database.model('records');
+     createdRecord = await RecordModel.create(recordData);
+   }
+
+   // Update user balance and freeze balance
+   try {
+     const UserModel = options.database.model('user');
+     await UserModel.findByIdAndUpdate(
+       currentUser.id,
+       {
+         $inc: {
+           balance: -finalPrice,
+           freezeblance: finalPrice,
+         },
+       },
+       { new: true }
+     );
+   } catch (balanceUpdateError) {
+     throw new Error400(options.language, "validation.balanceUpdateFailed");
+   }
+
+   // Update product for return
+   selectedProduct.amount = finalPrice.toString();
+   selectedProduct.photo = await FileRepository.fillDownloadUrl(selectedProduct?.photo);
+
+   return selectedProduct;
+ }
 
 
 

@@ -61,7 +61,7 @@ function TabBottomNavigator() {
     height: 60px;
     border-radius: 50%;
     position: relative;
-    top: -10px;
+    top: -18px;
     display: flex;
     flex-direction: column;
     align-items: center;

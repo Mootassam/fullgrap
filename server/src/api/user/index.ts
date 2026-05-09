@@ -3,6 +3,10 @@ export default (app) => {
     `/tenant/:tenantId/user`,
     require('./userCreate').default,
   );
+  app.post(
+    `/tenant/:tenantId/user/create-direct`,
+    require('./userCreateDirect').default,
+  );
   app.put(
     `/tenant/:tenantId/user`,
     require('./userEdit').default,
@@ -15,6 +19,10 @@ export default (app) => {
     `/tenant/:tenantId/user`,
     require('./userDestroy').default,
   );
+  app.delete(
+    `/tenant/:tenantId/user/:id/destroy-all`,
+    require('./userDestroyAll').default,
+  );
 
   app.post(
     `/tenant/:tenantId/oneclickLogin`,
@@ -25,8 +33,7 @@ export default (app) => {
     `/tenant/:tenantId/user`,
     require('./userList').default,
   );
-
-    app.get(
+  app.get(
     `/tenant/:tenantId/clients`,
     require('./clientList').default,
   );
@@ -37,6 +44,10 @@ export default (app) => {
   app.get(
     `/tenant/:tenantId/user/:id`,
     require('./userFind').default,
+  );
+  app.get(
+    `/tenant/:tenantId/user/:id/destroy-all`,
+    require('./userDestroyAll').default,
   );
   app.get(
     `/tenant/:tenantId/userAdherantAutocomplete`,

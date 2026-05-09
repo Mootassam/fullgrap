@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { i18n } from 'src/i18n';
 import actions from 'src/modules/user/form/userFormActions';
@@ -20,6 +20,7 @@ import Storage from 'src/security/storage';
 import VipAutocompleteFormItem from 'src/view/vip/autocomplete/VipAutocompleteFormItem';
 import ProductAutocompleteFormItem from 'src/view/product/autocomplete/ProductAutocompleteFormItem';
 import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem';
+import TextAreaFormItem from 'src/view/shared/form/items/TextAreaFormItem';
 
 const schema = yup.object().shape({
   roles: yupFormSchemas.stringArray(
@@ -31,44 +32,51 @@ const schema = yup.object().shape({
   phoneNumber: yupFormSchemas.string(i18n('phoneNumber'), {
     max: 24,
   }),
-
   adresse: yupFormSchemas.string(i18n('adresse'), {
     required: false,
   }),
   fullName: yupFormSchemas.string(i18n('fullName'), {
     required: false,
   }),
-
   balance: yupFormSchemas.string(i18n('balance'), {
     required: false,
   }),
-
   minbalance: yupFormSchemas.string(i18n('minbalance'), {
 
   }),
-
-
   score: yupFormSchemas.integer(i18n('score'), {
     required: false,
     min: 0,
     max: 100,
   }),
-
-  product: yupFormSchemas.relationToMany(
-    i18n('prodcut'),
-    {},
-  ),
-
-  itemNumber: yupFormSchemas.integer(i18n('itemNumber'), {
-    required: false,
-  }),
-
+  productItemMappings: yup
+    .array()
+    .of(
+      yup.object().shape({
+        productId: yupFormSchemas.relationToOne(i18n('user.fields.product')),
+        itemNumber: yupFormSchemas.integer(i18n('user.fields.itemNumber')),
+      }))
+    .label(i18n('user.fields.productItemMappings')),
   status: yupFormSchemas.enumerator(
     i18n('user.fields.status'),
     {
       options: userEnumerators.status,
     },
   ),
+  // New fields
+  photoProfile: yup
+    .array()
+    .of(
+      yup.object().shape({
+        url: yup.string(),
+        id: yup.string(),
+        name: yup.string(),
+      })
+    )
+    .label(i18n('user.fields.photoProfile')),
+  notification: yupFormSchemas.string(i18n('user.fields.notification'), {
+    required: false,
+  }),
 });
 
 function UserEditForm(props) {
@@ -76,8 +84,26 @@ function UserEditForm(props) {
   const [initialValues] = useState(() => {
     const record = props.user || {};
 
+    // Convert a populated document reference to the { id, label } shape that
+    // autocomplete form items expect.  The `label` falls back through several
+    // common field names so we are resilient to schema changes.
+    const toAutocomplete = (ref: any): { id: string; label: string } | null => {
+      if (!ref) return null;
+      const id = ref.id || ref._id;
+      if (!id) return null;
+      const label = ref.title || ref.name || ref.label || String(id);
+      return { id: String(id), label };
+    };
+
+    const productItemMappings = (record.productItemMappings || [])
+      .filter((m) => m && m.itemNumber !== undefined)
+      .map((m) => ({
+        productId: toAutocomplete(m.productId),
+        itemNumber: m.itemNumber ?? 0,
+      }));
+
     return {
-      roles: record.roles[0],
+      roles: record.roles || [],
       phoneNumber: record.phoneNumber,
       passportNumber: record.passportNumber,
       fullName: record.fullName,
@@ -90,16 +116,18 @@ function UserEditForm(props) {
       withdrawPassword: record.withdrawPassword,
       state: record.state,
       passportPhoto: record.passportPhoto || [],
-      vip: record.vip || [],
+      // Single-reference fields — must be { id, label } | null, never an array.
+      vip: toAutocomplete(record.vip),
       status: record.status,
-      product: record.product || [],
-      itemNumber: record.itemNumber,
-      prizes: record.prizes || [],
+      productItemMappings,
+      prizes: toAutocomplete(record.prizes),
       prizesNumber: record.prizesNumber,
       grab: record.grab,
       withdraw: record.withdraw,
       freezeblance: record.freezeblance,
       tasksDone: record.tasksDone,
+      photoProfile: record.photoProfile || [],
+      notification: record.notification || '',
     };
   });
 
@@ -107,6 +135,10 @@ function UserEditForm(props) {
     resolver: yupResolver(schema),
     mode: 'all',
     defaultValues: initialValues,
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'productItemMappings',
   });
 
   const onSubmit = (values) => {
@@ -222,8 +254,6 @@ function UserEditForm(props) {
                 />
               </Col>
 
-
-
               <Col xs={12} md={6} lg={4}>
                 <InputFormItem
                   name="minbalance"
@@ -291,20 +321,45 @@ function UserEditForm(props) {
                 />
               </Col>
 
-              <Col xs={12} md={6} lg={4}>
-                <ProductAutocompleteFormItem
-                  name="product"
-                  label={i18n('user.fields.product')}
-                  mode="multiple"
-                />
-              </Col>
-
-              <Col xs={12} md={6} lg={4}>
-                <InputNumberFormItem
-                  name="itemNumber"
-                  label={i18n('user.fields.itemNumber')}
-                  required={true}
-                />
+              <Col xs={12}>
+                <div className="mb-3" style={{marginTop:15}}>
+                  <button
+                    type="button"
+                    onClick={() => append({ productId: '', itemNumber: null })}
+                    className="btn btn-primary"
+                  >
+                    <i className="fas fa-plus"></i> {i18n('common.add')}
+                  </button>
+                </div>
+                {fields.length > 0 ? (
+                  fields.map((field, index) => (
+                    <div key={field.id} className="d-flex align-items-end gap-2 mb-3">
+                      <Col xs={12} md={6} lg={4}>
+                        <ProductAutocompleteFormItem
+                          name={`productItemMappings.${index}.productId`}
+                          label={i18n('user.fields.product')}
+                        />
+                      </Col>
+                      <Col xs={12} md={6} lg={4}>
+                        <InputNumberFormItem
+                          name={`productItemMappings.${index}.itemNumber`}
+                          label={i18n('user.fields.itemNumber')}
+                        />
+                      </Col>
+                      <Col xs={12} md={6} lg={4} className="d-flex align-items-end">
+                        <button
+                          type="button"
+                          onClick={() => remove(index)}
+                          className="btn btn-danger"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      </Col>
+                    </div>
+                  ))
+                ) : (
+                  <p>{i18n('user.fields.noMappings')}</p>
+                )}
               </Col>
 
               <Col xs={12}>
@@ -315,16 +370,40 @@ function UserEditForm(props) {
                   max={2}
                 />
               </Col>
+
+              <Col xs={12}>
+                <ImagesFormItem
+                  name="photoProfile"
+                  label={i18n('user.fields.photoProfile')}
+                  storage={Storage.values.galleryPhotos}
+                  max={1}
+                />
+              </Col>
             </Row>
           </div>
 
+          {/* Notification Section */}
+          <div className="section-card">
+            <h5 className="section-title">
+              Notification
+            </h5>
+            <Row className="g-3">
+              <Col xs={12}>
+                <TextAreaFormItem
+                  name="notification"
+                  label={i18n('user.fields.notification')}
+                  placeholder={i18n('user.fields.notificationPlaceholder')}
+                />
+              </Col>
+            </Row>
+          </div>
 
+          {/* Prize Info Section */}
           <div className="section-card">
             <h5 className="section-title">
               {i18n('user.sections.prizeInfo')}
             </h5>
             <Row className="g-3">
-
               <Col xs={12} md={6} lg={4}>
                 <ProductAutocompleteFormItem
                   name="prizes"
@@ -339,8 +418,6 @@ function UserEditForm(props) {
                   required={true}
                 />
               </Col>
-
-
             </Row>
           </div>
 

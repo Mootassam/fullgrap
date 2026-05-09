@@ -2237,17 +2237,7 @@ button:disabled {
 }
 
 /* styling the grap butrton  */
-.grap__cirlce {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  position: relative;
-  top: -15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+
 
 .white {
   color: white;

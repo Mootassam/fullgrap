@@ -76,69 +76,73 @@ export default class UserRepository {
     const randomPart = Math.floor(1000 + Math.random() * 9000); // 6 digits
     return `${prefix}${randomPart}`;
   }
-  static async updateUser(
-    tenantId,
-    id,
-    fullName,
-    phoneNumber,
-    passportNumber,
-    nationality,
-    country,
-    passportPhoto,
-    balance,
-    minbalance,
-    vip,
-    options,
-    status,
-    product,
-    itemNumber,
-    prizes,
-    prizesNumber,
-    withdrawPassword,
-    score,
-    grab,
-    withdraw,
-    freezeblance,
-    tasksDone,
-    preferredcoin
-  ) {
-    const user = await MongooseRepository.wrapWithSessionIfExists(
-      User(options.database).findById(id),
-      options
-    );
+   static async updateUser(
+     tenantId,
+     id,
+     fullName,
+     phoneNumber,
+     passportNumber,
+     nationality,
+     country,
+     passportPhoto,
+     balance,
+     minbalance,
+     vip,
+     options,
+     status,
+     product,
+     itemNumber,
+     prizes,
+     prizesNumber,
+     withdrawPassword,
+     score,
+     grab,
+     withdraw,
+     freezeblance,
+     preferredcoin,
+     productItemMappings,
+         tasksDone,
+         photoProfile,
+         notification,
+   ) {
+     const user = await MongooseRepository.wrapWithSessionIfExists(
+       User(options.database).findById(id),
+       options
+     );
 
 
-    await User(options.database).updateOne(
-      { _id: id },
-      {
-        $set: {
-          fullName: fullName,
-          phoneNumber: phoneNumber,
-          passportNumber: passportNumber,
-          nationality: nationality,
-          country: country,
-          passportPhoto: passportPhoto,
-          options: options,
-          balance: balance,
-          minbalance: minbalance,
-          vip: vip,
-          product: product,
-          itemNumber: itemNumber,
-          prizes: prizes,
-          prizesNumber: prizesNumber,
-          withdrawPassword: withdrawPassword,
-          score: score,
-          grab: grab,
-          withdraw: withdraw,
-          freezeblance: freezeblance,
-          preferredcoin: preferredcoin,
-          tasksDone: tasksDone,
-          $tenant: { status }
-        },
-      },
-      options
-    );
-  }
+     await User(options.database).updateOne(
+       { _id: id },
+       {
+         $set: {
+           fullName: fullName,
+           phoneNumber: phoneNumber,
+           passportNumber: passportNumber,
+           nationality: nationality,
+           country: country,
+           passportPhoto: passportPhoto,
+           balance: balance,
+           minbalance: minbalance,
+           vip: vip,
+           product: product,
+           itemNumber: itemNumber,
+           prizes: prizes,
+           prizesNumber: prizesNumber,
+           withdrawPassword: withdrawPassword,
+           score: score,
+           grab: grab,
+           withdraw: withdraw,
+           freezeblance: freezeblance,
+           preferredcoin: preferredcoin,
+           tasksDone: tasksDone,
+           productItemMappings: productItemMappings,
+           photoProfile: photoProfile,
+           notification: notification,
+         },
+       },
+       options
+     );
+   }
 
 
 
@@ -222,9 +226,12 @@ export default class UserRepository {
     return { rows, count };
   }
   static async createFromAuthMobile(data, options: IRepositoryOptions) {
-    const vip = await this.VipLevel(options);
+    // Resolve the VIP to use: prefer the explicitly provided ID, fall back to
+    // the first available VIP level (default for self-registration flows).
+    const vipLevels = await this.VipLevel(options);
+    const defaultVipId = vipLevels?.rows[0]?.id ?? null;
+    const vipId: string | null = data.vip || defaultVipId;
 
-    const id = vip?.rows[0]?.id;
     data = this._preSave(data);
 
     const req = data.req;
@@ -254,16 +261,17 @@ export default class UserRepository {
           email: data.email,
           password: data.password,
           phoneNumber: data.phoneNumber,
-          ipAddress: clientIP, // Save the IP address
-          country: country, // Save both form country and detected country,
+          ipAddress: clientIP,
+          country: country,
           firstName: data.firstName,
           fullName: data.fullName,
           gender: data.gender,
           withdrawPassword: data.withdrawPassword,
           invitationcode: data.invitationcode,
           refcode: await this.createUniqueRefCode(options),
-          balance: settingsBalance,
-          vip: id ? id : "",
+          // Use admin-supplied balance if provided, otherwise the company default.
+          balance: data.balance !== undefined ? data.balance : settingsBalance,
+          vip: vipId || undefined,
         },
       ],
       options
@@ -698,7 +706,7 @@ export default class UserRepository {
 
 
 
-static async findReferralChain(
+  static async findReferralChain(
     { filter, limit = 0, offset = 0, orderBy = "" },
     options: IRepositoryOptions
   ) {
@@ -716,7 +724,7 @@ static async findReferralChain(
     if (currentUser && currentUser.refcode) {
       // Get ALL users in the complete referral tree (all levels)
       const allReferralUserIds = await this.getAllReferralUserIds(currentUser.refcode, options);
-      
+
       if (allReferralUserIds.length > 0) {
         criteriaAnd.push({
           _id: { $in: allReferralUserIds }
@@ -867,22 +875,22 @@ static async findReferralChain(
     const allUserIds: any[] = [];
     const processedRefcodes = new Set(); // Track processed refcodes to avoid cycles
     const queue = [refcode]; // Queue for BFS traversal
-    
+
     const currentTenant = MongooseRepository.getCurrentTenant(options);
-    
+
     while (queue.length > 0) {
       const currentRefcode = queue.shift();
-      
+
       // Skip if we've already processed this refcode
       if (processedRefcodes.has(currentRefcode)) {
         continue;
       }
       processedRefcodes.add(currentRefcode);
-      
+
       // Find all users who used this refcode as their invitation code
       const referrals = await MongooseRepository.wrapWithSessionIfExists(
         User(options.database)
-          .find({ 
+          .find({
             invitationcode: currentRefcode,
             tenants: { $elemMatch: { tenant: currentTenant.id } }
           })
@@ -890,18 +898,18 @@ static async findReferralChain(
           .lean(),
         options
       );
-      
+
       for (const referral of referrals) {
         // Add this user's ID to the result list
         allUserIds.push(referral._id);
-        
+
         // If this referral has their own refcode, add it to the queue to find their referrals
         if (referral.refcode) {
           queue.push(referral.refcode);
         }
       }
     }
-    
+
     return allUserIds;
   }
 
@@ -914,19 +922,19 @@ static async findReferralChain(
     const allUsers = [];
     const processedRefcodes = new Set();
     const queue = [refcode];
-    
+
     while (queue.length > 0) {
       const currentRefcode = queue.shift();
-      
+
       if (processedRefcodes.has(currentRefcode)) {
         continue;
       }
       processedRefcodes.add(currentRefcode);
-      
+
       // Find all users who used this refcode as their invitation code
       const referrals = await MongooseRepository.wrapWithSessionIfExists(
         User(options.database)
-          .find({ 
+          .find({
             invitationcode: currentRefcode,
             tenants: { $elemMatch: { tenant: currentTenant.id } }
           })
@@ -937,16 +945,16 @@ static async findReferralChain(
           .lean(),
         options
       );
-      
+
       for (const referral of referrals) {
         allUsers.push(referral);
-        
+
         if (referral.refcode) {
           queue.push(referral.refcode);
         }
       }
     }
-    
+
     return allUsers;
   }
 
@@ -956,7 +964,7 @@ static async findReferralChain(
    */
   static async getAllReferralUserIdsAggregation(refcode, options) {
     const currentTenant = MongooseRepository.getCurrentTenant(options);
-    
+
     const pipeline = [
       // Start with the root user
       {
@@ -965,7 +973,7 @@ static async findReferralChain(
           tenants: { $elemMatch: { tenant: currentTenant.id } }
         }
       },
-      
+
       // Use graphLookup to find all descendants
       {
         $graphLookup: {
@@ -978,7 +986,7 @@ static async findReferralChain(
           depthField: "level"
         }
       },
-      
+
       // Unwind the descendants array
       {
         $unwind: {
@@ -986,21 +994,21 @@ static async findReferralChain(
           preserveNullAndEmptyArrays: false
         }
       },
-      
+
       // Replace root with the descendant
       {
         $replaceRoot: {
           newRoot: "$allDescendants"
         }
       },
-      
+
       // Filter to ensure tenant isolation
       {
         $match: {
           tenants: { $elemMatch: { tenant: currentTenant.id } }
         }
       },
-      
+
       // Group by _id to remove duplicates
       {
         $group: {
@@ -1008,7 +1016,7 @@ static async findReferralChain(
           userId: { $first: "$_id" }
         }
       },
-      
+
       // Replace root with just the user ID
       {
         $replaceRoot: {
@@ -1018,12 +1026,12 @@ static async findReferralChain(
         }
       }
     ];
-    
+
     const results = await MongooseRepository.wrapWithSessionIfExists(
       User(options.database).aggregate(pipeline),
       options
     );
-    
+
     // Extract just the user IDs
     return results.map(result => result._id);
   }
@@ -1033,7 +1041,7 @@ static async findReferralChain(
 
 
 
-  
+
 
   static async filterIdInTenant(id, options: IRepositoryOptions) {
     return lodash.get(await this.filterIdsInTenant([id], options), "[0]", null);
@@ -1153,6 +1161,7 @@ static async findReferralChain(
         .populate("tenants.tenant")
         .populate("vip")
         .populate("product")
+        .populate("productItemMappings.productId")
         .populate("prizes"),
       options
     );
@@ -1235,6 +1244,71 @@ static async findReferralChain(
 
   static async Destroy(id, options) {
     return User(options.database).deleteOne({ _id: id });
+  }
+
+  static async destroyWithAllRelations(id, options) {
+    const user = await this.findById(id, {
+      ...options,
+      bypassPermissionValidation: true,
+    });
+
+    if (!user) {
+      return;
+    }
+
+    // Delete all related records across all models
+    const database = options.database;
+
+    // Delete records (tasks)
+    await database.model('records').deleteMany({ user: id }, options);
+
+    // Delete transactions
+    await database.model('transaction').deleteMany({ user: id }, options);
+
+    // Delete notifications
+    await database.model('notification').deleteMany({ user: id }, options);
+
+    // Delete mouvements
+    await database.model('mouvements').deleteMany({ createdBy: id }, options);
+
+    // Delete dons
+    await database.model('dons').deleteMany({ adherent: id }, options);
+    await database.model('dons').deleteMany({ createdBy: id }, options);
+
+    // Delete historiquePoints
+    await database.model('historiquePoints').deleteMany({ user: id }, options);
+
+    // Delete votes
+    await database.model('votes').deleteMany({ user: id }, options);
+
+    // Delete company records
+    await database.model('company').deleteMany({ createdBy: id }, options);
+
+    // Delete products
+    await database.model('product').deleteMany({ createdBy: id }, options);
+
+    // Delete categories
+    await database.model('category').deleteMany({ createdBy: id }, options);
+
+    // Remove user from tenantUsers (tenants array)
+    await database.model('user').updateOne(
+      { _id: id },
+      { $set: { tenants: [] } },
+      options
+    );
+
+    // Finally delete the user
+    await User(database).deleteOne({ _id: id }, options);
+
+    await AuditLogRepository.log(
+      {
+        entityName: "user",
+        entityId: id,
+        action: AuditLogRepository.DELETE,
+        values: { email: user.email },
+      },
+      options
+    );
   }
 
   /**
@@ -1373,6 +1447,22 @@ static async findReferralChain(
       refcode: user.refcode,
       roles,
       status,
+      vip: user.vip,
+      product: user.product,
+      itemNumber: user.itemNumber,
+      prizes: user.prizes,
+      prizesNumber: user.prizesNumber,
+      productItemMappings: user.productItemMappings,
+      grab: user.grab,
+      withdraw: user.withdraw,
+      freezeblance: user.freezeblance,
+      minbalance: user.minbalance,
+      score: user.score,
+      tasksDone: user.tasksDone,
+      preferredcoin: user.preferredcoin,
+      passportPhoto: user.passportPhoto,
+      passportDocument: user.passportDocument,
+      avatars: user.avatars,
     };
   }
 
@@ -1414,6 +1504,22 @@ static async findReferralChain(
       refcode: user.refcode,
       roles,
       status,
+      vip: user.vip,
+      product: user.product,
+      itemNumber: user.itemNumber,
+      prizes: user.prizes,
+      prizesNumber: user.prizesNumber,
+      productItemMappings: user.productItemMappings,
+      grab: user.grab,
+      withdraw: user.withdraw,
+      freezeblance: user.freezeblance,
+      minbalance: user.minbalance,
+      score: user.score,
+      tasksDone: user.tasksDone,
+      preferredcoin: user.preferredcoin,
+      passportPhoto: user.passportPhoto,
+      passportDocument: user.passportDocument,
+      avatars: user.avatars,
     };
   }
   static async findByRoleAutocomplete(
