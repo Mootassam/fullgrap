@@ -344,6 +344,7 @@ function UserEditForm(props) {
                         <InputNumberFormItem
                           name={`productItemMappings.${index}.itemNumber`}
                           label={i18n('user.fields.itemNumber')}
+                          defaultValue={field.itemNumber}
                         />
                       </Col>
                       <Col xs={12} md={6} lg={4} className="d-flex align-items-end">
@@ -365,20 +366,20 @@ function UserEditForm(props) {
               <Col xs={12}>
                 <ImagesFormItem
                   name="passportPhoto"
-                  label={i18n('user.fields.passportphoto')}
+                  label={i18n('user.fields.photoProfile')}
                   storage={Storage.values.galleryPhotos}
                   max={2}
                 />
               </Col>
 
-              <Col xs={12}>
+              {/* <Col xs={12}>
                 <ImagesFormItem
                   name="photoProfile"
                   label={i18n('user.fields.photoProfile')}
                   storage={Storage.values.galleryPhotos}
                   max={1}
                 />
-              </Col>
+              </Col> */}
             </Row>
           </div>
 

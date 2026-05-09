@@ -16,7 +16,7 @@ import ImagesFormItem from "src/shared/form/ImagesFormItems";
 import Storage from "src/security/storage";
 
 const schema = yup.object().shape({
-  avatars: yupFormSchemas.images(i18n("inputs.avatars"), {
+  passportPhoto: yupFormSchemas.images(i18n("inputs.passportPhoto"), {
     max: 1,
   }),
 });
@@ -45,7 +45,7 @@ function Profile() {
     const record = currentUser || {};
 
     return {
-      avatars: record.avatars || [],
+      passportPhoto: record.passportPhoto || [],
     };
   });
 
@@ -145,7 +145,7 @@ function Profile() {
             <FormProvider {...form}>
               <form>
                 <ImagesFormItem
-                  name="avatars"
+                  name="passportPhoto"
                   storage={Storage.values.userAvatarsProfiles}
                   max={1}
                 />

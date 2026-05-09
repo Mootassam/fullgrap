@@ -99,14 +99,7 @@ function ImagesUploader(props) {
       <div className="profile-avatar">
         <div className="avatar-placeholder">
           <i className="fa-solid fa-user-circle">
-            <input
-              style={{ display: 'none' }}
-              disabled={loading || readonly}
-              accept="image/*"
-              type="file"
-              onChange={handleChange}
-              ref={input}
-            />
+    
           </i>
         </div>
       </div>
@@ -147,15 +140,7 @@ function ImagesUploader(props) {
                   >
                     <i className="fas fa-search"></i>
                   </button>
-                  {!readonly && (
-                    <button
-                      type="button"
-                      className="btn btn-link ml-2"
-                      onClick={() => handleRemove(item.id)}
-                    >
-                      <i className="fas fa-times"></i>
-                    </button>
-                  )}
+        
                 </div>
               </div>
             );

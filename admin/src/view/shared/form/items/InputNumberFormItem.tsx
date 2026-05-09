@@ -15,6 +15,7 @@ export function InputNumberFormItem(props) {
     required,
     externalErrorMessage,
     disabled,
+    defaultValue,
   } = props;
 
   const {
@@ -48,6 +49,7 @@ export function InputNumberFormItem(props) {
         name={name}
         type={type}
         ref={register}
+        defaultValue={defaultValue}
         onChange={(event) => {
           props.onChange &&
             props.onChange(event.target.value);
@@ -90,6 +92,7 @@ InputNumberFormItem.propTypes = {
   placeholder: PropTypes.string,
   autoComplete: PropTypes.string,
   externalErrorMessage: PropTypes.string,
+  defaultValue: PropTypes.any,
 };
 
 export default InputNumberFormItem;

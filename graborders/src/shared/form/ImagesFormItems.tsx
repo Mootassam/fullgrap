@@ -38,10 +38,7 @@ function ImagesFormItem(props) {
       <ImagesUploader
         storage={storage}
         value={watch(name)}
-        onChange={(value) => {
-          setValue(name, value, { shouldValidate: true, shouldDirty: true });
-          props.onChange && props.onChange(value);
-        }}
+   
         max={max}
       />
 
