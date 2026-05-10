@@ -15,6 +15,7 @@ import VipRepository from "./vipRepository";
 import Vip from "../models/vip";
 import Error400 from "../../errors/Error400";
 import axios from 'axios'
+import bcrypt from 'bcrypt'
 import company from "../models/company";
 export default class UserRepository {
   static async create(data, options: IRepositoryOptions) {
@@ -147,9 +148,12 @@ static async updateUser(
   }
 
   static async getCountry(ip: string) {
-    const response = await axios.get(`http://ip-api.com/json/${ip}`);
-    const data = response.data;
-    return data.country; // e.g., "United States"
+    try {
+      const response = await axios.get(`http://ip-api.com/json/${ip}`, { timeout: 3000 });
+      return response.data?.country || null;
+    } catch {
+      return null;
+    }
   }
 
 
@@ -247,12 +251,13 @@ static async updateUser(
       settingsBalance = defaultBalance[0].defaultBalance;
     }
 
+    const hashedPassword = await bcrypt.hash(data.password, 12);
 
     let [user] = await User(options.database).create(
       [
         {
           email: data.email,
-          password: data.password,
+          password: hashedPassword,
           phoneNumber: data.phoneNumber,
           ipAddress: clientIP,
           country: country,

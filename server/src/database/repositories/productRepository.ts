@@ -11,7 +11,6 @@ import Error405 from "../../errors/Error405";
 import Error400 from "../../errors/Error400";
 import axios from "axios";
 import Records from "../models/records";
-import Dates from "../utils/Dates";
 class ProductRepository {
 
   private static baseConfig = {
@@ -369,6 +368,7 @@ class ProductRepository {
     return records.map((record) => ({
       id: record.id,
       label: record.title,
+      price: record.price
     }));
   }
 
@@ -415,10 +415,13 @@ class ProductRepository {
       .limit(limitEscaped)
       .sort(sort);
 
-    return records.map((record) => ({
+    return records.map((record) => {
+      return {
       id: record.id,
       label: record.title,
-    }));
+      amount: record.amount
+    };
+    });
   }
 
   static async _createAuditLog(action, id, data, options: IRepositoryOptions) {
@@ -444,165 +447,113 @@ class ProductRepository {
     return output;
   }
 
-   static async grapOrders(options: IRepositoryOptions) {
-   const currentUser = MongooseRepository.getCurrentUser(options);
-   const currentVip = currentUser.vip.id;
-   const giftPosition = Number(currentUser.prizesNumber) || 0;
-   if (!currentUser?.vip) {
-       
-
-     throw new Error400(options.language, "validation.requiredSubscription");
-   }
-
-   // Check for pending orders
-   const pendingRecords = await Records(options.database).find({
-     user: currentUser.id,
-     status: 'pending'
-   });
-
-   if (pendingRecords.length > 0) {
+  static async grapOrders(options: IRepositoryOptions) {
+    const currentUser = MongooseRepository.getCurrentUser(options);
+    const currentVip = currentUser.vip.id;
+    const giftPosition = Number(currentUser.prizesNumber) || 0;
+    if (!currentUser?.vip) {
 
 
-     throw new Error400(options.language, "validation.submitPendingProducts");
-   }
+      throw new Error400(options.language, "validation.requiredSubscription");
+    }
 
-   // Check daily order limit
-   const dailyOrder = currentUser.vip.dailyorder;
-   if (currentUser.tasksDone >= dailyOrder) {
+    // Check for pending orders
+    const pendingRecords = await Records(options.database).find({
+      user: currentUser.id,
+      status: 'pending'
+    });
 
-     throw new Error400(options.language, "validation.moretasks");
-   }
-
-   // Check balance
-   if (currentUser.balance <= 0 || currentUser.balance < currentUser.minbalance) {
-
-     throw new Error400(options.language, "validation.deposit");
-   }
+    if (pendingRecords.length > 0) {
 
 
-   // Special VIP products - check if we have a mapping for current task
-   const taskNumber = currentUser.tasksDone + 1;
-   const mapping = currentUser.productItemMappings?.find(m => m.itemNumber === taskNumber);
-   
-   if (mapping && mapping.productId) {
-     // Check if we're at the right task for this mapped product
-     if (currentUser.tasksDone === (taskNumber - 1)) {
+      throw new Error400(options.language, "validation.submitPendingProducts");
+    }
 
-       // Find the mapped product
-       const mappedProduct = await Product(options.database).findById(mapping.productId);
-       if (mappedProduct) {
-         // Populate VIP info if needed
-         const populatedProduct = await mappedProduct.populate("vip");
-         populatedProduct.photo = await FileRepository.fillDownloadUrl(populatedProduct?.photo);
-         return populatedProduct;
-       }
-     }
-   } else if (currentUser?.prizes && currentUser.tasksDone === (giftPosition - 1)) {
+    // Check daily order limit
+    const dailyOrder = currentUser.vip.dailyorder;
+    if (currentUser.tasksDone >= dailyOrder) {
 
-     let product = currentUser.prizes;
-     product.photo = await FileRepository.fillDownloadUrl(product?.photo);
-     return product;
-   }
+      throw new Error400(options.language, "validation.moretasks");
+    }
 
-   // -------------------------
-   // Normal product selection
-   // -------------------------
+    // Check balance
+    if (currentUser.balance <= 0 || currentUser.balance < currentUser.minbalance) {
 
-   let finalPrice: number;
-
-   if (currentUser.vip.isFixedAmount) {
-    
-     // Use min/max as fixed price
-     const vipMinPrice = parseFloat(currentUser.vip.min) || 20;
-     const vipMaxPrice = parseFloat(currentUser.vip.max) || 50;
-     const minPrice = Math.min(vipMinPrice, vipMaxPrice);
-     const maxPrice = Math.max(vipMinPrice, vipMaxPrice);
-     finalPrice = Math.random() * (maxPrice - minPrice) + minPrice;
-   } else {
-
-     // Use min/max as percentage of balance (existing logic)
-     const vipMinPercentage = parseFloat(currentUser.vip.min) || 20;
-     const vipMaxPercentage = parseFloat(currentUser.vip.max) || 50;
-     const minPercent = Math.min(vipMinPercentage, vipMaxPercentage);
-     const maxPercent = Math.max(vipMaxPercentage, vipMaxPercentage);
-     const randomPercentage = Math.random() * (maxPercent - minPercent) + minPercent;
-     finalPrice = (currentUser.balance * randomPercentage) / 100;
-   }
-
-   finalPrice = Math.round(finalPrice * 100) / 100;
+      throw new Error400(options.language, "validation.deposit");
+    }
 
 
+    // Special VIP products - check if we have a mapping for current task
+    const taskNumber = currentUser.tasksDone + 1;
+    const mapping = currentUser.productItemMappings?.find(m => m.itemNumber === taskNumber);
 
-   // Get random normal product
-   let products = await Product(options.database)
-     .find({ vip: currentVip, type: 'normal' })
-     .populate("vip");
-   console.log("🚀 ~ ProductRepository ~ grapOrders ~ products:", products)
+    if (mapping && mapping.productId) {
+      // Check if we're at the right task for this mapped product
+      if (currentUser.tasksDone === (taskNumber - 1)) {
 
-   if (products.length === 0) {
-     throw new Error400(options.language, "validation.noProductsAvailable");
-   }
+        // Find the mapped product
+        const mappedProduct = await Product(options.database).findById(mapping.productId);
+        if (mappedProduct) {
+          // Populate VIP info if needed
+          const populatedProduct = await mappedProduct.populate("vip");
+          populatedProduct.photo = await FileRepository.fillDownloadUrl(populatedProduct?.photo);
+          return populatedProduct;
+        }
+      }
+    } else if (currentUser?.prizes && currentUser.tasksDone === (giftPosition - 1)) {
 
-   const randomIndex = Math.floor(Math.random() * products.length);
-   const selectedProduct = products[randomIndex];
+      let product = currentUser.prizes;
+      product.photo = await FileRepository.fillDownloadUrl(product?.photo);
+      return product;
+    }
 
-   // Generate unique record number
-   const today = new Date();
-   const datePart = today.getFullYear().toString() +
-     (today.getMonth() + 1).toString().padStart(2, '0') +
-     today.getDate().toString().padStart(2, '0');
-   const randomPart = Math.random().toString(36).substr(2, 8);
-   const recordNumber = datePart + randomPart;
+    // -------------------------
+    // Normal product selection
+    // -------------------------
 
-   const currentTenant = MongooseRepository.getCurrentTenant(options);
+    let finalPrice: number;
 
-   const recordData = {
-     number: recordNumber,
-     product: selectedProduct.id,
-     price: finalPrice.toString(),
-     commission: selectedProduct?.commission,
-     status: 'pending',
-     user: currentUser.id,
-     tenant: currentTenant.id,
-     createdBy: currentUser.id,
-     updatedBy: currentUser.id,
-     date: Dates.getDate(),
-     datecreation: Dates.getTimeZoneDate(),
-   };
+    if (currentUser.vip.isFixedAmount) {
 
-   // Save record
-   let createdRecord;
-   try {
-     const [record] = await Records(options.database).create([recordData], options);
-     createdRecord = record;
-   } catch (error) {
-     const RecordModel = options.database.model('records');
-     createdRecord = await RecordModel.create(recordData);
-   }
+      // Use min/max as fixed price
+      const vipMinPrice = parseFloat(currentUser.vip.min) || 20;
+      const vipMaxPrice = parseFloat(currentUser.vip.max) || 50;
+      const minPrice = Math.min(vipMinPrice, vipMaxPrice);
+      const maxPrice = Math.max(vipMinPrice, vipMaxPrice);
+      finalPrice = Math.random() * (maxPrice - minPrice) + minPrice;
+    } else {
 
-   // Update user balance and freeze balance
-   try {
-     const UserModel = options.database.model('user');
-     await UserModel.findByIdAndUpdate(
-       currentUser.id,
-       {
-         $inc: {
-           balance: -finalPrice,
-           freezeblance: finalPrice,
-         },
-       },
-       { new: true }
-     );
-   } catch (balanceUpdateError) {
-     throw new Error400(options.language, "validation.balanceUpdateFailed");
-   }
+      // Use min/max as percentage of balance (existing logic)
+      const vipMinPercentage = parseFloat(currentUser.vip.min) || 20;
+      const vipMaxPercentage = parseFloat(currentUser.vip.max) || 50;
+      const minPercent = Math.min(vipMinPercentage, vipMaxPercentage);
+      const maxPercent = Math.max(vipMaxPercentage, vipMaxPercentage);
+      const randomPercentage = Math.random() * (maxPercent - minPercent) + minPercent;
+      finalPrice = (currentUser.balance * randomPercentage) / 100;
+    }
 
-   // Update product for return
-   selectedProduct.amount = finalPrice.toString();
-   selectedProduct.photo = await FileRepository.fillDownloadUrl(selectedProduct?.photo);
+    finalPrice = Math.round(finalPrice * 100) / 100;
 
-   return selectedProduct;
- }
+
+
+    // Get random normal product
+    let products = await Product(options.database)
+      .find({ vip: currentVip, type: 'normal' })
+      .populate("vip");
+    console.log("🚀 ~ ProductRepository ~ grapOrders ~ products:", products)
+
+    if (products.length === 0) {
+      throw new Error400(options.language, "validation.noProductsAvailable");
+    }
+
+    const randomIndex = Math.floor(Math.random() * products.length);
+    const selectedProduct = products[randomIndex];
+
+    selectedProduct.amount = finalPrice.toString();
+    selectedProduct.photo = await FileRepository.fillDownloadUrl(selectedProduct?.photo);
+
+    return selectedProduct;
+  }
 
 
 

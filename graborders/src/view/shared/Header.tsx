@@ -1,14 +1,9 @@
-import React, { useEffect } from "react";
 import { Link } from 'react-router-dom';
-import actions from 'src/modules/notification/list/notificationListActions';
-import { useDispatch, useSelector } from "react-redux";
 
-import authSelectors from "src/modules/auth/authSelectors";
 
 function Header() {
 
 
-  const currentUser = useSelector(authSelectors.selectCurrentUser);
 
 
 
@@ -26,7 +21,7 @@ function Header() {
       />
 
 
-      <p style={{ color: "white" }}>{currentUser?.notification || ''} </p>
+
 
       <div className="header-icons">
         {/* <Link to="/notifications">

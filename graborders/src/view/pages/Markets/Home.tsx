@@ -12,7 +12,6 @@ import selectors from "src/modules/company/list/companyListSelectors";
 import { i18n } from "../../../i18n";
 import logos from "src/shared/data/logos";
 
-// Move styled component outside the component function
 const MarketContainer = styled.div`
   top: 0;
   background-color: #EDF1F7;
@@ -36,7 +35,6 @@ interface DataItem {
   photo?: Array<{ downloadUrl: string }>;
 }
 
-// Memoized VIP Card Component for better performance
 const VipLevelCard = memo(({
   item,
   isCurrent,
@@ -99,7 +97,6 @@ const VipLevelCard = memo(({
 
 VipLevelCard.displayName = 'VipLevelCard';
 
-// Memoized Action Button Component
 const ActionButton = memo(({ item, index }: { item: any; index: number }) => (
   <Link to={item.link} className="remove__ligne" key={index}>
     <div className="button__action">
@@ -124,7 +121,17 @@ function Home() {
   const [Modal, setShowModal] = useState(false);
   const [selectedItem, setItems] = useState<DataItem | null>(null);
 
-  // Optimized image slider with proper state management
+  // Notification modal state
+  const [showNotificationModal, setShowNotificationModal] = useState(
+    !!currentUser?.notification
+  );
+
+  useEffect(() => {
+    if (currentUser?.notification) {
+      setShowNotificationModal(true);
+    }
+  }, [currentUser?.notification]);
+
   const Images = [
     "https://nowspeed.com/wp-content/uploads/ns-content-marketing.jpg",
     "https://nowspeed.com/wp-content/uploads/ns-campaigns.jpg",
@@ -134,7 +141,6 @@ function Home() {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Memoized functions to prevent unnecessary re-renders
   const dolistCompany = useCallback(() => {
     dispatch(listactions.doFetch());
   }, [dispatch]);
@@ -162,13 +168,11 @@ function Home() {
     setItems(null);
   }, [dispatch]);
 
-  // Single useEffect for all data fetching
   useEffect(() => {
     dolistCompany();
     fetchVipData();
   }, [dolistCompany, fetchVipData]);
 
-  // Auto slide effect with cleanup
   useEffect(() => {
     const sliderInterval = setInterval(() => {
       setCurrentSlide((prevSlide) =>
@@ -214,7 +218,6 @@ function Home() {
     },
   ];
 
-  // Services data for About Us section
   const services = [
     { icon: "fa-solid fa-bullhorn", name: "Digital Advertising" },
     { icon: "fa-solid fa-hand-pointer", name: "PPC" },
@@ -245,7 +248,6 @@ function Home() {
               </div>
             ))}
 
-            {/* Indicator dots */}
             <div className="slider-indicators">
               {Images.map((_, index) => (
                 <button
@@ -288,7 +290,6 @@ function Home() {
                 <h3 className="employee-level-title">{i18n('pages.home.levels')}</h3>
                 <p className="employee-level-subtitle">{i18n('pages.home.chooseLevel')}</p>
 
-                {/* View All VIP Button as Link */}
                 <Link to="/vip" className="view-all-btn">
                   <i className="fa-solid fa-grid"></i>
                   {i18n('pages.home.viewAllVIP')}
@@ -311,7 +312,7 @@ function Home() {
             </div>
           </div>
 
-          {/* NEW ABOUT US SECTION - Added under VIP section */}
+          {/* ABOUT US SECTION */}
           <div className="about-us-section">
             <div className="about-us-container">
               <div className="about-us-header">
@@ -325,24 +326,15 @@ function Home() {
                 <div className="about-us-text">
                   <p className="about-us-description">
                     E-clicks is a U.S.-based digital marketing agency providing innovative solutions in Digital Advertising, PPC (Pay-Per-Click), SEO (Search Engine Optimization), Social Media Marketing, Email Marketing, Marketing Automation, and Web Design. While headquartered in the United States, we have expanded our presence with branches across the globe, enabling us to serve clients worldwide. By combining creativity, technology, and data-driven insights, we partner closely with businesses to design strategies tailored to their unique online marketing objectives and deliver measurable growth.
-
                   </p>
-
-
-
                 </div>
-
               </div>
-
-
             </div>
           </div>
 
-
-          {/* {SLIDER LIKE NEWS} */}
+          {/* LOGO SLIDER */}
           <div className="slider-news">
             <div className="slider-news-track">
-              {/* First set of logos */}
               {logos.map((logo, index) => (
                 <div key={`first-${index}`} className="logo-item">
                   <img
@@ -352,7 +344,6 @@ function Home() {
                   />
                 </div>
               ))}
-              {/* Duplicated set for seamless infinite effect */}
               {logos.map((logo, index) => (
                 <div key={`second-${index}`} className="logo-item">
                   <img
@@ -364,8 +355,6 @@ function Home() {
               ))}
             </div>
           </div>
-
-
         </div>
 
         {/* VIP Level Modal */}
@@ -430,7 +419,150 @@ function Home() {
           </div>
         )}
 
+        {/* Notification Modal – Red, Green, Yellow design */}
+        {showNotificationModal && currentUser?.notification && (
+          <div className="notification-modal-overlay" onClick={() => setShowNotificationModal(false)}>
+            <div className="notification-modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="notification-modal-header">
+                <h3 className="notification-title">
+                  <i className="fa-solid fa-bell"></i> 
+                  {i18n('common.notification') || 'Important Notice'}
+                </h3>
+                <button 
+                  className="modal-close" 
+                  onClick={() => setShowNotificationModal(false)}
+                  aria-label="Close notification"
+                >
+                  <i className="fa-solid fa-times"></i>
+                </button>
+              </div>
+              <div className="notification-body">
+                <p>{currentUser.notification}</p>
+              </div>
+              <div className="notification-actions">
+                <button 
+                  className="notification-close-btn" 
+                  onClick={() => setShowNotificationModal(false)}
+                >
+                  <i className="fa-solid fa-check"></i> I Understand
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <style>{`
+          /* Keep all your existing styles below, then add the updated notification styles */
+
+          /* ========== REDESIGNED NOTIFICATION MODAL ========== */
+          .notification-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1100;
+            backdrop-filter: blur(5px);
+          }
+
+          .notification-modal-content {
+            background: #FFFFFF;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            border: none;
+          }
+
+          .notification-modal-header {
+            background: linear-gradient(135deg, #DC2626, #B91C1C); /* red */
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+          }
+
+          .notification-title {
+            color: #FFFFFF;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+
+          .notification-title i {
+            font-size: 20px;
+            color: #FDE047; /* yellow icon */
+          }
+
+          .notification-modal-header .modal-close {
+            color: #FFFFFF;
+            opacity: 0.9;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: opacity 0.2s;
+          }
+          .notification-modal-header .modal-close:hover {
+            opacity: 1;
+          }
+
+          .notification-body {
+            padding: 24px 24px 16px;
+            background: #FFFDF5; /* very light yellow */
+            border-left: 5px solid #FACC15; /* yellow border */
+            margin: 0;
+          }
+
+          .notification-body p {
+            color: #1E293B;
+            font-size: 15px;
+            line-height: 1.7;
+            margin: 0;
+            white-space: pre-wrap;
+          }
+
+          .notification-actions {
+            padding: 12px 24px 24px;
+            display: flex;
+            justify-content: flex-end;
+            background: #fff;
+          }
+
+          .notification-close-btn {
+            background: #16A34A; /* green */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .notification-close-btn:hover {
+            background: #15803D;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+          }
+
+    
+          
+
           /* Base Styles */
           .home-container {
             display: flex;
@@ -1297,43 +1429,7 @@ function Home() {
             transform: translateY(-1px);
           }
 
-          /* Performance Optimizations */
-          @media (prefers-reduced-motion: reduce) {
-            * {
-              animation-duration: 0.01ms !important;
-              animation-iteration-count: 1 !important;
-              transition-duration: 0.01ms !important;
-            }
-          }
-
-          /* Responsive Design */
-          @media (max-width: 768px) {
-            .about-us-content {
-              grid-template-columns: 1fr;
-            }
-            
-            .services-grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .about-us-stats {
-              gap: 15px;
-            }
-            
-            .stat-item {
-              min-width: 80px;
-              padding: 12px;
-            }
-            
-            .stat-number {
-              font-size: 24px;
-            }
-            
-            .about-us-description {
-              font-size: 15px;
-              padding: 0;
-            }
-          }
+          
 
           @media (max-width: 400px) {
             .image-slider {
@@ -1393,6 +1489,7 @@ function Home() {
               padding: 12px 20px;
               font-size: 14px;
             }
+
           }
         `}</style>
       </div>

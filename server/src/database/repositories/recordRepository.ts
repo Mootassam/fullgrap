@@ -46,22 +46,8 @@ class RecordRepository {
 console.log("5 - Checking order eligibility") ;
 
   await this.checkOrder(options);
-console.log("6 - Order eligibility passed") ;
-
-  // // calculeGrap handles financial mutations for COMBO and PRIZE modes.
-  // // For the NORMAL flow, grapOrders() already created the pending record and
-  // // deducted the balance — calling calculeGrap here would double-count.
-  // // We detect the mode by checking for a pre-existing pending record.
-  const preExistingPending = await Records(database).findOne({
-    tenant: currentTenant.id,
-    user: currentUser.id,
-    status: "pending",
-  }).lean();
-
-  const isNormalFlow = Boolean(preExistingPending);
-
-  if (!isNormalFlow) {
-    // COMBO or PRIZE mode — no pending record exists yet; let calculeGrap run.
+  // calculeGrap handles balance freeze (COMBO) or unlock (PRIZE) — skip for normal mode
+  if (isComboMode || (hasPrizes && isPrizesMatch)) {
     await this.calculeGrap(data, options);
   }
 
@@ -196,38 +182,39 @@ console.log("6 - Order eligibility passed") ;
      3️⃣ NORMAL MODE
   ====================================================== */
 
-  // Re-fetch the pending record as a full document so we can call .save() on it.
-  const pendingRecord = preExistingPending
-    ? await Records(database).findById(preExistingPending._id)
-    : null;
-
-  if (!pendingRecord) {
-    throw new Error400(options.language, "validation.noPendingRecord");
+  const productDoc = await Product(database)
+    .findById(data.product)
+    .lean() as any;
+  if (!productDoc) {
+    throw new Error400(options.language, "validation.noProductsAvailable");
   }
 
-  const recordPrice = Number(pendingRecord.price) || 0;
-  const commissionPercent =
-    Number(pendingRecord.commission) || 0;
+  const recordPrice = Number(data.price) || 0;
+  const commissionPercent = Number(productDoc.commission) || 0;
+  const profit = (commissionPercent / 100) * recordPrice;
 
-  const profit =
-    (commissionPercent / 100) * recordPrice;
+  const normalRecordData = {
+    ...data,
+    price: recordPrice,
+    commission: commissionPercent,
+    status: "completed",
+    tenant: currentTenant.id,
+    createdBy: currentUser.id,
+    updatedBy: currentUser.id,
+    date: Dates.getDate(),
+    datecreation: Dates.getTimeZoneDate(),
+  };
 
-  // Mark record as completed
-  pendingRecord.status = data.status || "completed";
-  pendingRecord.updatedBy = currentUser.id;
-  pendingRecord.updatedAt = new Date();
-  await pendingRecord.save();
-
+  const [normalRecord] = await Records(database).create([normalRecordData]);
 
   await User(database).updateOne(
     { _id: currentUser.id },
     {
       $inc: {
-        balance: profit + (currentUser.freezeblance || 0),
+        balance: profit,
         tasksDone: 1,
       },
       $set: {
-        freezeblance: 0,
         updatedAt: new Date(),
         updatedBy: currentUser.id,
       },
@@ -235,13 +222,13 @@ console.log("6 - Order eligibility passed") ;
   );
 
   await this._createAuditLog(
-    AuditLogRepository.UPDATE,
-    pendingRecord.id,
-    { status: pendingRecord.status },
+    AuditLogRepository.CREATE,
+    normalRecord.id,
+    normalRecordData,
     options
   );
 
-  return this.findById(pendingRecord.id, options);
+  return this.findById(normalRecord.id, options);
 }
 
 

@@ -1,5 +1,7 @@
 const en = {
   common: {
+    notification: "Notification",
+    close :"Close",
     or: "Or",
     cancel: "Cancel",
     reset: "Reset",

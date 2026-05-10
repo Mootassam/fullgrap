@@ -3,7 +3,7 @@ import { add } from "lodash";
 
 const en = {
   common: {
-    actions:"actions",
+    actions: "actions",
     or: 'Or',
     add: 'Add Combo',
     cancel: 'Cancel',
@@ -39,7 +39,7 @@ const en = {
     membership: 'MemberShip',
     accounting: 'Accounting',
     configurations: 'Configurations',
-    createAccount : 'Create Tranning Account',
+    createAccount: 'Create Tranning Account',
   },
   company: {
     menu: 'Company',
@@ -121,7 +121,7 @@ const en = {
         setperday: 'sets of data everyday',
         withdrawperday: 'Withdraw per day',
         photo: "photo",
-        isFixedAmount:"Use fixed amount (checked = price, unchecked = % of balance)",
+        isFixedAmount: "Use fixed amount (checked = price, unchecked = % of balance)",
         min: "Minimum product price for this VIP ",
         max: "Maximum product price for this VIP"
       },
@@ -228,7 +228,7 @@ const en = {
         slug: 'Number',
         photo: 'Photo',
         trc20: 'TRC20',
-        defaultBalance:"Default balance",
+        defaultBalance: "Default balance",
         eth: 'ETH',
         metaKeywords: 'MetaKeywords',
         metaDescriptions: 'MetaDescriptions',
@@ -2663,6 +2663,8 @@ const en = {
 
     fields: {
       notification: 'Notification',
+
+      vip: 'Vip',
       photoProfile: 'Photo Profile',
       notificationPlaceholder: 'Add a notification',
       currentrecord: 'Tasks Done',
@@ -2675,7 +2677,7 @@ const en = {
       email: 'Email',
       tasksDone: "tasksDone",
       username: 'Username',
-           refcode: 'Invitation Code',
+      refcode: 'Invitation Code',
       score: 'Score',
       grab: 'Grab',
       withdraw: 'Withdraw',

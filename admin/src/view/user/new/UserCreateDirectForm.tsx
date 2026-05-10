@@ -147,7 +147,7 @@ function UserCreateDirectForm(props) {
             </Col>
           </Row>
 
-          <Row>
+          {/* <Row>
             <Col sm={6}>
               <SelectFormItem
                 name="status"
@@ -159,7 +159,7 @@ function UserCreateDirectForm(props) {
                 required={true}
               />
             </Col>
-          </Row>
+          </Row> */}
 
           <div className="form-buttons">
             <button

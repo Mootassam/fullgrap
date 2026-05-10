@@ -20,6 +20,7 @@ const authAxios = Axios.create({
   paramsSerializer: function (params) {
     return Qs.stringify(params, {
       arrayFormat: 'brackets',
+
       filter: (prefix, value) => {
         if (
           moment.isMoment(value) ||

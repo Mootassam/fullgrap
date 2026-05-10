@@ -27,7 +27,6 @@ function ProductAutocompleteFormItem(props) {
     const { name, mode, controlledOnChange } = props;
 
     if (controlledOnChange) {
-      // Controlled mode (used inside a RHF Controller / useFieldArray)
       const newValue = record
         ? { id: record.id || record._id, label: record.label || record.title }
         : null;
@@ -53,22 +52,34 @@ function ProductAutocompleteFormItem(props) {
   };
 
   const mapper = {
-  toAutocomplete(originalValue) {
-    if (!originalValue) return null;
-    return {
-      key: originalValue.id || originalValue._id?.toString(),
-      value: originalValue.id || originalValue._id?.toString(),
-      label: originalValue.label || originalValue.title,   // fallback to title
-    };
-  },
-  toValue(originalValue) {
-    if (!originalValue) return null;
-    return {
-      id: originalValue.value || originalValue.id,
-      label: originalValue.label,   // keep label as stored
-    };
-  },
-};
+    toAutocomplete(originalValue) {
+      if (!originalValue) return null;
+
+      // Build the display label: "amount -- label"
+      const cleanLabel = originalValue.label || originalValue.title || '';
+      const amount = originalValue.amount != null ? originalValue.amount : '';
+      const displayLabel = amount !== '' ? `${amount} -- ${cleanLabel}` : cleanLabel;
+
+      return {
+        key: originalValue.id || originalValue._id?.toString(),
+        value: originalValue.id || originalValue._id?.toString(),
+        label: displayLabel,               // what the user sees in the dropdown
+        amount: originalValue.amount,      // keep the raw amount for later use
+      };
+    },
+
+    toValue(originalValue) {
+      if (!originalValue) return null;
+
+      return {
+        id: originalValue.value || originalValue.id,
+        // Store the *clean* label, not the formatted one
+        label: originalValue.label?.split(' -- ').pop() || originalValue.label,
+        amount: originalValue.amount,
+      };
+    },
+  };
+
   return (
     <>
       <AutocompleteInMemoryFormItem
