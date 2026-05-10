@@ -26,25 +26,32 @@ class RecordRepository {
     throw new Error("User not authenticated");
   }
 
-  const mergeDataPosition = currentUser.itemNumber || 0;
   const prizesPosition = currentUser.prizesNumber || 0;
   const tasksDone = currentUser.tasksDone || 0;
-
-  const isPositionMatch = tasksDone === (mergeDataPosition - 1);
   const isPrizesMatch = tasksDone === (prizesPosition - 1);
 
   const hasProduct =
-    Array.isArray(currentUser.product) &&
-    currentUser.product.length > 0;
+    Array.isArray(currentUser.productItemMappings) &&
+    currentUser.productItemMappings.length > 0;
+
+  // Find which mappings trigger at the current task position
+  const matchingComboMappings = hasProduct
+    ? currentUser.productItemMappings.filter(
+        (m) => tasksDone === (Number(m.itemNumber) - 1)
+      )
+    : [];
+  const isComboMode = matchingComboMappings.length > 0;
 
   const hasPrizes = Boolean(currentUser?.prizes?.id || currentUser?.prizes);
+console.log("5 - Checking order eligibility") ;
 
   await this.checkOrder(options);
+console.log("6 - Order eligibility passed") ;
 
-  // calculeGrap handles financial mutations for COMBO and PRIZE modes.
-  // For the NORMAL flow, grapOrders() already created the pending record and
-  // deducted the balance — calling calculeGrap here would double-count.
-  // We detect the mode by checking for a pre-existing pending record.
+  // // calculeGrap handles financial mutations for COMBO and PRIZE modes.
+  // // For the NORMAL flow, grapOrders() already created the pending record and
+  // // deducted the balance — calling calculeGrap here would double-count.
+  // // We detect the mode by checking for a pre-existing pending record.
   const preExistingPending = await Records(database).findOne({
     tenant: currentTenant.id,
     user: currentUser.id,
@@ -58,27 +65,33 @@ class RecordRepository {
     await this.calculeGrap(data, options);
   }
 
+
+
+
+
   /* =====================================================
      1️⃣ COMBO MODE
   ====================================================== */
-  if (hasProduct && isPositionMatch) {
-    const recordDataArray = [];
+  if (isComboMode) {
+    const recordDataArray: any[] = [];
     let totalUserEarning = 0;
 
-    for (let i = 0; i < currentUser.product.length; i++) {
-      const productItem = currentUser.product[i];
+    for (let i = 0; i < matchingComboMappings.length; i++) {
+      const mapping = matchingComboMappings[i];
 
-      const productAmount = Number(productItem?.amount) || 0;
-      const commissionPercent = Number(productItem?.commission) || 0;
+      const productDoc = await Product(database)
+        .findById(mapping.productId)
+        .lean() as any;
+      if (!productDoc) continue;
 
-      const earning =
-        (commissionPercent / 100) * productAmount;
-
+      const productAmount = Number(productDoc.amount) || 0;
+      const commissionPercent = Number(productDoc.commission) || 0;
+      const earning = (commissionPercent / 100) * productAmount;
       totalUserEarning += earning;
 
       recordDataArray.push({
         number: `${data.number}-${i}`,
-        product: productItem,
+        product: mapping.productId,
         price: productAmount,
         commission: commissionPercent,
         user: data.user || currentUser.id,
@@ -92,13 +105,12 @@ class RecordRepository {
     }
 
     const records = await Records(database).create(recordDataArray);
-    console.log("🚀 ~ RecordRepository ~ create ~ records:", records)
 
-    // Increment tasksDone safely
+    // Increment tasksDone by the number of matched combo mappings
     await User(database).updateOne(
       { _id: currentUser.id },
       {
-        $inc: { tasksDone: currentUser.product.length },
+        $inc: { tasksDone: matchingComboMappings.length },
         $set: {
           updatedAt: new Date(),
           updatedBy: currentUser.id,
@@ -206,7 +218,7 @@ class RecordRepository {
   pendingRecord.updatedAt = new Date();
   await pendingRecord.save();
 
-  // Safely update user balance
+
   await User(database).updateOne(
     { _id: currentUser.id },
     {
@@ -258,12 +270,8 @@ static async calculeGrap(data, options) {
   const productAmount = Number(currentProduct.amount) || 0;
   const commissionPercent = Number(currentProduct.commission) || 0;
 
-  const itemPosition = Number(currentUser.itemNumber) || 0;
   const prizePosition = Number(currentUser.prizesNumber) || 0;
-
   const tasksDone = Number(currentUser.tasksDone) || 0;
-
-  const isPositionMatch = tasksDone === (itemPosition - 1);
   const isPrizeMatch = tasksDone === (prizePosition - 1);
 
   let balanceIncrement = 0;
@@ -272,17 +280,23 @@ static async calculeGrap(data, options) {
   /* =====================================================
      CASE 1: Combo Product Freeze
   ====================================================== */
-  if (
-    Array.isArray(currentUser.product) &&
-    currentUser.product.length > 0 &&
-    isPositionMatch
-  ) {
+  const matchingComboMappings = Array.isArray(currentUser.productItemMappings)
+    ? currentUser.productItemMappings.filter(
+        (m: any) => tasksDone === (Number(m.itemNumber) - 1)
+      )
+    : [];
+
+  if (matchingComboMappings.length > 0) {
     let comboPrice = 0;
 
-    for (const item of currentUser.product) {
-      comboPrice += Number(item.amount) || 0;
+    for (const mapping of matchingComboMappings) {
+      const productDoc = await Product(database)
+        .findById((mapping as any).productId)
+        .lean() as any;
+      if (productDoc) {
+        comboPrice += Number(productDoc.amount) || 0;
+      }
     }
-
 
     balanceIncrement = -comboPrice;
     freezeAmount = comboPrice;
@@ -489,8 +503,6 @@ static async calculeGrap(data, options) {
     }
 
     if (userVip.balance <= 0) {
-
-
       throw new Error400(
         options.language,
         "validation.InsufficientBalance"

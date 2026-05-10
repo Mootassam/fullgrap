@@ -447,26 +447,9 @@ class ProductRepository {
    static async grapOrders(options: IRepositoryOptions) {
    const currentUser = MongooseRepository.getCurrentUser(options);
    const currentVip = currentUser.vip.id;
-   
-   // Handle productItemMappings if available
-   let mergeDataPosition = currentUser.itemNumber; // fallback to legacy
-   let giftPosition = currentUser.prizesNumber; // fallback to legacy
-   
-   // Check if we have productItemMappings and use them
-   if (currentUser.productItemMappings && Array.isArray(currentUser.productItemMappings) && currentUser.productItemMappings.length > 0) {
-     // For now, we'll still use the legacy system for determining which product to show
-     // but we'll modify the logic to check mappings
-     const taskNumber = currentUser.tasksDone + 1; // Next task number
-     const mapping = currentUser.productItemMappings.find(m => m.itemNumber === taskNumber);
-     if (mapping) {
-       // If we have a mapping for this task, we'll use the mapped product
-       // For backward compatibility, we'll still set mergeDataPosition to taskNumber
-       mergeDataPosition = taskNumber;
-     }
-   }
-   
+   const giftPosition = Number(currentUser.prizesNumber) || 0;
    if (!currentUser?.vip) {
-         console.log("1 ") ;
+       
 
      throw new Error400(options.language, "validation.requiredSubscription");
    }
@@ -478,7 +461,7 @@ class ProductRepository {
    });
 
    if (pendingRecords.length > 0) {
-         console.log("2") ;
+
 
      throw new Error400(options.language, "validation.submitPendingProducts");
    }
@@ -486,17 +469,16 @@ class ProductRepository {
    // Check daily order limit
    const dailyOrder = currentUser.vip.dailyorder;
    if (currentUser.tasksDone >= dailyOrder) {
-         console.log("3") ;
 
      throw new Error400(options.language, "validation.moretasks");
    }
 
    // Check balance
    if (currentUser.balance <= 0 || currentUser.balance < currentUser.minbalance) {
-         console.log("4") ;
 
      throw new Error400(options.language, "validation.deposit");
    }
+
 
    // Special VIP products - check if we have a mapping for current task
    const taskNumber = currentUser.tasksDone + 1;
@@ -505,7 +487,6 @@ class ProductRepository {
    if (mapping && mapping.productId) {
      // Check if we're at the right task for this mapped product
      if (currentUser.tasksDone === (taskNumber - 1)) {
-         console.log("5 - Using mapped product");
 
        // Find the mapped product
        const mappedProduct = await Product(options.database).findById(mapping.productId);
@@ -516,14 +497,7 @@ class ProductRepository {
          return populatedProduct;
        }
      }
-   } else if (currentUser?.product?.length > 0 && currentUser.tasksDone === (mergeDataPosition - 1)) {
-         console.log("5") ;
-
-     let product = currentUser.product[0];
-     product.photo = await FileRepository.fillDownloadUrl(product?.photo);
-     return product;
    } else if (currentUser?.prizes && currentUser.tasksDone === (giftPosition - 1)) {
-         console.log("6") ;
 
      let product = currentUser.prizes;
      product.photo = await FileRepository.fillDownloadUrl(product?.photo);
@@ -537,6 +511,7 @@ class ProductRepository {
    let finalPrice: number;
 
    if (currentUser.vip.isFixedAmount) {
+    
      // Use min/max as fixed price
      const vipMinPrice = parseFloat(currentUser.vip.min) || 20;
      const vipMaxPrice = parseFloat(currentUser.vip.max) || 50;
@@ -544,6 +519,7 @@ class ProductRepository {
      const maxPrice = Math.max(vipMinPrice, vipMaxPrice);
      finalPrice = Math.random() * (maxPrice - minPrice) + minPrice;
    } else {
+
      // Use min/max as percentage of balance (existing logic)
      const vipMinPercentage = parseFloat(currentUser.vip.min) || 20;
      const vipMaxPercentage = parseFloat(currentUser.vip.max) || 50;
@@ -555,14 +531,13 @@ class ProductRepository {
 
    finalPrice = Math.round(finalPrice * 100) / 100;
 
-   if (finalPrice > currentUser.balance) {
-     throw new Error400(options.language, "validation.insufficientBalance");
-   }
+
 
    // Get random normal product
    let products = await Product(options.database)
      .find({ vip: currentVip, type: 'normal' })
      .populate("vip");
+   console.log("🚀 ~ ProductRepository ~ grapOrders ~ products:", products)
 
    if (products.length === 0) {
      throw new Error400(options.language, "validation.noProductsAvailable");
