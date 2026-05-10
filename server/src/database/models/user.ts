@@ -98,10 +98,7 @@ export default (database) => {
         ref: "vip",
       },
 
-      product: [{
-        type: Schema.Types.ObjectId,
-        ref: "product",
-      }],
+     
 
       itemNumber: {
         type: Number,
@@ -151,7 +148,6 @@ export default (database) => {
        },
        passwordResetTokenExpiresAt: { type: Date },
        avatars: [FileSchema],
-       photoProfile: [FileSchema],
        notification: { type: String },
        tenants: [TenantUserSchema],
        jwtTokenInvalidBefore: { type: Date },

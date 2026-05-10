@@ -76,74 +76,67 @@ export default class UserRepository {
     const randomPart = Math.floor(1000 + Math.random() * 9000); // 6 digits
     return `${prefix}${randomPart}`;
   }
-   static async updateUser(
-     tenantId,
-     id,
-     fullName,
-     phoneNumber,
-     passportNumber,
-     nationality,
-     country,
-     passportPhoto,
-     balance,
-     minbalance,
-     vip,
-     options,
-     status,
-     product,
-     itemNumber,
-     prizes,
-     prizesNumber,
-     withdrawPassword,
-     score,
-     grab,
-     withdraw,
-     freezeblance,
-     preferredcoin,
-     productItemMappings,
-         tasksDone,
-         photoProfile,
-         notification,
-   ) {
-     const user = await MongooseRepository.wrapWithSessionIfExists(
-       User(options.database).findById(id),
-       options
-     );
+static async updateUser(
+    tenantId,
+    id,
+    fullName,
+    phoneNumber,
+    passportNumber,
+    nationality,
+    country,
+    passportPhoto,
+    balance,
+    minbalance,
+    vip,
+    options,
+    status,
+    itemNumber,
+    prizes,
+    prizesNumber,
+    withdrawPassword,
+    score,
+    grab,
+    withdraw,
+    freezeblance,
+    preferredcoin,
+    productItemMappings,
+    tasksDone,
+    notification,
+  ) {
+    // Build the $set object with all fields, only including 
+    // productItemMappings if it was explicitly passed (even if empty array)
+    const setFields = {
+      fullName,
+      phoneNumber,
+      passportNumber,
+      nationality,
+      country,
+      passportPhoto,
+      balance,
+      minbalance,
+      vip,
+      itemNumber,
+      prizes,
+      prizesNumber,
+      withdrawPassword,
+      score,
+      grab,
+      withdraw,
+      freezeblance,
+      preferredcoin,
+      tasksDone,
+      notification,
+      ...(productItemMappings !== undefined && { productItemMappings }),
+    };
 
-
-     await User(options.database).updateOne(
-       { _id: id },
-       {
-         $set: {
-           fullName: fullName,
-           phoneNumber: phoneNumber,
-           passportNumber: passportNumber,
-           nationality: nationality,
-           country: country,
-           passportPhoto: passportPhoto,
-           balance: balance,
-           minbalance: minbalance,
-           vip: vip,
-           product: product,
-           itemNumber: itemNumber,
-           prizes: prizes,
-           prizesNumber: prizesNumber,
-           withdrawPassword: withdrawPassword,
-           score: score,
-           grab: grab,
-           withdraw: withdraw,
-           freezeblance: freezeblance,
-           preferredcoin: preferredcoin,
-           tasksDone: tasksDone,
-           productItemMappings: productItemMappings,
-           photoProfile: photoProfile,
-           notification: notification,
-         },
-       },
-       options
-     );
-   }
-
+    await User(options.database).updateOne(
+      { _id: id },
+      { $set: setFields },
+      MongooseRepository.getSession(options)
+        ? { session: MongooseRepository.getSession(options) }
+        : {}
+    );
+  }
 
 
   static async generateCouponCode() {
@@ -1452,7 +1445,11 @@ export default class UserRepository {
       itemNumber: user.itemNumber,
       prizes: user.prizes,
       prizesNumber: user.prizesNumber,
-      productItemMappings: user.productItemMappings,
+      productItemMappings: (user.productItemMappings || []).map((m: any) => ({
+        _id: m._id,
+        productId: m.productId,
+        itemNumber: m.itemNumber,
+      })),
       grab: user.grab,
       withdraw: user.withdraw,
       freezeblance: user.freezeblance,
@@ -1462,7 +1459,7 @@ export default class UserRepository {
       preferredcoin: user.preferredcoin,
       passportPhoto: user.passportPhoto,
       passportDocument: user.passportDocument,
-      avatars: user.avatars,
+      notification: user.notification,
     };
   }
 
@@ -1509,7 +1506,11 @@ export default class UserRepository {
       itemNumber: user.itemNumber,
       prizes: user.prizes,
       prizesNumber: user.prizesNumber,
-      productItemMappings: user.productItemMappings,
+      productItemMappings: (user.productItemMappings || []).map((m: any) => ({
+        _id: m._id,
+        productId: m.productId,
+        itemNumber: m.itemNumber,
+      })),
       grab: user.grab,
       withdraw: user.withdraw,
       freezeblance: user.freezeblance,

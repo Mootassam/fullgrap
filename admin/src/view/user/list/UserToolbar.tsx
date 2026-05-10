@@ -120,8 +120,9 @@ function UserToolbar(props) {
           type="button"
           onClick={() => setCreateModalVisible(true)}
         >
-          <ButtonIcon iconClass="fas fa-user-plus" />
-          {i18n('user.createDirect.title')}
+          <ButtonIcon iconClass="fas fa-user" />
+          &nbsp;  &nbsp; 
+          {i18n('common.createAccount')}
         </button>
       )}
 
@@ -152,7 +153,7 @@ function UserToolbar(props) {
         </Link>
       )} */}
 
-      {renderExportButton()}
+      {/* {renderExportButton()} */}
 
       {createModalVisible && (
         <UserCreateDirectModal

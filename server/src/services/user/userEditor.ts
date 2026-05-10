@@ -35,12 +35,14 @@ export default class UserEditor {
   }
 
   get _roles() {
-    if (this.data.roles && !Array.isArray(this.data.roles)) {
-      return [this.data.roles];
-    } else {
-      const uniqueRoles = [...new Set(this.data.roles)];
-      return uniqueRoles;
+    let roles = this.data.roles;
+    if (!roles) {
+      return [];
     }
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+    return [...new Set(roles)];
   }
 
   async _loadUser() {
@@ -52,12 +54,13 @@ export default class UserEditor {
   }
 
   async _updateAtDatabase() {
+    const status = this.data.status || undefined;
     await TenantUserRepository.updateRoles(
       this.options.currentTenant.id,
       this.data.id,
-      this.data.roles,
+      this._roles,
       this.options,
-      this.data.status
+      status
     );
   }
   async _updateUserAtDatabase() {
@@ -73,6 +76,7 @@ export default class UserEditor {
         itemNumber: Number(m.itemNumber) || 0,
       }));
 
+
     await UserRepository.updateUser(
       this.options.currentTenant.id,
       this.data.id,
@@ -87,7 +91,6 @@ export default class UserEditor {
       vipId,
       this.options,
       this.data.status,
-      this.data.product,
       this.data.itemNumber,
       prizesId,
       this.data?.prizesNumber,
@@ -99,7 +102,6 @@ export default class UserEditor {
       this.data.preferredcoin,
       productItemMappings,
       this.data.tasksDone,
-      this.data.photoProfile,
       this.data.notification,
     );
   }

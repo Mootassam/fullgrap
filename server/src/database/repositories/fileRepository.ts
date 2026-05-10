@@ -18,8 +18,10 @@ export default class FileRepository {
           );
         }
 
-        return {
-          ...file,
+        const plainFile = file.toObject ? file.toObject() : file;
+
+      return {
+          ...plainFile,
           downloadUrl,
         };
       }),

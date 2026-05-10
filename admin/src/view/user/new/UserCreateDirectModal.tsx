@@ -40,7 +40,7 @@ function UserCreateDirectModal(props) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">
-              {i18n('user.createDirect.titleModal')}
+              {i18n('common.createAccount')}
             </h5>
             <button
               type="button"

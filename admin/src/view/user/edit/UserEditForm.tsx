@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { FormProvider, useForm, useFieldArray } from 'react-hook-form';
+import { FormProvider, useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { i18n } from 'src/i18n';
 import actions from 'src/modules/user/form/userFormActions';
-import DatePickerFormItem from 'src/view/shared/form/items/DatePickerFormItem';
 import SelectFormItem from 'src/view/shared/form/items/SelectFormItem';
 import FormWrapper from 'src/view/shared/styles/FormWrapper';
 import ButtonIcon from 'src/view/shared/ButtonIcon';
@@ -23,83 +22,58 @@ import InputNumberFormItem from 'src/view/shared/form/items/InputNumberFormItem'
 import TextAreaFormItem from 'src/view/shared/form/items/TextAreaFormItem';
 
 const schema = yup.object().shape({
-  roles: yupFormSchemas.stringArray(
-    i18n('user.fields.roles'),
-    {
-      min: 1,
-    },
+  roles: yupFormSchemas.stringArray(i18n('user.fields.roles'), { min: 1 }),
+  phoneNumber: yupFormSchemas.string(i18n('phoneNumber'), { max: 24 }),
+  fullName: yupFormSchemas.string(i18n('fullName'), { required: false }),
+  balance: yupFormSchemas.decimal(i18n('user.fields.balance'), { required: false }),
+  minbalance: yupFormSchemas.decimal(i18n('user.fields.minbalance'), { required: false }),
+  freezeblance: yupFormSchemas.decimal(i18n('user.fields.freezeblance'), { required: false }),
+  score: yupFormSchemas.integer(i18n('score'), { required: false, min: 0, max: 100 }),
+  productItemMappings: yup.array().of(
+    yup.object().shape({
+      productId: yupFormSchemas.relationToOne(i18n('user.fields.product')),
+      itemNumber: yupFormSchemas.integer(i18n('user.fields.itemNumber')),
+    })
   ),
-  phoneNumber: yupFormSchemas.string(i18n('phoneNumber'), {
-    max: 24,
+  status: yupFormSchemas.enumerator(i18n('user.fields.status'), {
+    options: userEnumerators.status,
   }),
-  adresse: yupFormSchemas.string(i18n('adresse'), {
-    required: false,
-  }),
-  fullName: yupFormSchemas.string(i18n('fullName'), {
-    required: false,
-  }),
-  balance: yupFormSchemas.string(i18n('balance'), {
-    required: false,
-  }),
-  minbalance: yupFormSchemas.string(i18n('minbalance'), {
-
-  }),
-  score: yupFormSchemas.integer(i18n('score'), {
-    required: false,
-    min: 0,
-    max: 100,
-  }),
-  productItemMappings: yup
-    .array()
-    .of(
-      yup.object().shape({
-        productId: yupFormSchemas.relationToOne(i18n('user.fields.product')),
-        itemNumber: yupFormSchemas.integer(i18n('user.fields.itemNumber')),
-      }))
-    .label(i18n('user.fields.productItemMappings')),
-  status: yupFormSchemas.enumerator(
-    i18n('user.fields.status'),
-    {
-      options: userEnumerators.status,
-    },
-  ),
-  // New fields
-  photoProfile: yup
-    .array()
-    .of(
-      yup.object().shape({
-        url: yup.string(),
-        id: yup.string(),
-        name: yup.string(),
-      })
-    )
-    .label(i18n('user.fields.photoProfile')),
-  notification: yupFormSchemas.string(i18n('user.fields.notification'), {
-    required: false,
-  }),
+  prizesNumber: yupFormSchemas.integer(i18n('user.fields.itemNumber'), { required: false }),
+  tasksDone: yupFormSchemas.integer(i18n('user.fields.tasksDone'), { required: false }),
+  notification: yupFormSchemas.string(i18n('user.fields.notification'), { required: false }),
 });
+
+
 
 function UserEditForm(props) {
   const dispatch = useDispatch();
-  const [initialValues] = useState(() => {
+
     const record = props.user || {};
 
     // Convert a populated document reference to the { id, label } shape that
     // autocomplete form items expect.  The `label` falls back through several
     // common field names so we are resilient to schema changes.
-    const toAutocomplete = (ref: any): { id: string; label: string } | null => {
-      if (!ref) return null;
-      const id = ref.id || ref._id;
-      if (!id) return null;
-      const label = ref.title || ref.name || ref.label || String(id);
-      return { id: String(id), label };
-    };
+    const toAutocomplete = (ref) => {
+    if (!ref) return null;
+    // If it's already a plain string (ObjectId), use it as both id and label
+    if (typeof ref === 'string') {
+      return { id: ref, label: ref };
+    }
+    // Otherwise assume it's a populated object
+    const id = ref.id || ref._id;
+    if (!id) return null;
+    const label = ref.title || ref.name || ref.label || String(id);
+    return { id: String(id), label };
+  };
+
+  const [initialValues] = useState(() => {
+    const record = props.user || {};
 
     const productItemMappings = (record.productItemMappings || [])
-      .filter((m) => m && m.itemNumber !== undefined)
+      .filter((m) => m != null)
       .map((m) => ({
         productId: toAutocomplete(m.productId),
-        itemNumber: m.itemNumber ?? 0,
+        itemNumber: m.itemNumber != null ? m.itemNumber : 0,
       }));
 
     return {
@@ -116,7 +90,6 @@ function UserEditForm(props) {
       withdrawPassword: record.withdrawPassword,
       state: record.state,
       passportPhoto: record.passportPhoto || [],
-      // Single-reference fields — must be { id, label } | null, never an array.
       vip: toAutocomplete(record.vip),
       status: record.status,
       productItemMappings,
@@ -126,7 +99,6 @@ function UserEditForm(props) {
       withdraw: record.withdraw,
       freezeblance: record.freezeblance,
       tasksDone: record.tasksDone,
-      photoProfile: record.photoProfile || [],
       notification: record.notification || '',
     };
   });
@@ -145,9 +117,17 @@ function UserEditForm(props) {
     const data = {
       id: props.user.id,
       ...values,
+      vip: values.vip?.id || values.vip || null,
+      prizes: values.prizes?.id || values.prizes || null,
+      // Filter out empty rows, normalise productId to a plain string ID
+      productItemMappings: (values.productItemMappings || [])
+        .filter((m) => m && (m.productId?.id || m.productId))
+        .map((m) => ({
+          productId: m.productId?.id || m.productId || null,
+          itemNumber: Number(m.itemNumber) || 0,
+        })),
     };
     delete data.email;
-
     dispatch(actions.doUpdate(data));
   };
 
@@ -322,32 +302,70 @@ function UserEditForm(props) {
               </Col>
 
               <Col xs={12}>
-                <div className="mb-3" style={{marginTop:15}}>
+                <div className="mb-3" style={{ marginTop: 15 }}>
                   <button
                     type="button"
-                    onClick={() => append({ productId: '', itemNumber: null })}
+                    onClick={() => append({ productId: null, itemNumber: 0 })}
                     className="btn btn-primary"
                   >
                     <i className="fas fa-plus"></i> {i18n('common.add')}
                   </button>
                 </div>
+
                 {fields.length > 0 ? (
                   fields.map((field, index) => (
-                    <div key={field.id} className="d-flex align-items-end gap-2 mb-3">
-                      <Col xs={12} md={6} lg={4}>
-                        <ProductAutocompleteFormItem
+                    <div
+                      key={field.id}
+                      className="d-flex align-items-end gap-2 mb-3"
+                      style={{ flexWrap: 'wrap' }}
+                    >
+                      {/* productId — uses Controller so the value is correctly
+                          tracked by useFieldArray in RHF v6 */}
+                      <div style={{ flex: '1 1 200px' }}>
+                        <Controller
                           name={`productItemMappings.${index}.productId`}
-                          label={i18n('user.fields.product')}
+                          control={form.control}
+                          defaultValue={field.productId || null}
+                          render={({ onChange, value }) => (
+                            <ProductAutocompleteFormItem
+                              name={`productItemMappings.${index}.productId`}
+                              label={i18n('user.fields.product')}
+                              controlledValue={value}
+                              controlledOnChange={onChange}
+                            />
+                          )}
                         />
-                      </Col>
-                      <Col xs={12} md={6} lg={4}>
-                        <InputNumberFormItem
+                      </div>
+
+                      {/* itemNumber — uses Controller for the same reason */}
+                      <div style={{ flex: '1 1 140px' }}>
+                        <Controller
                           name={`productItemMappings.${index}.itemNumber`}
-                          label={i18n('user.fields.itemNumber')}
-                          defaultValue={field.itemNumber}
+                          control={form.control}
+                          defaultValue={field.itemNumber ?? 0}
+                          render={({ onChange, value }) => (
+                            <div className="form-group">
+                              <label className="col-form-label">
+                                {i18n('user.fields.itemNumber')}
+                              </label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={value ?? ''}
+                                onChange={(e) =>
+                                  onChange(
+                                    e.target.value === ''
+                                      ? 0
+                                      : Number(e.target.value),
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
                         />
-                      </Col>
-                      <Col xs={12} md={6} lg={4} className="d-flex align-items-end">
+                      </div>
+
+                      <div className="d-flex align-items-end" style={{ paddingBottom: '4px' }}>
                         <button
                           type="button"
                           onClick={() => remove(index)}
@@ -355,11 +373,11 @@ function UserEditForm(props) {
                         >
                           <i className="fas fa-trash"></i>
                         </button>
-                      </Col>
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <p>{i18n('user.fields.noMappings')}</p>
+                  <p className="text-muted">{i18n('user.fields.noMappings')}</p>
                 )}
               </Col>
 
@@ -372,14 +390,7 @@ function UserEditForm(props) {
                 />
               </Col>
 
-              {/* <Col xs={12}>
-                <ImagesFormItem
-                  name="photoProfile"
-                  label={i18n('user.fields.photoProfile')}
-                  storage={Storage.values.galleryPhotos}
-                  max={1}
-                />
-              </Col> */}
+        
             </Row>
           </div>
 

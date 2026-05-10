@@ -24,9 +24,15 @@ function ProductAutocompleteFormItem(props) {
   };
 
   const doCreateSuccess = (record) => {
-    const { name, mode } = props;
+    const { name, mode, controlledOnChange } = props;
 
-    if (mode && mode === 'multiple') {
+    if (controlledOnChange) {
+      // Controlled mode (used inside a RHF Controller / useFieldArray)
+      const newValue = record
+        ? { id: record.id || record._id, label: record.label || record.title }
+        : null;
+      controlledOnChange(newValue);
+    } else if (mode && mode === 'multiple') {
       setValue(
         name,
         [...(getValues()[name] || []), record],

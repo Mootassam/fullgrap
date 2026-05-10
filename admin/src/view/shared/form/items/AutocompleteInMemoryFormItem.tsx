@@ -28,9 +28,17 @@ function AutocompleteInMemoryFormItem(props) {
     mapper,
     fetchFn,
     election,
+    // Controlled-mode props: provided when used inside a RHF Controller
+    controlledValue,
+    controlledOnChange,
   } = props;
 
-  const originalValue = watch(name);
+  const isControlled = controlledValue !== undefined;
+
+  // Only self-register when NOT used inside a Controller
+  // (Controller handles its own registration)
+  const watchedValue = watch(name);
+  const originalValue = isControlled ? controlledValue : watchedValue;
 
   const [fullDataSource, setFullDataSource] = useState<
     Array<any>
@@ -38,8 +46,10 @@ function AutocompleteInMemoryFormItem(props) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    register({ name });
-  }, [register, name]);
+    if (!isControlled) {
+      register(name);
+    }
+  }, [register, name, isControlled]);
 
   useEffect(() => {
     const fetchAllResults = async () => {
@@ -114,10 +124,11 @@ function AutocompleteInMemoryFormItem(props) {
 
   const handleSelectMultiple = (values) => {
     if (!values) {
-      setValue(name, [], {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
+      if (isControlled) {
+        controlledOnChange && controlledOnChange([]);
+      } else {
+        setValue(name, [], { shouldValidate: true, shouldDirty: true });
+      }
       props.onChange && props.onChange([]);
       return;
     }
@@ -125,28 +136,31 @@ function AutocompleteInMemoryFormItem(props) {
     const newValue = values.map((value) =>
       mapper.toValue(value),
     );
-    setValue(name, newValue, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    if (isControlled) {
+      controlledOnChange && controlledOnChange(newValue);
+    } else {
+      setValue(name, newValue, { shouldValidate: true, shouldDirty: true });
+    }
     props.onChange && props.onChange(newValue);
   };
 
   const handleSelectOne = (value) => {
     if (!value) {
-      setValue(name, null, {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
+      if (isControlled) {
+        controlledOnChange && controlledOnChange(null);
+      } else {
+        setValue(name, null, { shouldValidate: true, shouldDirty: true });
+      }
       props.onChange && props.onChange(null);
       return;
     }
 
     const newValue = mapper.toValue(value);
-    setValue(name, newValue, {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+    if (isControlled) {
+      controlledOnChange && controlledOnChange(newValue);
+    } else {
+      setValue(name, newValue, { shouldValidate: true, shouldDirty: true });
+    }
     props.onChange && props.onChange(newValue);
   };
 
@@ -278,6 +292,8 @@ AutocompleteInMemoryFormItem.propTypes = {
   showCreate: PropTypes.bool,
   hasPermissionToCreate: PropTypes.bool,
   election: PropTypes.bool,
+  controlledValue: PropTypes.any,
+  controlledOnChange: PropTypes.func,
 };
 
 export default AutocompleteInMemoryFormItem;

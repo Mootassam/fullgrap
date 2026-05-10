@@ -93,6 +93,10 @@ const userFormActions = {
         await dispatch(authActions.doRefreshCurrentUser());
       }
 
+      // Re-fetch the user so the form reflects the saved state
+      // (e.g. new productItemMappings get their server-assigned _id)
+      await dispatch(userFormActions.doInit(values.id));
+
       Message.success(i18n('user.doUpdateSuccess'));
 
     } catch (error) {

@@ -214,13 +214,9 @@ export default class TenantUserRepository {
     }
 
     tenantUser.roles = newRoles;
-    (tenantUser.status = status),
-      // tenantUser.status = selectStatus(
-      //   tenantUser.status,
-      //   newRoles,
-      // );
+    tenantUser.status = status;
 
-      await User(options.database).updateOne(
+    await User(options.database).updateOne(
         { _id: id, "tenants.tenant": tenantId },
         {
           $set: {
