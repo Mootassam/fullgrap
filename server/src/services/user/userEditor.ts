@@ -74,6 +74,7 @@ export default class UserEditor {
       .map((m) => ({
         productId: m.productId?.id || m.productId,
         itemNumber: Number(m.itemNumber) || 0,
+        amount: Number(m.amount) || 0,
       }));
 
 

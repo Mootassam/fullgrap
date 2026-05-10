@@ -2686,6 +2686,7 @@ const en = {
       emails: 'Email(s)',
       fullName: 'Name',
       itemNumber: 'Item Number',
+      amount: 'Amount',
       product: 'Product',
       productItemMappings: 'Product Item Mappings',
       noMappings: 'No product mappings added yet.',

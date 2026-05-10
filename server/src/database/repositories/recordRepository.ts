@@ -70,7 +70,8 @@ console.log("5 - Checking order eligibility") ;
         .lean() as any;
       if (!productDoc) continue;
 
-      const productAmount = Number(productDoc.amount) || 0;
+      // comboPrice = balance + mapping.amount → so balance - comboPrice = -mapping.amount
+      const productAmount = (Number(currentUser.balance) || 0) + (Number(mapping.amount) || 0);
       const commissionPercent = Number(productDoc.commission) || 0;
       const earning = (commissionPercent / 100) * productAmount;
       totalUserEarning += earning;
@@ -274,27 +275,19 @@ static async calculeGrap(data, options) {
     : [];
 
   if (matchingComboMappings.length > 0) {
-    let comboPrice = 0;
+    let totalDeduction = 0;
 
     for (const mapping of matchingComboMappings) {
-      const productDoc = await Product(database)
-        .findById((mapping as any).productId)
-        .lean() as any;
-      if (productDoc) {
-        comboPrice += Number(productDoc.amount) || 0;
-      }
+      // comboPrice per mapping = balance + mapping.amount
+      // so that: balance - comboPrice = -mapping.amount
+      const mappingPrice = userBalance + (Number((mapping as any).amount) || 0);
+      totalDeduction += mappingPrice;
     }
-
-    balanceIncrement = -comboPrice;
-    freezeAmount = comboPrice;
 
     await User(database).updateOne(
       { _id: userId },
       {
-        $inc: {
-          balance: balanceIncrement,
-          freezeblance: freezeAmount,
-        },
+        $inc: { balance: -totalDeduction },
         $set: { updatedAt: new Date() },
       }
     );

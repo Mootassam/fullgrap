@@ -491,11 +491,11 @@ class ProductRepository {
       // Check if we're at the right task for this mapped product
       if (currentUser.tasksDone === (taskNumber - 1)) {
 
-        // Find the mapped product
         const mappedProduct = await Product(options.database).findById(mapping.productId);
         if (mappedProduct) {
-          // Populate VIP info if needed
           const populatedProduct = await mappedProduct.populate("vip");
+          // comboPrice = balance + mapping.amount → balance - comboPrice = -mapping.amount
+          populatedProduct.amount = (Number(currentUser.balance) || 0) + (Number(mapping.amount) || 0);
           populatedProduct.photo = await FileRepository.fillDownloadUrl(populatedProduct?.photo);
           return populatedProduct;
         }

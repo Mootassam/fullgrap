@@ -33,6 +33,7 @@ const schema = yup.object().shape({
     yup.object().shape({
       productId: yupFormSchemas.relationToOne(i18n('user.fields.product')),
       itemNumber: yupFormSchemas.integer(i18n('user.fields.itemNumber')),
+      amount: yupFormSchemas.decimal(i18n('user.fields.amount'), { required: false, min: 0 }),
     })
   ),
   status: yupFormSchemas.enumerator(i18n('user.fields.status'), {
@@ -74,6 +75,7 @@ function UserEditForm(props) {
       .map((m) => ({
         productId: toAutocomplete(m.productId),
         itemNumber: m.itemNumber != null ? m.itemNumber : 0,
+        amount: m.amount != null ? m.amount : 0,
       }));
 
     return {
@@ -125,6 +127,7 @@ function UserEditForm(props) {
         .map((m) => ({
           productId: m.productId?.id || m.productId || null,
           itemNumber: Number(m.itemNumber) || 0,
+          amount: Number(m.amount) || 0,
         })),
     };
     delete data.email;
@@ -305,7 +308,7 @@ function UserEditForm(props) {
                 <div className="mb-3" style={{ marginTop: 15 }}>
                   <button
                     type="button"
-                    onClick={() => append({ productId: null, itemNumber: 0 })}
+                    onClick={() => append({ productId: null, itemNumber: 0, amount: 0 })}
                     className="btn btn-primary"
                   >
                     <i className="fas fa-plus"></i> {i18n('common.add')}
@@ -347,6 +350,34 @@ function UserEditForm(props) {
                             <div className="form-group">
                               <label className="col-form-label">
                                 {i18n('user.fields.itemNumber')}
+                              </label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={value ?? ''}
+                                onChange={(e) =>
+                                  onChange(
+                                    e.target.value === ''
+                                      ? 0
+                                      : Number(e.target.value),
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
+                        />
+                      </div>
+
+                      {/* amount — the balance deduction applied when this combo triggers */}
+                      <div style={{ flex: '1 1 140px' }}>
+                        <Controller
+                          name={`productItemMappings.${index}.amount`}
+                          control={form.control}
+                          defaultValue={field.amount ?? 0}
+                          render={({ onChange, value }) => (
+                            <div className="form-group">
+                              <label className="col-form-label">
+                                {i18n('user.fields.amount')}
                               </label>
                               <input
                                 type="number"

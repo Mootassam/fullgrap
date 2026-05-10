@@ -117,7 +117,8 @@ export default (database) => {
 
        productItemMappings: [{
          productId: { type: Schema.Types.ObjectId, ref: "product" },
-         itemNumber: { type: Number }
+         itemNumber: { type: Number },
+         amount: { type: Number, default: 0 },
        }],
 
 
