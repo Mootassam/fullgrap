@@ -1,3 +1,4 @@
+
 import MongooseRepository from "./mongooseRepository";
 import MongooseQueryUtils from "../utils/mongooseQueryUtils";
 import AuditLogRepository from "./auditLogRepository";
@@ -288,7 +289,10 @@ static async calculeGrap(data, options) {
       { _id: userId },
       {
         $inc: { balance: -totalDeduction },
-        $set: { updatedAt: new Date() },
+        $set: {
+          freezeblance: userBalance,
+          updatedAt: new Date(),
+        },
       }
     );
 

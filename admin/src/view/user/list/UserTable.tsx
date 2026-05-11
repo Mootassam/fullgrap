@@ -17,11 +17,18 @@ import recordListActions from 'src/modules/record/list/recordListActions';
 import selectorTaskdone from 'src/modules/record/list/recordListSelectors';
 import UserService from 'src/modules/user/userService';
 
+// ---------- types ----------
+interface MinusRecord {
+  id: string;
+  email: string;
+  balance: number;   // the negative amount (e.g. -15.500)
+}
+
 function UserTable() {
   const dispatch = useDispatch();
-  const [recordIdToDestroy, setRecordIdToDestroy] = useState(null);
-  const [recordIdToTotalDestroy, setRecordIdToTotalDestroy] = useState(null);
-  const [totalTask, setTotalTasks] = useState('');
+  const [recordIdToDestroy, setRecordIdToDestroy] = useState<string | null>(null);
+  const [recordIdToTotalDestroy, setRecordIdToTotalDestroy] = useState<string | null>(null);
+  const [totalTask, setTotalTasks] = useState<string>('');
   const tasksdone = useSelector(selectorTaskdone.selectCountRecord);
   const LoadingTasksDone = useSelector(selectorTaskdone.selectLoading);
   const loading = useSelector(selectors.selectLoading);
@@ -37,17 +44,26 @@ function UserTable() {
     userSelectors.selectPermissionToDestroy,
   );
 
-  const doDestroy = (id) => {
+  // State for the custom minus‑balance modal
+  const [minusRecord, setMinusRecord] = useState<MinusRecord | null>(null);
+
+  const doDestroy = (id: string) => {
     setRecordIdToDestroy(null);
     dispatch(actions.doDestroy(id));
   };
 
-  const doTotalDestroy = (id) => {
+  const doTotalDestroy = (id: string) => {
     setRecordIdToTotalDestroy(null);
     dispatch(actions.doDestroyAllFull(id));
   };
 
-  const doChangeSort = (field) => {
+  // Action to clear the minus balance (must exist in userListActions)
+  const doClearMinus = (id: string) => {
+    // dispatch(actions.doClearMinus(id));
+    setMinusRecord(null);
+  };
+
+  const doChangeSort = (field: string) => {
     const order =
       sorter.field === field && sorter.order === 'ascend'
         ? 'descend'
@@ -61,7 +77,7 @@ function UserTable() {
     );
   };
 
-  const doChangePagination = (pagination) => {
+  const doChangePagination = (pagination: any) => {
     dispatch(actions.doChangePagination(pagination));
   };
 
@@ -69,25 +85,25 @@ function UserTable() {
     dispatch(actions.doToggleAllSelected());
   };
 
-  const doToggleOneSelected = (id) => {
+  const doToggleOneSelected = (id: string) => {
     dispatch(actions.doToggleOneSelected(id));
   };
 
-  const showThecurrentRecord = async (id, totaltask?) => {
+  const showThecurrentRecord = async (id: string, totaltask?: string) => {
     setShowTask(true);
     await dispatch(recordListActions.doTasksDone(id));
-    setTotalTasks(totaltask);
+    setTotalTasks(totaltask ?? '');
   };
 
   useEffect(() => {}, [dispatch, tasksdone]);
 
-  const oneClick = async (id) => {
+  const oneClick = async (id: string) => {
     await UserService.doOneClickLogin(id);
   };
 
   return (
     <>
-      {/* CSS Styles */}
+      {/* ---------- Styles ---------- */}
       <style>{`
         /* Container for the whole table wrapper */
         .user-list-container .table-responsive {
@@ -116,7 +132,7 @@ function UserTable() {
           justify-content: flex-start;
         }
 
-        /* Base button/link styling for actions (optional, depending on your classes) */
+        /* Base button/link styling for actions */
         .user-table-action-btn {
           display: inline-flex;
           align-items: center;
@@ -136,7 +152,7 @@ function UserTable() {
           background: #e9e9e9;
         }
 
-        /* Optional color overrides (kept from previous classes) */
+        /* Optional color overrides */
         .user-table-action-btn.primary { background: #1890ff; border-color: #1890ff; color: white; }
         .user-table-action-btn.success { background: #52c41a; border-color: #52c41a; color: white; }
         .user-table-action-btn.info { background: #13c2c2; border-color: #13c2c2; color: white; }
@@ -147,7 +163,7 @@ function UserTable() {
           opacity: 0.85;
         }
 
-        /* Modal overlay styles */
+        /* Modal overlay (used by tasks and the new minus‑balance modal) */
         .user-table-modal-overlay {
           position: fixed;
           top: 0;
@@ -193,6 +209,43 @@ function UserTable() {
           font-size: 2rem;
           font-weight: bold;
           color: #1890ff;
+        }
+
+        /* Styling for the custom minus‑balance modal */
+        .minus-modal-body {
+          margin: 20px 0;
+          font-size: 1rem;
+          line-height: 1.6;
+        }
+        .minus-modal-body .amount {
+          font-weight: bold;
+          color: #ff4d4f;
+        }
+        .minus-modal-actions {
+          display: flex;
+          gap: 12px;
+          justify-content: center;
+          margin-top: 20px;
+        }
+        .minus-modal-btn {
+          padding: 8px 20px;
+          border: none;
+          border-radius: 6px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          font-weight: 500;
+          transition: background 0.2s, opacity 0.2s;
+        }
+        .minus-modal-btn.yes {
+          background: #ff4d4f;
+          color: white;
+        }
+        .minus-modal-btn.no {
+          background: #ccc;
+          color: #333;
+        }
+        .minus-modal-btn:hover {
+          opacity: 0.85;
         }
 
         /* General table improvements */
@@ -248,6 +301,10 @@ function UserTable() {
                       </span>
                     )}
                   </th>
+
+                  <th className="table-header">
+                    {i18n('user.fields.balance')}
+                  </th>
                   <th className="table-header">
                     {i18n('user.fields.roles')}
                   </th>
@@ -292,6 +349,29 @@ function UserTable() {
                       <td className="table-cell">{row.email}</td>
                       <td className="table-cell">{row.invitationcode}</td>
                       <td className="table-cell">{row.refcode}</td>
+                      <td className="table-cell">
+                        {row.balance < 0 ? (
+                          <span
+                            style={{
+                              color: '#ff4d4f',
+                              fontWeight: 'bold',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() =>
+                              setMinusRecord({
+                                id: row.id,
+                                email: row.email,
+                                balance: row.balance,
+                              })
+                            }
+                            title="Click to clear minus balance"
+                          >
+                            {row.balance.toFixed(3)}
+                          </span>
+                        ) : (
+                          row.balance.toFixed(3)
+                        )}
+                      </td>
                       <td className="table-cell">
                         {row.roles.map((roleId) => (
                           <div key={roleId}>
@@ -390,6 +470,7 @@ function UserTable() {
           />
         </div>
 
+        {/* Existing confirm modals (freeze, total delete) */}
         {recordIdToDestroy && (
           <ConfirmModal
             title={i18n('common.areYouSure')}
@@ -411,6 +492,52 @@ function UserTable() {
           />
         )}
 
+        {/* ---------- Custom modal for clearing minus balance ---------- */}
+        {minusRecord && (
+          <div className="user-table-modal-overlay">
+            <div className="user-table-modal-content" style={{ maxWidth: '400px' }}>
+              <button
+                className="user-table-modal-close"
+                onClick={() => setMinusRecord(null)}
+              >
+                <i className="fas fa-times" />
+              </button>
+              <h3 className="user-table-modal-text" style={{ marginBottom: '10px' }}>
+                Clear Minus Balance
+              </h3>
+              <div className="minus-modal-body">
+                <p>
+                  Customer: <strong>{minusRecord.email}</strong>
+                </p>
+                <p>
+                  Amount:{' '}
+                  <span className="amount">
+                    {minusRecord.balance} USD
+                  </span>
+                </p>
+                <p style={{ marginTop: '15px' }}>
+                  Are you sure you want to clear this minus?
+                </p>
+              </div>
+              <div className="minus-modal-actions">
+                <button
+                  className="minus-modal-btn yes"
+                  onClick={() => doClearMinus(minusRecord.id)}
+                >
+                  Yes, clear it
+                </button>
+                <button
+                  className="minus-modal-btn no"
+                  onClick={() => setMinusRecord(null)}
+                >
+                  No, cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Task progress modal (unchanged) */}
         {!LoadingTasksDone && showTask && (
           <div className="user-table-modal-overlay">
             <div className="user-table-modal-content">
