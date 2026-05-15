@@ -61,6 +61,14 @@ export default class UserService {
     return response.data;
   }
 
+  static async clearMinus(userId) {
+    const tenantId = AuthCurrentTenant.get();
+    const response = await authAxios.post(
+      `/tenant/${tenantId}/user/${userId}/clear-minus`,
+    );
+    return response.data;
+  }
+
   static async createDirect(data) {
     const tenantId = AuthCurrentTenant.get();
 

@@ -3,6 +3,7 @@ import TenantUserRepository from '../../database/repositories/tenantUserReposito
 import PermissionChecker from '../../services/user/permissionChecker';
 import ApiResponseHandler from '../apiResponseHandler';
 import Permissions from '../../security/permissions';
+import bcrypt from 'bcrypt';
 
 export default async (req, res) => {
   try {
@@ -28,9 +29,11 @@ export default async (req, res) => {
     const rawVip = req.body.vip;
     const vipId: string | null = rawVip?.id || rawVip || null;
 
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     const data = {
       email,
-      password,
+      password: hashedPassword,
       phoneNumber,
       fullName,
       firstName,

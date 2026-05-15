@@ -16,6 +16,7 @@ import TableWrapper from 'src/view/shared/styles/TableWrapper';
 import recordListActions from 'src/modules/record/list/recordListActions';
 import selectorTaskdone from 'src/modules/record/list/recordListSelectors';
 import UserService from 'src/modules/user/userService';
+import Message from 'src/view/shared/message';
 
 // ---------- types ----------
 interface MinusRecord {
@@ -46,6 +47,7 @@ function UserTable() {
 
   // State for the custom minus‑balance modal
   const [minusRecord, setMinusRecord] = useState<MinusRecord | null>(null);
+  const [clearingMinus, setClearingMinus] = useState(false);
 
   const doDestroy = (id: string) => {
     setRecordIdToDestroy(null);
@@ -57,10 +59,18 @@ function UserTable() {
     dispatch(actions.doDestroyAllFull(id));
   };
 
-  // Action to clear the minus balance (must exist in userListActions)
-  const doClearMinus = (id: string) => {
-    // dispatch(actions.doClearMinus(id));
-    setMinusRecord(null);
+  const doClearMinus = async (id: string) => {
+    try {
+      setClearingMinus(true);
+      await UserService.clearMinus(id);
+      setMinusRecord(null);
+      dispatch(actions.doFetchCurrentFilter());
+      Message.success('Minus balance cleared successfully.');
+    } catch (error) {
+      console.error('Failed to clear minus balance', error);
+    } finally {
+      setClearingMinus(false);
+    }
   };
 
   const doChangeSort = (field: string) => {
@@ -522,9 +532,10 @@ function UserTable() {
               <div className="minus-modal-actions">
                 <button
                   className="minus-modal-btn yes"
+                  disabled={clearingMinus}
                   onClick={() => doClearMinus(minusRecord.id)}
                 >
-                  Yes, clear it
+                  {clearingMinus ? 'Processing...' : 'Yes, clear it'}
                 </button>
                 <button
                   className="minus-modal-btn no"

@@ -251,13 +251,11 @@ static async updateUser(
       settingsBalance = defaultBalance[0].defaultBalance;
     }
 
-    const hashedPassword = await bcrypt.hash(data.password, 12);
-
     let [user] = await User(options.database).create(
       [
         {
           email: data.email,
-          password: hashedPassword,
+          password: data.password,
           phoneNumber: data.phoneNumber,
           ipAddress: clientIP,
           country: country,

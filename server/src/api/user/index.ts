@@ -7,6 +7,10 @@ export default (app) => {
     `/tenant/:tenantId/user/create-direct`,
     require('./userCreateDirect').default,
   );
+  app.post(
+    `/tenant/:tenantId/user/:id/clear-minus`,
+    require('./userClearMinus').default,
+  );
   app.put(
     `/tenant/:tenantId/user`,
     require('./userEdit').default,
